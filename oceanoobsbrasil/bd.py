@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import urllib
 
 class Getdata():
 
@@ -21,44 +22,57 @@ class Getdata():
             if end_date == None:
                 end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d')
 
-        query = f"SELECT * FROM {table} WHERE start_date > {start_date} AND end_date < {end_date}"
+            query = f"SELECT * FROM {table} WHERE date_time > '{start_date}' AND date_time < '{end_date}'"
+
+        else:
+            query = f"SELECT * FROM {table} WHERE true"
+
 
         if kwargs:
-            for key, value in kwargs.items():
-                query += f" AND {key} {value[0]} {value[1]}"
+            query = self.create_query(query, kwargs)
 
         df = pd.read_sql(query, self.engine)
 
         return df
 
-
     def post(self,table, df):
 
-        if table!='stations':
-            institution = df['institution'][0]
-            self.delete(table=table, institution=['=',institution], date_time=['>', df['date_time'].min()])
-            df.to_sql(con=self.engine, name=table, if_exists='append', index=False)
+        if table == 'data_stations':
+            station = list(df.station_id.astype('str').unique())
+            self.delete(table=table, station_id=['in',station], date_time=['>=', df['date_time'].min()])
 
-        return data
+        elif table == 'data_no_stations':
+            institution = list(df.institution.unique())
+            self.delete(table=table, institution=['in',station], date_time=['>=', df['date_time'].min()])
+
+        df.to_sql(con=self.engine, name=table, if_exists='append', index=False)
 
     def delete(self, table, **kwargs):
 
-        query = "DELETE FROM data_stations WHERE"
+        query = f"DELETE FROM {table} WHERE true"
         if kwargs:
-            for key, value in kwargs.items():
-                query += f"{key}{value[0]}{value[1]} AND"
+            query = self.create_query(query, kwargs)
 
-        query = query[0:-4]
+        print(query)
 
-        cur = con.connect()
-
-        cur.execute(query)
-
-        print("deleted old data")
-
+        self.engine.execute(query)
 
     def engine_create():
 
-        engine = create_engine(f"postgresql+psycopg2://{os.getenv('POSTGRE_USER')}:{os.getenv('POSTGRE_PWD')}@{os.getenv('POSTGRE_LOCAL')}/{os.getenv('POSTGRE_BD')}")
+        password = urllib.parse.quote_plus(os.getenv('POSTGRE_PWD'))
+
+        engine = create_engine(f"postgresql+psycopg2://{os.getenv('POSTGRE_USER')}:{password}@{os.getenv('POSTGRE_LOCAL')}/{os.getenv('POSTGRE_BD')}")
 
         return engine
+
+    def create_query(self, query, kwargs):
+        for key, value in kwargs.items():
+            if type(value[1]) == list:
+                if len(value[1]) == 1:
+                    query += f" AND {key} {value[0]} ({value[1][0]})"
+                else:
+                    query += f" AND {key} {value[0]} {tuple(value[1])}"
+            else:
+                query += f" AND {key} {value[0]} '{value[1]}'"
+
+        return query
