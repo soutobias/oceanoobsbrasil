@@ -5,15 +5,12 @@ Created on Tue Feb 12 23:34:44 2019
 
 import time
 import datetime
-import operator
 import urllib.request, json
 
 import numpy as np
 
 import pandas as pd
-import os
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 from oceanoobsbrasil.bd import Getdata
 
 class Simcosta():
