@@ -43,7 +43,7 @@ class Getdata():
 
         elif table == 'data_no_stations':
             institution = list(df.institution.unique())
-            self.delete(table=table, institution=['in',station], data_type=['=', 'gts'] date_time=['>=', df['date_time'].min()])
+            self.delete(table=table, institution=['in', institution], data_type=['=', 'gts'], date_time=['>=', df['date_time'].min()])
 
         df.to_sql(con=self.engine, name=table, if_exists='append', index=False)
 
