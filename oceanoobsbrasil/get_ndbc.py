@@ -13,7 +13,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import re
-from oceanoobsbrasil.bd import Getdata
+from oceanoobsbrasil.bd import GetData
 
 
 class Ndbc():
@@ -63,10 +63,10 @@ class Ndbc():
         df.hour = (df.hour.astype(int)/100).astype(int)
         df['date_time'] = df['hour'].apply(lambda x: self.calculate_date(x))
 
-        self.result = df.astype(float, errors='ignore')
-        self.result = self.result[['date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']]
-
+        self.result = df[['date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']].copy()
         self.result.columns = ['date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
+
+        self.convert_to_numeric()
 
         self.result["institution"] = 'ndbc'
         self.result["data_type"] = 'gts'
@@ -91,4 +91,9 @@ class Ndbc():
         value = value.replace(second=0)
         value = value.replace(microsecond=0)
         return value
+
+    def convert_to_numeric(self):
+        columns = self.result.drop(columns='date_time').columns
+        for column in columns:
+            self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
 

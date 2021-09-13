@@ -1,29 +1,15 @@
-# packaging
-pip>=9
-setuptools>=26
+pip
 twine
-wheel>=0.29
+pytest
 
-# data science
 numpy
 pandas
-scikit-learn
+bs4
+selenium
 
-# tests/linter
-black
-coverage
-flake8
-pytest
-yapf
+python-dotenv
+psutil
 
-# API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
-
-# utilities
-six>=1.14
-joblib
-memoized-property
-termcolor
+sqlalchemy
+psycopg2
+chromedriver-binary==93.0.4577.63

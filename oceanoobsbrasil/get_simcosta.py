@@ -11,7 +11,7 @@ import numpy as np
 
 import pandas as pd
 from datetime import datetime, timedelta
-from oceanoobsbrasil.bd import Getdata
+from oceanoobsbrasil.bd import GetData
 
 class Simcosta():
 
@@ -62,10 +62,10 @@ class Simcosta():
 
                 self.result['station_id'] = str(station['id'])
 
-                self.feed_bd(station)
+                self.feed_bd()
 
 
-    def feed_bd(self, station):
+    def feed_bd(self):
         self.bd.post(table='data_stations', df=self.result)
 
     def remove_dup_columns(self):

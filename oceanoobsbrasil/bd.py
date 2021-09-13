@@ -1,3 +1,8 @@
+"""
+Created on Tue Feb 12 23:34:44 2019
+@author: tobia
+"""
+
 from sqlalchemy import create_engine
 import sqlalchemy
 import pandas as pd
@@ -6,13 +11,13 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import urllib
 
-class Getdata():
+class GetData():
 
     load_dotenv()
 
     def __init__(self):
         # Connect to the database
-        self.engine = Getdata.engine_create()
+        self.engine = GetData.engine_create()
 
     def get(self, table, start_date=None, end_date=None, **kwargs):
 
@@ -53,8 +58,6 @@ class Getdata():
         if kwargs:
             query = self.create_query(query, kwargs)
 
-        print(query)
-
         self.engine.execute(query)
 
     def engine_create():
@@ -69,7 +72,7 @@ class Getdata():
         for key, value in kwargs.items():
             if type(value[1]) == list:
                 if len(value[1]) == 1:
-                    query += f" AND {key} {value[0]} ({value[1][0]})"
+                    query += f" AND {key} {value[0]} ('{value[1][0]}')"
                 else:
                     query += f" AND {key} {value[0]} {tuple(value[1])}"
             else:
