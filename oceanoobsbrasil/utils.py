@@ -32,3 +32,6 @@ def uv2intdir(u, v):
         direcao=270
 
     return intensidade,direcao
+
+def deEmojify(inputString):
+    return inputString.encode('ascii', 'ignore').decode('ascii')

@@ -40,7 +40,7 @@ class GetData():
 
         return df
 
-    def post(self,table, df):
+    def post(self,table, df, data_type=None):
 
         if table == 'data_stations':
             station = list(df.station_id.astype('str').unique())
@@ -48,7 +48,7 @@ class GetData():
 
         elif table == 'data_no_stations':
             institution = list(df.institution.unique())
-            self.delete(table=table, institution=['in', institution], data_type=['=', 'gts'], date_time=['>=', df['date_time'].min()])
+            self.delete(table=table, institution=['in', institution], data_type=['=', data_type], date_time=['>=', df['date_time'].min()])
 
         df.to_sql(con=self.engine, name=table, if_exists='append', index=False)
 

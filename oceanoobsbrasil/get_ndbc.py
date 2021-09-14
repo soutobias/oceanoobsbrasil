@@ -22,7 +22,7 @@ class Ndbc():
         lon=[-55.20, 20],
         hours=12):
 
-        self.bd = Getdata()
+        self.db = GetData()
         self.lat = lat
         self.lon = lon
         self.hours = hours
@@ -75,7 +75,7 @@ class Ndbc():
 
     def feed_bd(self):
 
-        self.bd.post(table='data_no_stations', df=self.result)
+        self.db.post(table='data_no_stations', df=self.result, data_type='gts')
 
     def calculate_date(self, x):
         start_date = datetime.utcnow()-timedelta(hours=12)

@@ -43,7 +43,7 @@ class PEBuoy():
         self.def_args_prefs()
         self.driver = webdriver.Chrome(options=self.options)
 
-        self.bd = GetData()
+        self.db = GetData()
         self.equip = equip
         self.stations = self.bd.get(table='stations', institution=['=', 'hidromares'], name=['=', 'suape'], data_type=['=', self.equip]).iloc[0]
 
@@ -115,7 +115,7 @@ class PEBuoy():
 
 
     def feed_bd(self):
-        self.bd.post(table='data_stations', df=self.result)
+        self.db.post(table='data_stations', df=self.result)
 
 
     def quit_driver(self):
