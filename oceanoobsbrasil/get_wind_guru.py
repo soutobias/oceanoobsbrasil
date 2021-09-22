@@ -24,12 +24,9 @@ from oceanoobsbrasil.utils import *
 
 import psutil
 import os
-from dotenv import load_dotenv
 
 
 class WindGuru():
-
-    load_dotenv()
 
     def __init__(self,
         args=["-headless"],
