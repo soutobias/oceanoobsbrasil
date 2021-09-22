@@ -32,7 +32,7 @@ class Ndbc():
 
         self.url=f"https://www.ndbc.noaa.gov/box_search.php?lat1={lat[0]}&lat2={lat[1]}&lon1={lon[0]}&lon2={lon[1]}&uom=M&ot=A&time={hours}"
 
-    def get(self):
+    def get(self, save_bd=False):
 
         resp = requests.get(self.url)
 
@@ -68,10 +68,13 @@ class Ndbc():
 
         self.convert_to_numeric()
 
-        self.result["institution"] = 'ndbc'
-        self.result["data_type"] = 'gts'
+        if save_bd:
+            self.result["institution"] = 'ndbc'
+            self.result["data_type"] = 'gts'
 
-        self.feed_bd()
+            self.feed_bd()
+        else:
+            return self.result
 
     def feed_bd(self):
 

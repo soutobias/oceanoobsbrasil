@@ -13,3 +13,4 @@ psutil
 sqlalchemy
 psycopg2
 chromedriver-binary==93.0.4577.63
+erddapy

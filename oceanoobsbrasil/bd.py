@@ -19,15 +19,18 @@ class GetData():
         # Connect to the database
         self.engine = GetData.engine_create()
 
-    def get(self, table, start_date=None, end_date=None, **kwargs):
+    def get(self, table, start_date=None, end_date=None, last=None, **kwargs):
 
         if table != 'stations':
-            if start_date == None:
-                start_date = (datetime.utcnow() - timedelta(days=3)).strftime('%Y-%m-%d')
-            if end_date == None:
-                end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d')
+            if last:
+                query = f"SELECT * FROM {table} WHERE institution = {last} ORDER BY date_time DESC LIMIT 1"
+            else:
+                if start_date == None:
+                    start_date = (datetime.utcnow() - timedelta(days=3)).strftime('%Y-%m-%d')
+                if end_date == None:
+                    end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d')
 
-            query = f"SELECT * FROM {table} WHERE date_time > '{start_date}' AND date_time < '{end_date}'"
+                query = f"SELECT * FROM {table} WHERE date_time > '{start_date}' AND date_time < '{end_date}'"
 
         else:
             query = f"SELECT * FROM {table} WHERE true"
