@@ -40,6 +40,7 @@ class Ebn_Tide():
         pwd = self.pwd
 
 
+        driver = self.driver
         driver.get(site_1)
 
         login = driver.find_element_by_id("login")
