@@ -24,7 +24,7 @@ class EbnTide():
         
         self.db = GetData()
         self.equip = equip
-        self.stations = self.db.get(table='stations', institution=['=', 'epagri'], data_type=['=', self.equip])
+        self.stations = self.db.get(table='stations', institution=['=', 'BrasilDados'], data_type=['=', self.equip])
         self.url = os.getenv("SITE_EBN")
         self.user = os.getenv("USER_EBN")
         self.pwd = os.getenv("PWD_EBN")
