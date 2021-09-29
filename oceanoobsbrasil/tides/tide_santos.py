@@ -33,7 +33,7 @@ class TideSantos():
         
         self.db = GetData()
         self.equip = equip
-        self.stations = self.db.get(table='stations', institution=['=', 'epagri'], data_type=['=', self.equip])
+        self.stations = self.db.get(table='stations', institution=['=', 'SantosPilot'], data_type=['=', self.equip])
         self.url = os.getenv("SITE_SANTOS")
         self.user = os.getenv("USER_SANTOS")
         self.pwd = os.getenv("PSW_SANTOS")
