@@ -10,7 +10,7 @@ import pandas as pd
 
 
 
-class HydroMet_IlhaFiscal():
+class HydroMetIlhaFiscal():
     
     def __init__(self,
         args=["-headless"],

@@ -17,7 +17,7 @@ from db_mare import db_conn
 
 
 
-class Tide_Santos():
+class TideSantos():
     
     def __init__(self,
         args=["-headless"],

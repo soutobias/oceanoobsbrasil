@@ -8,7 +8,7 @@ import time
 import pandas as pd
 
 
-class Ebn_Tide():
+class EbnTide():
     
     def __init__(self,
         args=["-headless"],

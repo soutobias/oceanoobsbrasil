@@ -11,7 +11,7 @@ import pandas as pd
 
 
 
-class HydroMet_Curua():
+class HydroMetCurua():
     
     def __init__(self,
         args=["-headless"],
