@@ -26,7 +26,7 @@ class HydroMetIlhaFiscal():
         
         self.db = GetData()
         self.equip = equip
-        self.stations = self.db.get(table='stations', institution=['=', 'epagri'], data_type=['=', self.equip])
+        self.stations = self.db.get(table='stations', institution=['=', 'HydroMet'], data_type=['=', self.equip])
         self.url = os.getenv("SITE_ILHAFISCAL")
         self.user = os.getenv("USER_ILHAFISCAL")
         self.pwd = os.getenv("PSW_ILHAFISCAL")
