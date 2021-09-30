@@ -8,7 +8,8 @@ from datetime import datetime as dt
 import time
 import pandas as pd
 
-
+from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.utils import *
 
 class HydroMetIlhaFiscal():
     
