@@ -5,10 +5,11 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime as dt
+from datetime import timedelta
 import time
 import pandas as pd
 
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
 
 class HydroMetIlhaFiscal():
@@ -47,6 +48,7 @@ class HydroMetIlhaFiscal():
 
 
         driver.get(site)
+        time.sleep(4)
 
 
         driver.find_element_by_name("Login").click()
@@ -61,7 +63,7 @@ class HydroMetIlhaFiscal():
 
         login_bt = driver.find_element_by_xpath("//button[@type='submit']")
         login_bt.click()
-
+        time.sleep(6)
 
         # Logged
 
@@ -69,28 +71,35 @@ class HydroMetIlhaFiscal():
 
         driver.get(data_report_link)
 
+        time.sleep(5)
         # Click on checkbox DELFOS_MARITIMA
         box_delfos = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[1]/div[3]/div/ul/li/span/span[1]")
         box_delfos.click()
 
+        time.sleep(4)
         box_ilha_fiscal = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[1]/div[3]/div/ul/li/ul/li/span/span[1]")
         box_ilha_fiscal.click()
 
-
+        time.sleep(4)
         kalesto = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[1]/div[3]/div/ul/li/ul/li/ul/li[1]/span/span[2]")
         kalesto.click()
 
         custom_time = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[1]/div[4]/div/div[2]/div[1]/label")
         custom_time.click()
 
-        initial_time = driver.find_element_by_xpath("//*[@id='fromFld']")
-        last_time = driver.find_element_by_xpath("//*[@id='toFld']")
+        initial_time_field = driver.find_element_by_xpath("//*[@id='fromFld']")
+        last_time_field = driver.find_element_by_xpath("//*[@id='toFld']")
+        
+        # last data on db 
+        last_time_db = self.db.get("data_stations", last = 904)
+        last_time = last_time_db['date_time'][0] + timedelta(minutes=5)
+        last_time_str = dt.strftime(last_time, "%Y-%m-%d %H:%M")
 
-        initial_time.send_keys("2021-10-03 00:00")
+        initial_time_field.send_keys(last_time_str)
 
         now = dt.now().strftime("%Y-%m-%d %H:%M")
-        last_time.send_keys(now)
-
+        last_time_field.send_keys(now)
+        
         #
         plot_button = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[1]/div[4]/div/div[3]/ul/li[1]/button")
         plot_button.click()
@@ -114,7 +123,7 @@ class HydroMetIlhaFiscal():
 
         tr = tbody.find_elements_by_tag_name('tr')
 
-        df_tide = pd.DataFrame(columns=["date_time", "tide"])
+        df_tide = pd.DataFrame(columns=["date_time", "water_level"])
 
         for table_row in tr:
             th = table_row.find_elements_by_tag_name('th')[0].text
@@ -125,7 +134,7 @@ class HydroMetIlhaFiscal():
             
             level = float(td)   
 
-            tide_obs = {"date_time":th,"tide":level}
+            tide_obs = {"date_time":th,"water_level":level}
 
             df_tide = df_tide.append(tide_obs, ignore_index=True)
 
