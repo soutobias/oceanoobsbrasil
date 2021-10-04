@@ -91,7 +91,8 @@ class HydroMetIlhaFiscal():
         last_time_field = driver.find_element_by_xpath("//*[@id='toFld']")
         
         # last data on db 
-        last_time_db = self.db.get("data_stations", last = 904)
+    
+        last_time_db = self.db.get("data_stations", last = self.stations.id[0])
         last_time = last_time_db['date_time'][0] + timedelta(minutes=5)
         last_time_str = dt.strftime(last_time, "%Y-%m-%d %H:%M")
 
@@ -139,6 +140,8 @@ class HydroMetIlhaFiscal():
             df_tide = df_tide.append(tide_obs, ignore_index=True)
 
 
-
+        df_tide['station_id'] = self.stations.id[0]
+        
+        self.db.post(table='data_stations', df=df_tide)
 
        # driver.quit()
