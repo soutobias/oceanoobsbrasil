@@ -23,7 +23,7 @@ class GetData():
 
         if table != 'stations':
             if last:
-                query = f"SELECT * FROM {table} WHERE institution = {last} ORDER BY date_time DESC LIMIT 1"
+                query = f"SELECT * FROM {table} WHERE station_id = {last} ORDER BY date_time DESC LIMIT 1"
             else:
                 if start_date == None:
                     start_date = (datetime.utcnow() - timedelta(days=3)).strftime('%Y-%m-%d')
