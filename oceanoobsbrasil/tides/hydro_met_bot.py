@@ -22,8 +22,8 @@ class HydroMetIlhaFiscal():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        self.def_args_prefs()
-        self.driver = webdriver.Chrome(options=self.options),
+        #self.def_args_prefs()
+        self.driver = webdriver.Chrome(options=self.options)
         
         self.db = GetData()
         self.equip = equip
@@ -86,7 +86,7 @@ class HydroMetIlhaFiscal():
         initial_time = driver.find_element_by_xpath("//*[@id='fromFld']")
         last_time = driver.find_element_by_xpath("//*[@id='toFld']")
 
-        initial_time.send_keys("2021-06-24 00:00")
+        initial_time.send_keys("2021-10-03 00:00")
 
         now = dt.now().strftime("%Y-%m-%d %H:%M")
         last_time.send_keys(now)
@@ -132,4 +132,4 @@ class HydroMetIlhaFiscal():
 
 
 
-        driver.quit()
+       # driver.quit()
