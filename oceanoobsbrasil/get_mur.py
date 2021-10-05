@@ -24,7 +24,7 @@ class Mur():
 
         self.points = self.load_point()
 
-        start_date = datetime.strftime(datetime.today() - dt.timedelta(days=5), format = "%Y-%m-%dT%H:%M:%SZ")
+        start_date = datetime.strftime(datetime.today() - timedelta(days=5), format = "%Y-%m-%dT%H:%M:%SZ")
 
         mur_last_date = self.bd.get(table='data_no_stations', start_date=start_date, institution=['=', 'mur'])
 
