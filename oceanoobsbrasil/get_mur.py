@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 
 
 class Mur():
@@ -24,9 +24,9 @@ class Mur():
 
         self.points = self.load_point()
 
-        start_date = datetime.strftime(datetime.today() - dt.timedelta(days=5), format = "%Y-%m-%dT%H:%M:%SZ")
+        start_date = datetime.strftime(datetime.today() - timedelta(days=5), format = "%Y-%m-%dT%H:%M:%SZ")
 
-        mur_last_date = self.bd.get(table='data_no_stations', start_date=start_date, institution=['=', 'mur'])
+        mur_last_date = self.db.get(table='data_no_stations', start_date=start_date, institution=['=', 'mur'])
 
         if mur_last_date.empty():
             self.start_date = start_date
@@ -34,15 +34,15 @@ class Mur():
             mur_last_date = self.mur_db.sort_values(by='date_time', ascending=False)
             self.start_date = datetime.strftime(mur_last_date['date_time'].iloc[0] + timedelta(days=1), format = "%Y-%m-%dT%H:%M:%SZ")
 
-        self.end_date = datetime.today().replace(microsecond=0, second=0, minute=0, hour=9) - timedelta(days=1)
+        self.end_date = datetime.today().replace(microsecond=0, second=0, minute=0, hour=9) - timedelta(days=2)
         self.end_date = datetime.strftime(end_date, format = "%Y-%m-%dT%H:%M:%SZ")
 
         all_points = pd.DataFrame()
 
-        for index, point in points.iterrows():
+        for index, point in self.points.iterrows():
             print(f"Ponto {index}.")
             lat = round(point['Lat'],4)
-            lon = round(point['Lon'],4)
+            lon = round(point['lon'],4)
 
             r = requests.get(f"https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41.json?analysed_sst%5B({start_date}):1:({end_date})%5D%5B({lat}):1:({lat})%5D%5B({lon}):1:({lon})%5D")
             json_file = r.json()
@@ -57,10 +57,11 @@ class Mur():
 
         # insert data on db
         status_insert = db.insert_data_mur(all_points)
+        self.db.post(table="data_no_stations", df=all_points)
 
 
     def load_point(self):
-        points = pd.read_csv("data/pontos_mur_cptec.csv")
+        points = pd.read_csv("oceanoobsbrasil/data/pontos_mur_cptec.csv")
 
         points['lon'] = (points['Lon'] + 180) % 360 - 180
 
