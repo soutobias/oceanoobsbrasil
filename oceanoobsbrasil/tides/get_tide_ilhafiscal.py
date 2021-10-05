@@ -52,12 +52,12 @@ class HydroMetIlhaFiscal():
         time.sleep(4)
 
 
-        driver.find_element_by_name("Login").click()
-        elem = driver.find_element_by_name("userName")
+        driver.find_element_by_name("login").click()
+        elem = driver.find_element_by_name("login")
 
         elem.send_keys(user)
 
-        elem = driver.find_element_by_name("password")
+        elem = driver.find_element_by_name("senha")
         elem.send_keys(pwd)
 
         # Clicando no botao.
@@ -140,6 +140,10 @@ class HydroMetIlhaFiscal():
         self.db = GetData()
         print("Inserting on database.")
         self.db.post(table='data_stations', df=df_tide)
+        print("All data inserted.")
+        
+        print("Quit Driver.")
+        self.quit_driver()
         
 
 
