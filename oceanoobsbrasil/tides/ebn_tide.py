@@ -1,14 +1,20 @@
 import os
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime as dt
+from datetime import timedelta
 import time
 import pandas as pd
+import psutil
+
+from oceanoobsbrasil.db import GetData
+from oceanoobsbrasil.utils import *
 
 
-class Ebn_Tide():
+class EbnTide():
     
     def __init__(self,
         args=["-headless"],
@@ -19,12 +25,12 @@ class Ebn_Tide():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        self.def_args_prefs()
-        self.driver = webdriver.Chrome(options=self.options),
+        #self.def_args_prefs()
+        self.driver = webdriver.Chrome(options=self.options)
         
         self.db = GetData()
         self.equip = equip
-        self.stations = self.db.get(table='stations', institution=['=', 'epagri'], data_type=['=', self.equip])
+        self.stations = self.db.get(table='stations', institution=['=', 'BrasilDados'], data_type=['=', self.equip])
         self.url = os.getenv("SITE_EBN")
         self.user = os.getenv("USER_EBN")
         self.pwd = os.getenv("PWD_EBN")
@@ -33,15 +39,15 @@ class Ebn_Tide():
     def get(self):
         
 
-#driver = webdriver.Firefox(executable_path ='/home/remobs/Bots/geckodriver')
 
-        site_1 = self.url
+
+        site = self.url
         user = self.user
         pwd = self.pwd
-
-
         driver = self.driver
-        driver.get(site_1)
+        
+        
+        driver.get(site)
 
         login = driver.find_element_by_id("login")
         login.send_keys(user)

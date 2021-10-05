@@ -1,6 +1,9 @@
+import os
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException,ElementNotInteractableException
+from selenium.webdriver.chrome.options import Options
 
 from datetime import datetime as dt
 import time
@@ -14,7 +17,7 @@ from db_mare import db_conn
 
 
 
-class Tide_Santos():
+class TideSantos():
     
     def __init__(self,
         args=["-headless"],
@@ -30,7 +33,7 @@ class Tide_Santos():
         
         self.db = GetData()
         self.equip = equip
-        self.stations = self.db.get(table='stations', institution=['=', 'epagri'], data_type=['=', self.equip])
+        self.stations = self.db.get(table='stations', institution=['=', 'SantosPilot'], data_type=['=', self.equip])
         self.url = os.getenv("SITE_SANTOS")
         self.user = os.getenv("USER_SANTOS")
         self.pwd = os.getenv("PSW_SANTOS")
