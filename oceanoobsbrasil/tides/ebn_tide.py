@@ -1,11 +1,17 @@
 import os
+import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime as dt
+from datetime import timedelta
 import time
 import pandas as pd
+import psutil
+
+from oceanoobsbrasil.db import GetData
+from oceanoobsbrasil.utils import *
 
 
 class EbnTide():
@@ -19,7 +25,7 @@ class EbnTide():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        self.def_args_prefs()
+        #self.def_args_prefs()
         self.driver = webdriver.Chrome(options=self.options),
         
         self.db = GetData()
@@ -33,7 +39,7 @@ class EbnTide():
     def get(self):
         
 
-#driver = webdriver.Firefox(executable_path ='/home/remobs/Bots/geckodriver')
+
 
         site_1 = self.url
         user = self.user
