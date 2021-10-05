@@ -26,7 +26,7 @@ class EbnTide():
         self.args = args
         self.preferences = preferences
         #self.def_args_prefs()
-        self.driver = webdriver.Chrome(options=self.options),
+        self.driver = webdriver.Chrome(options=self.options)
         
         self.db = GetData()
         self.equip = equip
@@ -41,13 +41,13 @@ class EbnTide():
 
 
 
-        site_1 = self.url
+        site = self.url
         user = self.user
         pwd = self.pwd
-
-
         driver = self.driver
-        driver.get(site_1)
+        
+        
+        driver.get(site)
 
         login = driver.find_element_by_id("login")
         login.send_keys(user)
