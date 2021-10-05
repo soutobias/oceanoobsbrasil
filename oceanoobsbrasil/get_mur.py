@@ -34,15 +34,15 @@ class Mur():
             mur_last_date = self.mur_db.sort_values(by='date_time', ascending=False)
             self.start_date = datetime.strftime(mur_last_date['date_time'].iloc[0] + timedelta(days=1), format = "%Y-%m-%dT%H:%M:%SZ")
 
-        self.end_date = datetime.today().replace(microsecond=0, second=0, minute=0, hour=9) - timedelta(days=1)
+        self.end_date = datetime.today().replace(microsecond=0, second=0, minute=0, hour=9) - timedelta(days=2)
         self.end_date = datetime.strftime(end_date, format = "%Y-%m-%dT%H:%M:%SZ")
 
         all_points = pd.DataFrame()
 
-        for index, point in points.iterrows():
+        for index, point in self.points.iterrows():
             print(f"Ponto {index}.")
             lat = round(point['Lat'],4)
-            lon = round(point['Lon'],4)
+            lon = round(point['lon'],4)
 
             r = requests.get(f"https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41.json?analysed_sst%5B({start_date}):1:({end_date})%5D%5B({lat}):1:({lat})%5D%5B({lon}):1:({lon})%5D")
             json_file = r.json()
@@ -57,6 +57,7 @@ class Mur():
 
         # insert data on db
         status_insert = db.insert_data_mur(all_points)
+        self.db.post(table="data_no_stations", df=all_points)
 
 
     def load_point(self):
