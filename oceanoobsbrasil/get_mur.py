@@ -26,7 +26,7 @@ class Mur():
 
         start_date = datetime.strftime(datetime.today() - timedelta(days=5), format = "%Y-%m-%dT%H:%M:%SZ")
 
-        mur_last_date = self.bd.get(table='data_no_stations', start_date=start_date, institution=['=', 'mur'])
+        mur_last_date = self.db.get(table='data_no_stations', start_date=start_date, institution=['=', 'mur'])
 
         if mur_last_date.empty():
             self.start_date = start_date
@@ -60,7 +60,7 @@ class Mur():
 
 
     def load_point(self):
-        points = pd.read_csv("data/pontos_mur_cptec.csv")
+        points = pd.read_csv("oceanoobsbrasil/data/pontos_mur_cptec.csv")
 
         points['lon'] = (points['Lon'] + 180) % 360 - 180
 
