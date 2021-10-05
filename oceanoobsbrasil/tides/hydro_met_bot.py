@@ -8,6 +8,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 import time
 import pandas as pd
+import psutil
 
 from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
@@ -37,7 +38,7 @@ class HydroMetIlhaFiscal():
 
     def get(self):
 
-       # driver = webdriver.Firefox(executable_path ='/home/remobs/Bots/geckodriver')
+       
 
 
         site = self.url
@@ -111,15 +112,10 @@ class HydroMetIlhaFiscal():
         menu_plot = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[4]/div/button")
         menu_plot.click()
 
-        # DownloadCSV
-
-        #csv_file = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[3]/div/div/div[7]")
-
 
         data_table_el = driver.find_element_by_xpath('/html/body/section/section/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div[2]/div[3]/div/div/div[9]')
         data_table_el.click()
 
-        #table = driver.find_element_by_xpath('//*[@id="highcharts-data-table-0"]')
         tbody = driver.find_element_by_xpath("/html/body/section/section/div[1]/div[2]/div[2]/div/div[2]/div[1]/div[1]/div[3]/table/tbody")
 
         tr = tbody.find_elements_by_tag_name('tr')
@@ -129,9 +125,8 @@ class HydroMetIlhaFiscal():
         for table_row in tr:
             th = table_row.find_elements_by_tag_name('th')[0].text
             td = table_row.find_elements_by_tag_name('td')[0].text
-
             
-            print(th, td)
+            #print(th, td)
             
             level = float(td)   
 
@@ -139,9 +134,31 @@ class HydroMetIlhaFiscal():
 
             df_tide = df_tide.append(tide_obs, ignore_index=True)
 
-
+        print("All data fetched.")
         df_tide['station_id'] = self.stations.id[0]
         
+        self.db = GetData()
+        print("Inserting on database.")
         self.db.post(table='data_stations', df=df_tide)
+        
 
-       # driver.quit()
+
+    def quit_driver(self):
+        driver_process = psutil.Process(self.driver.service.process.pid)
+        #driver.quit()
+
+        if driver_process.is_running():
+            print ("driver is running")
+
+            firefox_process = driver_process.children()
+            if firefox_process:
+                firefox_process = firefox_process[0]
+
+                if firefox_process.is_running():
+                    print("Chrome is still running, we can quit")
+                    self.driver.quit()
+                else:
+                    print("Chrome is dead, can't quit. Let's kill the driver")
+                    firefox_process.kill()
+            else:
+                print("driver has died")
