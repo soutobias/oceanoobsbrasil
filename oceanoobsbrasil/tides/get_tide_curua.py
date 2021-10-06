@@ -118,3 +118,17 @@ class HydroMetCurua():
             th = table_row.find_elements_by_tag_name('th')[0].text
             td = table_row.find_elements_by_tag_name('td')[0].text
             print(th, td)
+            
+            
+    def def_args_prefs(self):
+        for arg in self.args:
+            if type(arg) == list:
+                self.options.add_argument(arg[0], arg[1])
+            else:
+                self.options.add_argument(arg)
+
+        for preference in self.preferences:
+            if type(preference) == list:
+                self.options.set_preference(preference[0], preference[1])
+            else:
+                self.options.set_preference(preference[0])
