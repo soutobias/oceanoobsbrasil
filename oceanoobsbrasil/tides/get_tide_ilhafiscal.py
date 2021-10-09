@@ -12,9 +12,16 @@ import psutil
 
 from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
+import chromedriver_binary
+
+from dotenv import load_dotenv
+
 
 class HydroMetIlhaFiscal():
-    
+
+    load_dotenv()
+
+
     def __init__(self,
         args=["-headless"],
         preferences=[],
@@ -24,7 +31,7 @@ class HydroMetIlhaFiscal():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        #self.def_args_prefs()
+        self.def_args_prefs()
         self.driver = webdriver.Chrome(options=self.options)
         
         self.db = GetData()
@@ -49,7 +56,7 @@ class HydroMetIlhaFiscal():
 
 
         driver.get(site)
-        time.sleep(4)
+        time.sleep(15)
 
 
         driver.find_element_by_name("login").click()
@@ -166,3 +173,16 @@ class HydroMetIlhaFiscal():
                     firefox_process.kill()
             else:
                 print("driver has died")
+
+    def def_args_prefs(self):
+        for arg in self.args:
+            if type(arg) == list:
+                self.options.add_argument(arg[0], arg[1])
+            else:
+                self.options.add_argument(arg)
+
+        for preference in self.preferences:
+            if type(preference) == list:
+                self.options.set_preference(preference[0], preference[1])
+            else:
+                self.options.set_preference(preference[0])
