@@ -12,9 +12,7 @@ import numpy as np
 from bs4 import BeautifulSoup as bs
 import lxml
 
-
 from db_mare import db_conn
-
 
 
 class TideSantos():

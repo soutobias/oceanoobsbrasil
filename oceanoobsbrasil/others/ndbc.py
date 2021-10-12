@@ -72,13 +72,9 @@ class Ndbc():
             self.result["institution"] = 'ndbc'
             self.result["data_type"] = 'gts'
 
-            self.feed_bd()
+            self.db.feed_bd(table='data_no_stations', df=self.result, data_type='gts')
         else:
             return self.result
-
-    def feed_bd(self):
-
-        self.db.post(table='data_no_stations', df=self.result, data_type='gts')
 
     def calculate_date(self, x):
         start_date = datetime.utcnow()-timedelta(hours=12)

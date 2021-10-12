@@ -63,6 +63,11 @@ class GetData():
 
         self.engine.execute(query)
 
+
+    def feed_bd(self, table, df, data_type=None):
+        self.post(table=table, df=df, data_type=data_type)
+
+
     def engine_create():
 
         password = urllib.parse.quote_plus(os.getenv('POSTGRE_PWD'))

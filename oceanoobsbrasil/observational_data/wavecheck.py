@@ -52,11 +52,7 @@ class Wave():
                 self.result = pd.DataFrame(values).T
                 self.result.columns = columns
                 self.result['station_id'] = str(station['id'])
-                self.feed_bd()
+                self.db.feed_bd(table='data_stations', df=self.result)
                 print('dados alimentados')
             else:
                 print('No data for this station')
-
-    def feed_bd(self):
-        self.db.post(table='data_stations', df=self.result)
-

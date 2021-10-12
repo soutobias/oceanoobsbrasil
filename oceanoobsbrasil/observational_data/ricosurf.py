@@ -60,7 +60,7 @@ class RicoSurf():
                 self.result = self.result.replace(to_replace =['None', 'NULL', ' ', ''], value =np.nan)
 
                 self.result['station_id'] = str(station['id'])
-                self.feed_bd()
+                self.db.feed_bd(table='data_stations', df=self.result)
                 print('dados alimentados')
             else:
                 print('No data for this station')
@@ -78,8 +78,3 @@ class RicoSurf():
             l1= beach.find('div', attrs={'class': 'place'}).get_text(strip=True)
             beaches.append(l1)
         return beaches
-
-
-    def feed_bd(self):
-        self.db.post(table='data_stations', df=self.result)
-

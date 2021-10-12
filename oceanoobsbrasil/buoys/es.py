@@ -54,8 +54,7 @@ class ESBuoy():
         self.result.columns = columns
 
         self.result['station_id'] = str(self.stations['id'])
-
-        self.feed_bd()
+        self.db.feed_bd(table='data_stations', df=self.result)
 
     def get_data(self, attrs):
         try:
@@ -63,8 +62,3 @@ class ESBuoy():
         except:
             value = np.nan
         return value
-
-
-    def feed_bd(self):
-        self.bd.post(table='data_stations', df=self.result)
-
