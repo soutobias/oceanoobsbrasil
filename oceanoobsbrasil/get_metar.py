@@ -12,7 +12,7 @@ import numpy as np
 
 import pandas as pd
 from datetime import datetime, timedelta
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 
 class Metar():
     def __init__(self, equip='meteorological_station',

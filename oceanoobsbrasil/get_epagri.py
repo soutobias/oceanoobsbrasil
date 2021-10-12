@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import time
 
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
 
 import psutil

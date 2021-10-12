@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 
 
 class Wave():

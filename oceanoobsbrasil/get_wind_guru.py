@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import time
 
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
 
 import psutil
@@ -38,7 +38,6 @@ class WindGuru():
         self.args = args
         self.preferences = preferences
         self.def_args_prefs()
-        self.driver = webdriver.Chrome(options=self.options)
 
         self.db = GetData()
         self.equip = equip
@@ -49,21 +48,32 @@ class WindGuru():
 
         for index, station in self.stations.iterrows():
             print(station['name'])
-            self.driver.get(f"{self.url}{station['id']}")
+            self.driver = webdriver.Chrome(options=self.options)
+            self.driver.get(f"{self.url}{station['url']}")
+            print(f"{self.url}{station['url']}")
             time.sleep(8)
 
 
             self.soup=BeautifulSoup(self.driver.page_source, 'html.parser')
 
             wspd = self.soup.find(attrs={'class': 'wgs_wind_avg_value'}).text
+            if wspd == '':
+                wspd = None
+
             wdir = self.soup.find(attrs={'class': 'wgs_wind_dir_numvalue'}).text[:-1]
+            if wdir == '':
+                wdir = None
+
             sst = self.soup.find(attrs={'class': 'wgs_temp_value'}).text
+            if sst == '':
+                sst = None
 
             l = self.soup.find(attrs={'class': 'wgs_last_time'}).text
             date_time = datetime.strftime(datetime.utcnow(), '%Y-%m-%d %H:%M')[:-1]+"0"
 
             values = np.array([date_time, wspd, wdir, sst])
             columns = ['date_time', 'wspd', 'wdir', 'sst']
+
             self.result = pd.DataFrame(values).T
             self.result.columns = columns
 

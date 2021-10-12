@@ -2,7 +2,7 @@
 from erddapy import ERDDAP
 import pandas as pd
 from datetime import datetime, timedelta
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 
 
 class Metop():
@@ -77,5 +77,5 @@ class Metop():
 
     def feed_bd(self):
 
-        self.db.post(table='data_no_stations', df=self.result, data_type='gts')
+        self.db.post(table='data_no_stations', df=self.result, data_type='satellite')
 

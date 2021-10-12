@@ -6,7 +6,7 @@ Created on Tue Feb 12 23:34:44 2019
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from oceanoobsbrasil.bd import GetData
+from oceanoobsbrasil.db import GetData
 import os
 from dotenv import load_dotenv
 import requests
