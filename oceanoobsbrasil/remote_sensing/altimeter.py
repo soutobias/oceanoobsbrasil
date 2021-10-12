@@ -7,7 +7,7 @@ import time
 
 from oceanoobsbrasil.db import GetData
 
-import glob, os, subprocess, shlex
+import glob, os
 import ftplib
 from netCDF4 import Dataset
 
@@ -66,14 +66,9 @@ class Altimeter():
                 self.result = self.result.set_index('date_time').resample('15S').first().reset_index()
                 self.result["institution"] = 'jason3'
                 self.result["data_type"] = 'altimeter'
-                self.feed_bd()
+                self.db.feed_bd(table='data_no_stations', df=self.result, data_type='altimeter')
 
             os.remove(f)
-
-    def feed_bd(self):
-
-        self.db.post(table='data_no_stations', df=self.result, data_type='altimeter')
-
 
     def get_nc_files(self):
         self.nc_files = []
