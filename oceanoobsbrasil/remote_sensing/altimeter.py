@@ -8,17 +8,20 @@ import time
 from oceanoobsbrasil.db import GetData
 
 import glob, os
-import ftplib
-from netCDF4 import Dataset
 
+import re
+import urllib.request
+import requests
+from netCDF4 import Dataset
+from bs4 import BeautifulSoup
 
 class Altimeter():
 
     def __init__(self,
         start_date=datetime.utcnow()-timedelta(days=1),
         end_date=datetime.utcnow(),
-        directory='pub/data.nodc/jason3/ogdr/ogdr/',
-        url='ftp.nodc.noaa.gov',
+        directory='jason3/ogdr/ogdr/',
+        url='https://www.ncei.noaa.gov/data/oceans/',
         lat=[-36, 8],
         lon=[-50, -20]):
 
@@ -78,26 +81,29 @@ class Altimeter():
 
     def download_ftplib_nodc(self):
 
-        ftp = ftplib.FTP(self.url)
-        ftp.login('','')
-        ftp.cwd(self.directory)
 
-        dir_list = []
-        ftp.dir(dir_list.append)
-        directory2 = dir_list[-1].split(' ')[-1]
-        ftp.cwd(directory2)
+        response = requests.get(self.url + self.directory)
 
-        filematch = f"JA3_OPN_*{self.start_date.strftime('%Y%m%d')}*.nc"
-        for filename in ftp.nlst(filematch):
-            fhandle = open(f"{self.path}/{filename}", 'wb')
-            print ('Getting ' + filename)
-            ftp.retrbinary('RETR ' + filename, fhandle.write)
-            fhandle.close()
+        soup = BeautifulSoup(response.text,'html.parser')
+
+        url2 = soup.find_all('td')[-4].text
+        response = requests.get(self.url + self.directory + url2)
+        soup = BeautifulSoup(response.text,'html.parser')
+        links = soup.find_all('a')[5:]
+
+        file_names = []
+        for link in links:
+            file_names.append(link.text)
+        value = f".*{self.start_date.strftime('%Y%m%d')}.*"
+        file_names_filter = list(filter(lambda v: re.match(value, v), file_names))
+
+        for file_name in file_names_filter:
+            print(file_name)
+            urllib.request.urlretrieve(self.url + self.directory + url2 + file_name, f"{self.path}/{file_name}")
 
         if self.start_date.day != self.end_date.day:
-            filematch = f"JA3_OPN_*{self.end_date.strftime('%Y%m%d')}*.nc"
-            for filename in ftp.nlst(filematch):
-                fhandle = open(f"{self.path}/{filename}", 'wb')
-                print ('Getting ' + filename)
-                ftp.retrbinary('RETR ' + filename, fhandle.write)
-                fhandle.close()
+            value = f".*{self.end_date.strftime('%Y%m%d')}.*"
+            file_names_filter = list(filter(lambda v: re.match(value, v), file_names))
+            for file_name in file_names_filter:
+                print(file_name)
+                urllib.request.urlretrieve(self.url + self.directory + url2 + file_name, f"{self.path}/{file_name}")

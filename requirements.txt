@@ -15,3 +15,7 @@ psycopg2
 chromedriver-binary==93.0.4577.63
 erddapy
 podaacpy
+
+netcdf4
+h5py
+xarray
