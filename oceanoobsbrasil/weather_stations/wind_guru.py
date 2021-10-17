@@ -26,7 +26,7 @@ from oceanoobsbrasil.utils import *
 class WindGuru():
 
     def __init__(self,
-        args=["-headless"],
+        args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"],
         preferences=[],
         equip='meteorological_station'):
 

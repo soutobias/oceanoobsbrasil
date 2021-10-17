@@ -32,7 +32,7 @@ class PEBuoy():
     load_dotenv()
 
     def __init__(self,
-        args=["-headless"],
+        args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"],
         preferences=[],
         equip='buoy'):
 
