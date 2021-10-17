@@ -65,3 +65,7 @@ class ESBuoy():
         except:
             value = np.nan
         return value
+
+
+if __name__ == '__main__':
+    ESBuoy().get()

@@ -107,3 +107,6 @@ class Altimeter():
             for file_name in file_names_filter:
                 print(file_name)
                 urllib.request.urlretrieve(self.url + self.directory + url2 + file_name, f"{self.path}/{file_name}")
+
+if __name__ == '__main__':
+    Altimeter().get()

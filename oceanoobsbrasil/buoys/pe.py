@@ -108,4 +108,6 @@ class PEBuoy():
 
 
 
+if __name__ == '__main__':
+    PEBuoy().get()
 

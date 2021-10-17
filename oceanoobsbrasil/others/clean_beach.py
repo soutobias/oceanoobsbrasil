@@ -51,3 +51,6 @@ class CleanBeach():
                 print('dados alimentados')
             else:
                 print('No data for this station')
+
+if __name__ == '__main__':
+    CleanBeach().get()

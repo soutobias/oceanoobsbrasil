@@ -78,3 +78,6 @@ class RicoSurf():
             l1= beach.find('div', attrs={'class': 'place'}).get_text(strip=True)
             beaches.append(l1)
         return beaches
+
+if __name__ == '__main__':
+    RicoSurf().get()

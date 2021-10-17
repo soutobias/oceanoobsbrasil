@@ -50,3 +50,6 @@ class Metar():
                 self.db.feed_bd(table='data_stations', df=self.result)
             else:
                 return self.result
+
+if __name__ == '__main__':
+    Metar().get(save_bd=True)

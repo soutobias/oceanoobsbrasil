@@ -62,3 +62,6 @@ class SimcostaTide():
                 keep_names.add(name)
                 keep_icols.append(icol)
         self.result = self.result.iloc[:, keep_icols]
+
+if __name__ == '__main__':
+    SimcostaTide().get()

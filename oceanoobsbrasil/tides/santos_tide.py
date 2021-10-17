@@ -93,3 +93,6 @@ class TideSantos():
         login_bt = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[3]/form/div[2]/input")
         login_bt.click()
         time.sleep(5)
+
+if __name__ == '__main__':
+    TideSantos().get()

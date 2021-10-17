@@ -75,3 +75,5 @@ class Simcosta():
                 keep_icols.append(icol)
         self.result = self.result.iloc[:, keep_icols]
 
+if __name__ == '__main__':
+    Simcosta().get(save_bd=True)

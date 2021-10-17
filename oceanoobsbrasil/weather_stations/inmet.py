@@ -62,3 +62,6 @@ class Inmet():
                     return self.result
             else:
                 print ("Nao ha dados para essa estação")
+
+if __name__ == '__main__':
+    Inmet().get(save_bd=True)

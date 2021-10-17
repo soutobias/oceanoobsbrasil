@@ -11,8 +11,8 @@ python-dotenv
 psutil
 
 sqlalchemy
-psycopg2
-chromedriver-binary==93.0.4577.63
+psycopg2-binary
+chromedriver-binary==94.0.4606.81-1
 erddapy
 podaacpy
 

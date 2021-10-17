@@ -148,3 +148,6 @@ class Metop():
         self.nc_files = []
         for file in glob.glob(f"{self.path}/*l2.nc", recursive=True):
             self.nc_files.append(os.path.abspath(file))
+
+if __name__ == '__main__':
+    Metop().get()

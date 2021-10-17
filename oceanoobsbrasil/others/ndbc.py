@@ -100,3 +100,5 @@ class Ndbc():
         for column in columns:
             self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
 
+if __name__ == '__main__':
+    Ndbc().get(save_bd=True)

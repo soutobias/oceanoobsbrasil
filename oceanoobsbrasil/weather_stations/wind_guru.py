@@ -78,3 +78,6 @@ class WindGuru():
             self.db.feed_bd(table='data_stations', df=self.result)
 
             quit_driver(self.driver)
+
+if __name__ == '__main__':
+    WindGuru().get()

@@ -44,3 +44,5 @@ class Mur():
         self.result["data_type"] = 'mur'
         self.db.feed_bd(table='data_no_stations', df=self.result, data_type='mur')
 
+if __name__ == '__main__':
+    Mur().get()

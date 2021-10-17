@@ -68,3 +68,6 @@ class Pnboia():
                     self.db.feed_bd(table='data_stations', df=self.result)
                 else:
                     return self.result
+
+if __name__ == '__main__':
+    Pnboia().get(save_bd=True)
