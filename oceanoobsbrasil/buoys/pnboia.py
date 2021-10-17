@@ -46,14 +46,14 @@ class Pnboia():
             df['date_time'] = pd.to_datetime(df['date_time'], format='%Y-%m-%dT%H:%M:%S.000Z')
             df.sort_values('date_time', inplace=True)
 
-            df = df[['date_time', 'lat', 'lon', 'rh', 'pres', 'atmp',
+            df = df[['date_time', 'rh', 'pres', 'atmp',
                    'dewpt', 'wspd', 'wdir',
-                   'gust', 'arad', 'sst',
+                   'gust', 'sst',
                    'swvht1', 'mxwvht1', 'tp1','wvdir1']]
 
-            df.columns = ['date_time', 'lat', 'lon', 'rh', 'pres', 'atmp',
+            df.columns = ['date_time', 'rh', 'pres', 'atmp',
                    'dewpt', 'wspd', 'wdir',
-                   'gust', 'arad', 'sst',
+                   'gust', 'sst',
                    'swvht', 'mxwvht', 'tp','wvdir']
 
             self.result = df.copy()

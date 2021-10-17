@@ -45,7 +45,7 @@ class PEBuoy():
 
         self.db = GetData()
         self.equip = equip
-        self.stations = self.bd.get(table='stations', institution=['=', 'hidromares'], name=['=', 'suape'], data_type=['=', self.equip]).iloc[0]
+        self.stations = self.db.get(table='stations', institution=['=', 'hidromares'], name=['=', 'suape'], data_type=['=', self.equip]).iloc[0]
 
         self.url=os.getenv('PE_URL')
 
