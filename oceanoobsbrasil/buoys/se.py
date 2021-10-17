@@ -42,9 +42,9 @@ class SEBuoy():
         self.options = def_args_prefs(self.options, self.args, self.preferences)
         self.driver = webdriver.Chrome(options=self.options)
 
-        self.bd = GetData()
+        self.db = GetData()
         self.equip = equip
-        self.stations = self.bd.get(table='stations', institution=['=', 'hidromares'], name=['=', 'celse'], data_type=['=', self.equip]).iloc[0]
+        self.stations = self.db.get(table='stations', institution=['=', 'hidromares'], name=['=', 'celse'], data_type=['=', self.equip]).iloc[0]
 
         self.url=os.getenv('SE_URL')
 

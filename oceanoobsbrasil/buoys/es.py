@@ -19,11 +19,11 @@ class ESBuoy():
 
     def __init__(self, equip='buoy'):
 
-        self.bd = GetData()
+        self.db = GetData()
         self.url=os.getenv('ES_URL')
 
         self.equip = equip
-        self.stations = self.bd.get(table='stations', institution=['=', 'codesa'], data_type=['=', self.equip]).iloc[0]
+        self.stations = self.db.get(table='stations', institution=['=', 'codesa'], data_type=['=', self.equip]).iloc[0]
 
     def get(self):
 

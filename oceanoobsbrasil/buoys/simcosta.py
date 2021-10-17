@@ -26,7 +26,7 @@ class Simcosta():
         self.end_date = end_date
         self.stations = self.db.get(table='stations', institution=['=', 'simcosta'], data_type=['=', self.equip])
 
-    def get(self, save_bd=False):
+    def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
             url_address = f"http://simcosta.furg.br/api/metereo_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=Average_wind_direction_N,Last_sampling_interval_gust_speed,Average_Dew_Point,Average_Pressure,Solar_Radiation_Average_Reading,Average_Air_Temperature,Instantaneous_Humidity,Average_Humidity,Average_wind_speed"
             print(url_address)

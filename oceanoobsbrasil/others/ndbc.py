@@ -32,7 +32,7 @@ class Ndbc():
 
         self.url=f"https://www.ndbc.noaa.gov/box_search.php?lat1={lat[0]}&lat2={lat[1]}&lon1={lon[0]}&lon2={lon[1]}&uom=M&ot=A&time={hours}"
 
-    def get(self, save_bd=False):
+    def get(self, save_bd=True):
 
         resp = requests.get(self.url)
 
@@ -67,10 +67,8 @@ class Ndbc():
         self.result.columns = ['date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
 
 
-        self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
-
-
         self.convert_to_numeric()
+        self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
 
         if save_bd:
             self.result["institution"] = 'ndbc'

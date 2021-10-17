@@ -32,7 +32,7 @@ class Pnboia():
         self.end_date = end_date
         self.stations = self.db.get(table='stations', institution=['=', 'pnboia'], data_type=['=', self.equip])
 
-    def get(self, save_bd=False):
+    def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
             url=f"http://143.198.233.67/api/v1/data_buoys?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
 

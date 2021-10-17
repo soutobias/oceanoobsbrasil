@@ -26,7 +26,7 @@ class Metar():
         self.end_date = end_date
         self.stations = self.db.get(table='stations', institution=['=', 'metar'], data_type=['=', self.equip])
 
-    def get(self, save_bd=False):
+    def get(self, save_bd=True):
         self.url = f"https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?station=SBAF&station=SBAR&station=SBBE&station=SBCB&station=SBCV&station=SBFL&station=SBFS&station=SBFZ&station=SBGL&station=SBIL&station=SBJE&station=SBJP&station=SBJR&station=SBJV&station=SBME&station=SBMO&station=SBMQ&station=SBNF&station=SBNT&station=SBPB&station=SBPG&station=SBPS&station=SBRF&station=SBRG&station=SBRJ&station=SBSC&station=SBSL&station=SBST&station=SBSV&station=SBTC&station=SBVT&data=tmpc&data=dwpc&data=relh&data=drct&data=sknt&year1={self.start_date.year}&month1={self.start_date.month}&day1={self.start_date.day}&year2={self.end_date.year}&month2={self.end_date.month}&day2={self.end_date.day}&tz=Etc%2FUTC&format=onlycomma&latlon=no&elev=no&missing=empty&trace=empty&direct=no&report_type=1&report_type=2"
 
         print(self.url)

@@ -1,2 +1,85 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+
+args = sys.argv[1:]
+
+if args[0] == 'buoys_es':
+    from oceanoobsbrasil.buoys.es import ESBuoy
+    ESBuoy().get()
+
+if args[0] == 'buoys_pe':
+    from oceanoobsbrasil.buoys.pe import PEBuoy
+    PEBuoy().get()
+
+if args[0] == 'buoys_pnboia':
+    from oceanoobsbrasil.buoys.pnboia import Pnboia
+    Pnboia().get()
+
+if args[0] == 'buoys_se':
+    from oceanoobsbrasil.buoys.se import SEBuoy
+    SEBuoy().get()
+
+if args[0] == 'buoys_simcosta':
+    from oceanoobsbrasil.buoys.simcosta import Simcosta
+    Simcosta().get()
+
+if args[0] == 'observational_data_ricosurf':
+    from oceanoobsbrasil.observational_data.ricosurf import RicoSurf
+    RicoSurf().get()
+
+if args[0] == 'observational_data_wavecheck':
+    from oceanoobsbrasil.observational_data.wavecheck import Wave
+    Wave().get()
+
+if args[0] == 'others_clean_beach':
+    from oceanoobsbrasil.others.clean_beach import CleanBeach
+    CleanBeach().get()
+
+if args[0] == 'others_ndbc':
+    from oceanoobsbrasil.others.ndbc import Ndbc
+    Ndbc().get()
+
+if args[0] == 'remote_sensing_altimeter':
+    from oceanoobsbrasil.remote_sensing.altimeter import Altimeter
+    Altimeter().get()
+
+if args[0] == 'remote_sensing_scatterometer':
+    from oceanoobsbrasil.remote_sensing.scatterometer import Metop
+    Metop().get()
+
+if args[0] == 'remote_sensing_sst':
+    from oceanoobsbrasil.remote_sensing.sst import Mur
+    Mur().get()
+
+if args[0] == 'tides_epagri':
+    from oceanoobsbrasil.tides.epagri import Epagri
+    Epagri().get()
+
+if args[0] == 'tides_ilha_fiscal_tide':
+    from oceanoobsbrasil.tides.ilha_fiscal_tide import IlhaFiscal
+    IlhaFiscal().get()
+
+if args[0] == 'tides_santos_tide':
+    from oceanoobsbrasil.tides.santos_tide import TideSantos
+    TideSantos().get()
+
+if args[0] == 'tides_simcosta':
+    from oceanoobsbrasil.tides.simcosta import SimcostaTide
+    SimcostaTide().get()
+
+if args[0] == 'weather_station_inmet':
+    from oceanoobsbrasil.weather_station.inmet import Inmet
+    Inmet().get()
+
+if args[0] == 'weather_station_metar':
+    from oceanoobsbrasil.weather_station.metar import Metar
+    Metar().get()
+
+if args[0] == 'weather_station_wind_guru':
+    from oceanoobsbrasil.weather_station.wind_guru import WindGuru
+    WindGuru().get()

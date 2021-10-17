@@ -28,7 +28,7 @@ class Inmet():
         self.stations = self.db.get(table='stations', institution=['=', 'inmet'])
 
     def get(self,
-        save_bd=False):
+        save_bd=True):
 
         for index, station in self.stations.iterrows():
             print(station.url)
