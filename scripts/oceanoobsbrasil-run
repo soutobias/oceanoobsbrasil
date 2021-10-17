@@ -8,9 +8,6 @@ import sys
 
 args = sys.argv[1:]
 
-print(args[0])
-print(args)
-
 if args[0] == 'buoys_es':
     from oceanoobsbrasil.buoys.es import ESBuoy
     ESBuoy().get()
