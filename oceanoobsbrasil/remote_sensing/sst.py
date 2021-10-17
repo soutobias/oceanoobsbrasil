@@ -32,7 +32,7 @@ class Mur():
             lat = round(point['Lat'],4)
             lon = round(point['Lon'] - 360,4)
 
-            r = requests.get(f"https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41.json?analysed_sst%5B({start_date}):1:({end_date})%5D%5B({lat}):1:({lat})%5D%5B({lon}):1:({lon})%5D")
+            r = requests.get(f"https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41.json?analysed_sst%5B({self.start_date}):1:({self.end_date})%5D%5B({lat}):1:({lat})%5D%5B({lon}):1:({lon})%5D")
             json_file = r.json()
 
             df = pd.json_normalize(json_file, record_path=["table", "rows"])

@@ -55,7 +55,6 @@ class Metop():
         self.get_nc_files()
 
         for f in  self.nc_files:
-            print(f)
             ds = xr.open_dataset(f)
             wind_flag = wind_flag.append(pd.DataFrame(ds['wvc_quality_flag'].values))
             wind_dir = wind_dir.append(pd.DataFrame(ds['wind_dir'].values))
@@ -139,7 +138,6 @@ class Metop():
                         }
                     ]
                 }
-                print(self.path)
                 os.chdir(self.path)
 
                 l.granule_download(query_string = query, path=self.path)

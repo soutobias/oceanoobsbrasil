@@ -51,8 +51,11 @@ class Inmet():
                                         value =np.nan)
 
                 self.result.date_time = self.result.date_time + timedelta(hours=3)
-                self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
-                self.result.gust = (self.result.gust * 1.94384).round(decimals=1)
+
+                self.result['gust'] = pd.to_numeric(self.result['gust'], errors='coerce')
+                self.result.gust[self.result.gust.notnull()] = (self.result.gust[self.result.gust.notnull()]*1.94384).round(decimals=1)
+                self.result['wspd'] = pd.to_numeric(self.result['wspd'], errors='coerce')
+                self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
 
 
                 if save_bd:

@@ -44,13 +44,22 @@ if args[0] == 'others_ndbc':
     from oceanoobsbrasil.others.ndbc import Ndbc
     Ndbc().get()
 
+if args[0] == 'remote_sensing_altimeter_download':
+    from oceanoobsbrasil.remote_sensing.altimeter import Altimeter
+    Altimeter().download_ftplib_nodc()
+
 if args[0] == 'remote_sensing_altimeter':
     from oceanoobsbrasil.remote_sensing.altimeter import Altimeter
     Altimeter().get()
 
+
 if args[0] == 'remote_sensing_scatterometer':
     from oceanoobsbrasil.remote_sensing.scatterometer import Metop
     Metop().get()
+
+if args[0] == 'remote_sensing_scatterometer_download':
+    from oceanoobsbrasil.remote_sensing.scatterometer import Metop
+    Metop().download()
 
 if args[0] == 'remote_sensing_sst':
     from oceanoobsbrasil.remote_sensing.sst import Mur
@@ -72,14 +81,14 @@ if args[0] == 'tides_simcosta':
     from oceanoobsbrasil.tides.simcosta import SimcostaTide
     SimcostaTide().get()
 
-if args[0] == 'weather_station_inmet':
-    from oceanoobsbrasil.weather_station.inmet import Inmet
+if args[0] == 'weather_stations_inmet':
+    from oceanoobsbrasil.weather_stations.inmet import Inmet
     Inmet().get()
 
-if args[0] == 'weather_station_metar':
-    from oceanoobsbrasil.weather_station.metar import Metar
+if args[0] == 'weather_stations_metar':
+    from oceanoobsbrasil.weather_stations.metar import Metar
     Metar().get()
 
-if args[0] == 'weather_station_wind_guru':
-    from oceanoobsbrasil.weather_station.wind_guru import WindGuru
+if args[0] == 'weather_stations_wind_guru':
+    from oceanoobsbrasil.weather_stations.wind_guru import WindGuru
     WindGuru().get()
