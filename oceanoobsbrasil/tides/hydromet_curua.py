@@ -9,6 +9,7 @@ from datetime import timedelta
 import time
 import pandas as pd
 import psutil
+import chromedriver_binary
 
 from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
@@ -26,7 +27,7 @@ class HydroMetCurua():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        self.def_args_prefs()
+        self.options = def_args_prefs(self.options, self.args, self.preferences)
         self.driver = webdriver.Chrome(options=self.options),
         
         self.db = GetData()

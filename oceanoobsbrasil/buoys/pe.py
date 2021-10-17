@@ -40,7 +40,7 @@ class PEBuoy():
         self.options = Options()
         self.args = args
         self.preferences = preferences
-        self.def_args_prefs()
+        self.options = def_args_prefs(self.options, self.args, self.preferences)
         self.driver = webdriver.Chrome(options=self.options)
 
         self.db = GetData()
@@ -96,45 +96,10 @@ class PEBuoy():
 
         self.result['station_id'] = str(self.stations['id'])
 
-        self.feed_bd()
+        self.db.feed_bd(table='data_stations', df=self.result)
 
-        self.quit_driver()
-
-    def def_args_prefs(self):
-        for arg in self.args:
-            if type(arg) == list:
-                self.options.add_argument(arg[0], arg[1])
-            else:
-                self.options.add_argument(arg)
-
-        for preference in self.preferences:
-            if type(preference) == list:
-                self.options.set_preference(preference[0], preference[1])
-            else:
-                self.options.set_preference(preference[0])
+        quit_driver(self.driver)
 
 
-    def feed_bd(self):
-        self.db.post(table='data_stations', df=self.result)
 
-
-    def quit_driver(self):
-        driver_process = psutil.Process(self.driver.service.process.pid)
-        #driver.quit()
-
-        if driver_process.is_running():
-            print ("driver is running")
-
-            firefox_process = driver_process.children()
-            if firefox_process:
-                firefox_process = firefox_process[0]
-
-                if firefox_process.is_running():
-                    print("Firefox is still running, we can quit")
-                    self.driver.quit()
-                else:
-                    print("Firefox is dead, can't quit. Let's kill the driver")
-                    firefox_process.kill()
-            else:
-                print("driver has died")
 
