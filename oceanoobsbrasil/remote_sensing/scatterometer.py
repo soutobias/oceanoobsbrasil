@@ -12,6 +12,8 @@ from podaac import l2ss
 import os
 import glob
 
+from os.path import expanduser
+
 from dotenv import load_dotenv
 
 class Metop():
@@ -28,8 +30,8 @@ class Metop():
         end_date = datetime.strftime(datetime.utcnow(), "%Y-%m-%dT%H:%M:%SZ")):
 
         self.db = GetData()
-
-        self.path = f"{os.path.dirname(__file__)}/data"
+        home = expanduser("~")
+        self.path = f"{home}/data"
         self.lat = lat
         self.lon = lon
         self.step = step

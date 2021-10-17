@@ -15,7 +15,11 @@ import requests
 from netCDF4 import Dataset
 from bs4 import BeautifulSoup
 
+from os.path import expanduser
+
+
 class Altimeter():
+
 
     def __init__(self,
         start_date=datetime.utcnow()-timedelta(days=1),
@@ -35,7 +39,9 @@ class Altimeter():
         self.lat = lat
         self.lon = lon
 
-        self.path = f"{os.path.dirname(__file__)}/data"
+        home = expanduser("~")
+        self.path = f"{home}/data"
+
 
     def get(self):
 
