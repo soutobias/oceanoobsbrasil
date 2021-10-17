@@ -99,9 +99,9 @@ if args[0] == 'delete_old_stations':
     from oceanoobsbrasil.db import GetData
     date_time = (datetime.utcnow() - timedelta(days=5)).strftime("%Y-%m-%d")
 
-    GetData().delete(table='data_stations', date_time=['>=', date_time])
+    GetData().delete(table='data_stations', date_time=['<=', date_time])
 
 if args[0] == 'delete_old_no_stations':
     from oceanoobsbrasil.db import GetData
     date_time = (datetime.utcnow() - timedelta(days=5)).strftime("%Y-%m-%d")
-    GetData().delete(table='data_no_stations', date_time=['>=', date_time])
+    GetData().delete(table='data_no_stations', date_time=['<=', date_time])
