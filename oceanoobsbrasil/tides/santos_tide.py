@@ -60,10 +60,16 @@ class TideSantos():
             df.columns = ['date_time', 'water_level_pred', 'water_level']
             df = df[df.date_time < datetime.utcnow()]
 
+            df['meteorological_tide'] = df['water_level'] - df['water_level_pred']
+
+            df.drop(columns='water_level_pred', inplace=True)
+
             self.result = df.replace(to_replace =['None', 'NULL', ' ', ''],
                                     value =np.nan)
 
             self.result['station_id'] = str(station.iloc[0]['id'])
+
+            self.result.date_time = self.result.date_time + timedelta(hours=3)
 
             self.db.feed_bd(table='data_stations', df=self.result)
             print(name + " ok")

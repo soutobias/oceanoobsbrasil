@@ -73,6 +73,8 @@ class EpagriTide():
                 self.result = self.result.loc[np.isnan(self.result.water_level) == False]
                 self.result['station_id'] = str(station.iloc[0]['id'])
 
+                self.result.date_time = self.result.date_time + timedelta(hours=3)
+
                 self.db.feed_bd(table='data_stations', df=self.result)
 
         quit_driver(self.driver)

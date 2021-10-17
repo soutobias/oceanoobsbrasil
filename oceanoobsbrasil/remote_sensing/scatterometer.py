@@ -92,6 +92,9 @@ class Metop():
         if not self.result.empty:
             self.result["institution"] = 'metop'
             self.result["data_type"] = 'scatterometer'
+
+            self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
+
             self.db.feed_bd(table='data_no_stations', df=self.result, data_type='scatterometer')
 
 

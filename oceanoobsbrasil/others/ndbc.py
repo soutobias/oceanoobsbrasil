@@ -66,6 +66,10 @@ class Ndbc():
         self.result = df[['date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']].copy()
         self.result.columns = ['date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
 
+
+        self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
+
+
         self.convert_to_numeric()
 
         if save_bd:

@@ -82,17 +82,23 @@ class PEBuoy():
         wdir = round(direc)
 
         l=soup.find_all(attrs={'id': 'Box01_689'})
-        wspd =float(l[0].text)*0.514444
+        wspd =float(l[0].text)
+
+        # wspd =float(l[0].text)*0.514444
         wspd = round(wspd, 2)
 
         l=soup.find_all(attrs={'id': 'Box01_690'})
-        gust=float(l[0].text)*0.514444
+        gust=float(l[0].text)
+
+        # gust=float(l[0].text)*0.514444
         gust = round(gust, 2)
 
         values = np.array([date_time, mwd, hm0, seapeakdir, seahm0, swellpeakdir, swellhm0, wspd, gust, wdir])
         columns = ['date_time', 'wvdir', 'swvht', 'wvdir_sea', 'swvht_sea', 'wvdir_swell', 'swvht_swell', 'wspd', 'gust', 'wdir']
         self.result = pd.DataFrame(values).T
         self.result.columns = columns
+
+        self.result.date_time = self.result.date_time + timedelta(hours=3)
 
         self.result['station_id'] = str(self.stations['id'])
 

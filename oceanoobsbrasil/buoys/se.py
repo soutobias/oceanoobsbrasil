@@ -64,9 +64,9 @@ class SEBuoy():
         gust = self.get_data("Box01_1564")
 
         if wspd!=None:
-            wspd=round(wspd*0.514444, 2)
+            wspd=round(wspd, 2)
         if gust!=None:
-            gust=round(gust*0.514444, 2)
+            gust=round(gust, 2)
 
 
         data=self.soup.find("div", {"id": "Box11_h0"}).get_text(strip=True)
@@ -83,6 +83,9 @@ class SEBuoy():
 
         self.result = pd.DataFrame(values).T
         self.result.columns = columns
+
+        self.result.date_time = self.result.date_time + timedelta(hours=3)
+
         self.result['station_id'] = str(self.stations['id'])
 
         self.db.feed_bd(table='data_stations', df=self.result)

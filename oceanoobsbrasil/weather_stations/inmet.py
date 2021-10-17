@@ -49,6 +49,12 @@ class Inmet():
 
                 self.result = df.replace(to_replace =['None', 'NULL', ' ', ''],
                                         value =np.nan)
+
+                self.result.date_time = self.result.date_time + timedelta(hours=3)
+                self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
+                self.result.gust = (self.result.gust * 1.94384).round(decimals=1)
+
+
                 if save_bd:
                     self.result['station_id'] = str(station['id'])
                     self.db.feed_bd(table='data_stations', df=self.result)

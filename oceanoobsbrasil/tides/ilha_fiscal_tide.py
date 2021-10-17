@@ -71,6 +71,8 @@ class IlhaFiscal():
 
             self.result['station_id'] = str(self.stations['id'])
 
+            self.result.date_time = self.result.date_time + timedelta(hours=3)
+
             self.db.feed_bd(table='data_stations', df=self.result)
 
             quit_driver(self.driver)

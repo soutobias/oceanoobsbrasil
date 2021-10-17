@@ -53,6 +53,9 @@ class ESBuoy():
         self.result = pd.DataFrame(values).T
         self.result.columns = columns
 
+        self.result.date_time = self.result.date_time + timedelta(hours=3)
+
+
         self.result['station_id'] = str(self.stations['id'])
         self.db.feed_bd(table='data_stations', df=self.result)
 
