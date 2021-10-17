@@ -48,6 +48,7 @@ class SEBuoy():
 
         self.url=os.getenv('SE_URL')
 
+
     def get(self):
 
         self.driver.get(self.url)

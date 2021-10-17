@@ -40,9 +40,6 @@ class EbnTide():
     
     def get(self):
         
-
-
-
         site = self.url
         user = self.user
         pwd = self.pwd
