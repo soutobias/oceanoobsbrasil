@@ -67,8 +67,8 @@ if args[0] == 'remote_sensing_sst':
     Mur().get()
 
 if args[0] == 'tides_epagri':
-    from oceanoobsbrasil.tides.epagri import Epagri
-    Epagri().get()
+    from oceanoobsbrasil.tides.epagri import EpagriTide
+    EpagriTide().get()
 
 if args[0] == 'tides_ilha_fiscal_tide':
     from oceanoobsbrasil.tides.ilha_fiscal_tide import IlhaFiscal
