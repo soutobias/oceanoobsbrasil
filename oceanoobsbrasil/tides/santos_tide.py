@@ -54,7 +54,7 @@ class TideSantos():
             station = self.stations[self.stations.url == name]
 
             df = pd.read_html(self.driver.page_source)[1]
-            df['HORA'] = pd.to_datetime(datetime.utcnow().strftime("%Y-%m-%d") + df['HORA'], format='%Y-%m-%d%H:%M')
+            df['HORA'] = pd.to_datetime((datetime.utcnow()-timedelta(hours=3)).strftime("%Y-%m-%d") + df['HORA'], format='%Y-%m-%d%H:%M')
             df['HORA'] = df['HORA'] + timedelta(hours=3)
 
             df.columns = ['date_time', 'water_level_pred', 'water_level']
