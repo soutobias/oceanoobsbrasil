@@ -70,7 +70,8 @@ class GetData():
 
     def engine_create():
 
-        password = urllib.parse.quote_plus(os.getenv('POSTGRE_PWD'))
+        print(os.getenv('POSTGRE_PWD'))
+        password = os.getenv('POSTGRE_PWD')
 
         engine = create_engine(f"postgresql+psycopg2://{os.getenv('POSTGRE_USER')}:{password}@{os.getenv('POSTGRE_LOCAL')}/{os.getenv('POSTGRE_BD')}")
 
