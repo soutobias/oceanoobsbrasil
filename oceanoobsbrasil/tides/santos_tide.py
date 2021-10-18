@@ -75,7 +75,7 @@ class TideSantos():
             print(name + " ok")
             self.driver.switch_to.default_content()
             self.driver.find_element_by_xpath(xpath_close_box).click()
-            time.sleep(2)
+            time.sleep(4)
 
         quit_driver(self.driver)
 
