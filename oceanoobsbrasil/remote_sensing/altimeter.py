@@ -56,12 +56,12 @@ class Altimeter():
             lon = NC.groups['data_01'].variables['longitude']
             wspd = NC.groups['data_01'].variables['wind_speed_alt']
             swvht = NC.groups['data_01'].groups["ku"].variables['swh_ocean']
+            flag = NC.groups['data_01'].groups["ku"].variables['swh_ocean_compression_qual']
 
-
-            ar = np.array([tempo, lat, lon, wspd, swvht])
+            ar = np.array([tempo, lat, lon, wspd, swvht, flag])
             df = pd.DataFrame(ar).T
 
-            columns = ['date_time', 'lat', 'lon', 'wspd', 'swvht']
+            columns = ['date_time', 'lat', 'lon', 'wspd', 'swvht', 'flag']
             df.columns = columns
 
             df.lon = df.lon - 180
@@ -69,20 +69,28 @@ class Altimeter():
             df.date_time = pd.to_datetime(df['date_time'],unit='s')
             df = df[(df.lat > self.lat[0]) & (df.lat < self.lat[1]) & (df.lon < self.lon[1]) & (df.lon > self.lon[0])]
             self.result = df[(df.wspd < 9999) & (df.swvht < 9999)]
-
             if not self.result.empty:
                 print('data for brazilian coast')
                 self.result = self.result.set_index('date_time').resample('15S').first().reset_index()
+                self.result.drop(columns='flag', inplace=True)
                 self.result["institution"] = 'jason3'
                 self.result["data_type"] = 'altimeter'
                 self.db.feed_bd(table='data_no_stations', df=self.result, data_type='altimeter')
+                print('ok')
 
             os.remove(f)
+
 
     def get_nc_files(self):
         self.nc_files = []
         for file in glob.glob(f"{self.path}/*.nc", recursive=True):
             self.nc_files.append(os.path.abspath(file))
+
+        index = []
+        for file_name in self.nc_files:
+            index.append(int(file_name.split('/')[-1][16:19]))
+
+        self.nc_files = list(pd.DataFrame(np.array([index,self.nc_files]).T).set_index(0).sort_index()[1])
 
 
     def download_ftplib_nodc(self):
