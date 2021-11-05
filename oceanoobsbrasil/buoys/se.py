@@ -1,7 +1,3 @@
-"""
-Created on Tue Feb 12 23:34:44 2019
-@author: tobia
-"""
 
 import pandas as pd
 import numpy as np
@@ -70,8 +66,12 @@ class SEBuoy():
 
 
         data=self.soup.find("div", {"id": "Box11_h0"}).get_text(strip=True)
-        hour = int(data[0:2])
-        minute = int(data[3:5])
+        try:
+            hour = int(data[0:2])
+            minute = int(data[3:5])
+        except:
+            hour = int(data[0:1])
+            minute = int(data[2:4])
 
         date_time = datetime.utcnow() - timedelta(hours=3)
         date_time = date_time.replace(hour=hour)

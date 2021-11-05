@@ -11,7 +11,7 @@ def uv2intdir(u, v):
         direcao=90-rad2deg(arctan(v/u))
     elif u<0 and v>0:
         intensidade=np.sqrt((u*u)+(v*v))
-        direcao=rad2deg(arcsin(v/(-u)))+270
+        direcao=rad2deg(arctan(v/(-u)))+270
     elif u<0 and v<0:
         intensidade=np.sqrt((u*u)+(v*v))
         direcao=270-rad2deg(arctan((-v)/(-u)))

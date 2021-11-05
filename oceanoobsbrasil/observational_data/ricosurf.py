@@ -1,7 +1,3 @@
-"""
-Created on Tue Feb 12 23:34:44 2019
-@author: tobia
-"""
 
 import time
 import datetime
@@ -50,7 +46,8 @@ class RicoSurf():
                 sst = l[1].get_text(strip=True)
                 sst = float(sst[0:-2])
                 wvdir = soup.find("div", {"class": "small line-height-xs"}).get_text(strip=True)
-                date_time = datetime.date(datetime.now())
+                date_time = datetime.now()
+                date_time = date_time.replace(minute=0, second=0, microsecond=0)
 
                 values = np.array([date_time, swvht, tp, sst, wvdir])
                 columns = ['date_time', 'swvht', 'tp', 'sst', 'wvdir']

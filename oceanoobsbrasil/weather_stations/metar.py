@@ -1,7 +1,4 @@
-"""
-Created on Tue Feb 12 23:34:44 2019
-@author: tobia
-"""
+
 
 import time
 
@@ -45,6 +42,7 @@ class Metar():
 
             self.result = self.result.replace(to_replace =['None', 'NULL', ' ', ''],
                                     value =np.nan)
+            print('ok')
             if save_bd:
                 self.db.feed_bd(table='data_stations', df=self.result)
             else:

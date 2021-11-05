@@ -1,7 +1,3 @@
-"""
-Created on Tue Feb 12 23:34:44 2019
-@author: tobia
-"""
 
 import time
 import datetime
@@ -44,7 +40,8 @@ class Wave():
                 l = soup.find("td", {"id": "forecast_wave_direction"}).get_text(strip=True)
                 wvdir = str(l)
 
-                date_time = datetime.date(datetime.now())
+                date_time = datetime.now()
+                date_time = date_time.replace(minute=0, second=0, microsecond=0)
 
                 values = np.array([date_time, swvht, wvdir])
                 columns = ['date_time', 'swvht', 'wvdir']

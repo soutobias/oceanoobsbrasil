@@ -1,7 +1,3 @@
-"""
-Created on Tue Feb 12 23:34:44 2019
-@author: tobia
-"""
 
 import time
 import datetime
@@ -34,10 +30,13 @@ class Pnboia():
 
     def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
-            url=f"http://143.198.233.67/api/v1/data_buoys?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
-
+            url=f"https://remobsapi.herokuapp.com/api/v1/data_buoys?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
+            print(url)
             response = requests.get(url).json()
-            df = pd.DataFrame(response)
+            try:
+                df = pd.DataFrame(response)
+            except:
+                continue
             for i in df.columns:
                 try:
                     df[i] = pd.to_numeric(df[i])
