@@ -52,9 +52,10 @@ class ESBuoy():
 
         self.result.date_time = self.result.date_time + timedelta(hours=3)
 
-
+        print(self.result)
         self.result['station_id'] = str(self.stations['id'])
         self.db.feed_bd(table='data_stations', df=self.result)
+        print('ok')
 
     def get_data(self, attrs):
         try:
