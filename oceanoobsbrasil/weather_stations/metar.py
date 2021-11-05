@@ -14,9 +14,9 @@ from oceanoobsbrasil.db import GetData
 class Metar():
     def __init__(self, equip='meteorological_station',
         start_date=datetime.utcnow()-timedelta(days=3),
-        end_date=datetime.utcnow()):
-        # Connect to the database
+        end_date=datetime.utcnow()+timedelta(days=1)):
 
+        # Connect to the database
         self.db = GetData()
         self.equip = equip
         self.start_date = start_date
