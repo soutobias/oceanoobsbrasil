@@ -63,8 +63,7 @@ class EpagriTide():
             station = self.stations[self.stations.name==st]
             if not station.empty:
                 self.result = table_NM[index]
-                self.result["date_time"] = pd.to_datetime(self.result.Topping, format='%d/%m %H:%M') + pd.offsets.DateOffset(years=120)
-
+                self.result["date_time"] = pd.to_datetime(self.result.Topping, format='%d/%m %H:%M') + pd.offsets.DateOffset(years=datetime.utcnow().year - 1900)
                 self.result = self.result[['Mare Obser.', 'Residual', 'date_time']]
                 columns = ["water_level", "meteorological_tide", "date_time"]
                 self.result.columns = columns
@@ -73,8 +72,12 @@ class EpagriTide():
                 self.result = self.result.loc[np.isnan(self.result.water_level) == False]
                 self.result['station_id'] = str(station.iloc[0]['id'])
 
-                self.result.date_time = self.result.date_time + timedelta(hours=3)
+                self.result.water_level = self.result.water_level / 100
+                self.result.meteorological_tide = self.result.meteorological_tide / 100
 
+                self.result.date_time = self.result.date_time + timedelta(hours=3)
+                print(station.iloc[0]['id'])
+                print('ok')
                 self.db.feed_bd(table='data_stations', df=self.result)
 
         quit_driver(self.driver)
