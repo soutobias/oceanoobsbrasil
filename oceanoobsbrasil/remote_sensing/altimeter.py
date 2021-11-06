@@ -75,6 +75,8 @@ class Altimeter():
                 self.result.drop(columns='flag', inplace=True)
                 self.result["institution"] = 'jason3'
                 self.result["data_type"] = 'altimeter'
+                self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
+
                 self.db.feed_bd(table='data_no_stations', df=self.result, data_type='altimeter')
                 print('ok')
 
