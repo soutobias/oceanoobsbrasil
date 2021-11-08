@@ -63,8 +63,8 @@ class WindGuru():
             l = self.soup.find(attrs={'class': 'wgs_last_time'}).text
             date_time = datetime.strftime(datetime.utcnow(), '%Y-%m-%d %H:%M')[:-1]+"0"
 
-            values = np.array([date_time, wspd, wdir, sst])
-            columns = ['date_time', 'wspd', 'wdir', 'sst']
+            values = np.array([date_time, wspd, wdir, atmp])
+            columns = ['date_time', 'wspd', 'wdir', 'atmp']
 
             self.result = pd.DataFrame(values).T
             self.result.columns = columns
