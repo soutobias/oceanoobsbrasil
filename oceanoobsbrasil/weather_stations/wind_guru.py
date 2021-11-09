@@ -56,9 +56,9 @@ class WindGuru():
             if wdir == '':
                 wdir = None
 
-            sst = self.soup.find(attrs={'class': 'wgs_temp_value'}).text
-            if sst == '':
-                sst = None
+            atmp = self.soup.find(attrs={'class': 'wgs_temp_value'}).text
+            if atmp == '':
+                atmp = None
 
             l = self.soup.find(attrs={'class': 'wgs_last_time'}).text
             date_time = datetime.strftime(datetime.utcnow(), '%Y-%m-%d %H:%M')[:-1]+"0"
