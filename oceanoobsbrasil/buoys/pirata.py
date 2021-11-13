@@ -47,6 +47,11 @@ class Pirata():
                 self.result = self.result.replace(to_replace =['None', 'NULL', 'MM', ''],
                                         value =np.nan)
 
+
+                self.convert_to_numeric()
+                self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
+                self.result.gust[self.result.gust.notnull()] = (self.result.gust[self.result.gust.notnull()]*1.94384).round(decimals=1)
+
                 if save_bd:
                     self.result['station_id'] = str(station['id'])
                     self.db.feed_bd(table='data_stations', df=self.result)
@@ -55,6 +60,12 @@ class Pirata():
                     return self.result
             except:
                 print ("Nao ha dados para essa boia")
+
+    def convert_to_numeric(self):
+        columns = self.result.drop(columns='date_time').columns
+        for column in columns:
+            self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
+
 
 if __name__ == '__main__':
     Pirata().get(save_bd=True)
