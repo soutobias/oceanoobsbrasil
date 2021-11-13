@@ -29,6 +29,10 @@ if args[0] == 'buoys_simcosta':
     from oceanoobsbrasil.buoys.simcosta import Simcosta
     Simcosta().get()
 
+if args[0] == 'buoys_pirata':
+    from oceanoobsbrasil.buoys.pirata import Pirata
+    Pirata().get()
+
 if args[0] == 'observational_data_ricosurf':
     from oceanoobsbrasil.observational_data.ricosurf import RicoSurf
     RicoSurf().get()
