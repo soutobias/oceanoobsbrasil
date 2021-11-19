@@ -71,9 +71,8 @@ class Wave():
                     wvdir = 270 + 45
                 if wvdir == "noroeste-norte" or wvdir == "noroeste norte" or wvdir == "norte-noroeste" or wvdir == "norte noroeste":
                     wvdir = 270 + 45 + 22
-                
-                print(wvdir)
-
+                if wvdir == 'não informado':
+                    wvdir = np.nan
 
                 date_time = datetime.now()
                 date_time = date_time.replace(minute=0, second=0, microsecond=0)
