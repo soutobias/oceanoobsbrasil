@@ -33,6 +33,10 @@ if args[0] == 'buoys_pirata':
     from oceanoobsbrasil.buoys.pirata import Pirata
     Pirata().get()
 
+if args[0] == 'buoys_aqualink':
+    from oceanoobsbrasil.buoys.aqualink import AqualinkBuoy
+    AqualinkBuoy().get()
+
 if args[0] == 'observational_data_ricosurf':
     from oceanoobsbrasil.observational_data.ricosurf import RicoSurf
     RicoSurf().get()

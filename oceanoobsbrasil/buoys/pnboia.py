@@ -19,7 +19,7 @@ class Pnboia():
 
     def __init__(self, equip='buoy',
         start_date=(datetime.utcnow() - timedelta(days=1)).strftime('%Y-%m-%d'),
-        end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d')):
+        end_date = (datetime.utcnow() + timedelta(days=2)).strftime('%Y-%m-%d')):
 
 
         self.db = GetData()
