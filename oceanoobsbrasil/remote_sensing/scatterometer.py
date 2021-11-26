@@ -57,6 +57,7 @@ class Metop():
         self.get_nc_files()
 
         for f in  self.nc_files:
+            print(f)
             ds = xr.open_dataset(f)
             wind_flag = wind_flag.append(pd.DataFrame(ds['wvc_quality_flag'].values))
             wind_dir = wind_dir.append(pd.DataFrame(ds['wind_dir'].values))
@@ -89,17 +90,18 @@ class Metop():
         df = df.iloc[::self.step]
 
         self.result = df
-
+        print('Verificando se há dados')
         if not self.result.empty:
+            print('Há dados')
+
             self.result["institution"] = 'metop'
             self.result["data_type"] = 'scatterometer'
 
             self.result.wspd = (self.result.wspd * 1.94384).round(decimals=1)
 
             self.db.feed_bd(table='data_no_stations', df=self.result, data_type='scatterometer')
-
-
-
+        else:
+            print('Não há dados')
 
     def download(self):
 
