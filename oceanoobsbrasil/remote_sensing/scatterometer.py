@@ -25,7 +25,7 @@ class Metop():
         lon=[-55, -20],
         step=20,
         webdav_url = 'https://podaac-tools.jpl.nasa.gov/drive/files',
-        datasets = ['PODAAC-ASOP2-25X01', 'PODAAC-ASOP2-25B01', 'PODAAC-ASOP2-25C01'],
+        datasets = ['PODAAC-ASOP2-25B01', 'PODAAC-ASOP2-25C01'],
         start_date = datetime.strftime(datetime.utcnow()-timedelta(days=2), "%Y-%m-%dT%H:%M:%SZ"),
         end_date = datetime.strftime(datetime.utcnow()+timedelta(days=1), "%Y-%m-%dT%H:%M:%SZ")):
 
