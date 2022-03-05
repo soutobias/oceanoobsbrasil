@@ -49,20 +49,20 @@ class EpagriTide():
         time.sleep(5)
 
         table_NM = pd.read_html(self.driver.page_source)
+        self.table_NM = table_NM
         self.soup=BeautifulSoup(self.driver.page_source, 'html.parser')
 
         self.sts = []
-        for i in range(15):
-            try:
-                value = self.soup.find(attrs={'id': f'e{i}'}).find(attrs={'style': 'font-size: 11pt;'}).text
-                self.sts.append(value)
-            except:
-                value = 0
+        values = self.soup.find(attrs={'class': 'row'}).find_all(attrs={'style': 'font-size: 11pt;'})
+        for value in values:
+            self.sts.append(value.text)
 
         for index, st in enumerate(self.sts):
             station = self.stations[self.stations.name==st]
             if not station.empty:
                 self.result = table_NM[index]
+                print(self.result)
+
                 self.result["date_time"] = pd.to_datetime(self.result.Topping, format='%d/%m %H:%M') + pd.offsets.DateOffset(years=datetime.utcnow().year - 1900)
                 self.result = self.result[['Mare Obser.', 'Residual', 'date_time']]
                 columns = ["water_level", "meteorological_tide", "date_time"]

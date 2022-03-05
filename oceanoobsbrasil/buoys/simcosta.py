@@ -25,8 +25,8 @@ class Simcosta():
     def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
             print(station.url)
-            if int(station.url) == 510:
-                url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=Avg_Air_Press,Avg_Wnd_Dir_N,Gust_Sp,Avg_Dew,Avg_Sol_Rad,Avg_Air_Tmp,Hmt,Avg_Hmt,Avg_Wnd_Sp,Wv_H10,Wv_Havg,Wv_Hsig,Wv_HM0,Wv_Avg_Dir,Wv_Hmax,Wv_ZCN,Wv_Tp5,Wv_Tz,Wv_Tavg,Wv_T10,Wv_Tsig,Wv_Avg_Spread,Wv_Tp,Avg_Sal,Avg_W_Tmp1,Avg_W_Tmp2,Avg_Fluo,Avg_DO,Avg_DO,Avg_Turb"
+            if int(station.url) > 100:
+                url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=H10,HAvg,Hsig,HM0,Avg_Wv_Dir,Hmax,ZCN,Tp5,Tz,TAvg,T10,Tsig,Avg_Wv_Spread,Tp,Avg_Sal,Avg_W_Tmp1,Avg_W_Tmp2,Avg_Chl,Avg_Turb,Avg_Wnd_Dir_N,Gust_Sp,Avg_Dew,Avg_Air_Press,Avg_Sol_Rad,Avg_Air_Tmp,Avg_Hmt,Avg_Hmt,Avg_Wnd_Sp"
                 with urllib.request.urlopen(url_address) as url:
                     data = json.loads(url.read().decode())
                     self.data = pd.DataFrame(data)
@@ -39,11 +39,14 @@ class Simcosta():
                     print ("Nao ha dados para essa boia")
                 else:
                     self.result['date_time'] = pd.to_datetime(self.result.timestamp)
-                    self.result = self.result[[ 'Avg_Air_Press', 'Avg_Air_Tmp','Avg_Hmt', 'Avg_Dew',
-                        'Avg_Wnd_Sp', 'Avg_Wnd_Dir_N','Gust_Sp', 'Wv_Hsig', 'Wv_Hmax','Wv_Tp',
-                        'Avg_W_Tmp1','Wv_Avg_Spread','Wv_Avg_Dir', 'date_time']]
-
-                    self.result.columns = ['pres', 'atmp', 'rh', 'dewpt', 'wspd', 'wdir', 'gust', 'swvht', 'mxwvht', 'tp', 'sst', 'wvspread', 'wvdir', 'date_time']
+                    if int(station.url) > 300:
+                        self.result = self.result[[ 'Avg_Air_Press', 'Avg_Air_Tmp','Avg_Hmt', 'Avg_Dew',
+                            'Avg_Wnd_Sp', 'Avg_Wnd_Dir_N','Gust_Sp', 'Hsig', 'Hmax','Tp',
+                            'Avg_W_Tmp1','Avg_Wv_Spread','Avg_Wv_Dir', 'date_time']]
+                        self.result.columns = ['pres', 'atmp', 'rh', 'dewpt', 'wspd', 'wdir', 'gust', 'swvht', 'mxwvht', 'tp', 'sst', 'wvspread', 'wvdir', 'date_time']
+                    else:
+                        self.result = self.result[['Avg_W_Tmp1','date_time']]
+                        self.result.columns = ['atmp', 'date_time']
 
                     self.result = self.result.replace(to_replace =['None', 'NULL', ' ', ''],
                                             value =np.nan)
