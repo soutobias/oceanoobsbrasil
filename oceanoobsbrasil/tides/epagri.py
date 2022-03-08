@@ -76,9 +76,8 @@ class EpagriTide():
                 self.result.meteorological_tide = self.result.meteorological_tide / 100
 
                 self.result.date_time = self.result.date_time + timedelta(hours=3)
-                print(station.iloc[0]['id'])
-                print('ok')
-                self.db.feed_bd(table='data_stations', df=self.result)
+                if len(self.result) > 0:
+                    self.db.feed_bd(table='data_stations', df=self.result)
 
         quit_driver(self.driver)
 
