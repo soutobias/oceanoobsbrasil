@@ -90,6 +90,10 @@ if args[0] == 'tides_simcosta':
     from oceanoobsbrasil.tides.simcosta import SimcostaTide
     SimcostaTide().get()
 
+if args[0] == 'tides_gloss':
+    from oceanoobsbrasil.tides.gloss_tide import GlossTide
+    GlossTide().get()
+
 if args[0] == 'weather_stations_inmet':
     from oceanoobsbrasil.weather_stations.inmet import Inmet
     Inmet().get()
