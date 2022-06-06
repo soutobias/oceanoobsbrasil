@@ -16,7 +16,7 @@ from oceanoobsbrasil.db import GetData
 class SimcostaTide():
 
     def __init__(self, equip='tide',
-        start_date=str(int(np.ceil(time.time()-3600*24))),
+        start_date=str(int(np.ceil(time.time()-3600*100))),
         end_date=str(int(np.ceil(time.time())))):
         # Connect to the database
 
@@ -28,11 +28,11 @@ class SimcostaTide():
 
     def get(self):
         for index, station in self.stations.iterrows():
-            url_address = f"http://simcosta.furg.br/api/maregrafo_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=water_l1"
+            url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=water_l1"
             with urllib.request.urlopen(url_address) as url:
                 data = json.loads(url.read().decode())
                 self.data = pd.DataFrame(data)
-            url_address = f"http://simcosta.furg.br/api/maregrafo_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=relative_humidity,wind_direction,wind_speed,dew_point,atm_pressure,air_temp"
+            url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=relative_humidity,wind_direction,wind_speed,dew_point,atm_pressure,air_temp"
             with urllib.request.urlopen(url_address) as url:
                 data1 = json.loads(url.read().decode())
                 self.data1 = pd.DataFrame(data1)
@@ -43,16 +43,15 @@ class SimcostaTide():
             if len(self.result) == 0:
                 print ("Nao ha dados para essa boia")
             else:
-                self.result['date_time'] = pd.to_datetime(self.result.iloc[:,0:6])
-                columns = ['YEAR','MONTH','DAY','HOUR','MINUTE','SECOND']
-                self.result.drop(columns=columns, inplace=True)
+                self.result['date_time'] = pd.to_datetime(self.result.timestamp)
+                self.result = self.result[['water_l1', 'wind_speed', 'wind_direction', 'air_temp',
+                    'relative_humidity', 'atm_pressure', 'date_time']]
+                self.result.columns = ['water_level', 'wspd', 'wdir', 'atmp', 'rh', 'pres', 'date_time']
 
-                self.result.columns = ['water_level', 'wspd', 'wdir', 'atmp', 'rh', 'dewpt', 'pres', 'date_time']
                 self.result = self.result.replace(to_replace =['None', 'NULL', ' ', ''],
                                         value =np.nan)
                 self.result['station_id'] = str(station['id'])
                 self.db.feed_bd(table='data_stations', df=self.result)
-
 
     def remove_dup_columns(self):
         keep_names = set()
