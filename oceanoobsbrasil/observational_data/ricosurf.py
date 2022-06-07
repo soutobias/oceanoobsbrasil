@@ -104,11 +104,11 @@ class RicoSurf():
         return False
 
     def beaches_with_data(self, soup):
-        l = soup.find_all('a', attrs={'class': 'beach-peak col-xxs-12 col-xs-6 col-md-4'})
+        l = soup.find_all('li', attrs={'data-toggle': 'popover'})
         beaches = []
         for beach in l:
-            l1= beach.find('div', attrs={'class': 'place'}).get_text(strip=True)
-            beaches.append(l1)
+            if beach['data-content'][-10:-6] != 'zado':
+                beaches.append(beach.text.strip()[1:])
         return beaches
 
 if __name__ == '__main__':
