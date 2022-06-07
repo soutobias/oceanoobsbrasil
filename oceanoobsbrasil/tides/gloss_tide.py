@@ -25,6 +25,8 @@ class GlossTide():
         end_date=(datetime.utcnow() + timedelta(days=2)).strftime('%Y-%m-%d 00:00:00')):
         # Connect to the database
 
+        if datetime.utcnow() - timedelta(days=1) < datetime(2022,6,7,9,0,0):
+            start_date = datetime(2022,6,7,9,0,0).strftime('%Y-%m-%d %H:00:00')
         self.db = GetData()
         self.equip = equip
         self.start_date = start_date
