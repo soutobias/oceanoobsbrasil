@@ -21,3 +21,4 @@ netcdf4
 h5py
 xarray
 lxml
+pysofar
