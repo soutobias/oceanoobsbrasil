@@ -26,7 +26,7 @@ class SpotterData():
         self.db = GetData()
 
 
-    def get_new_data(self,
+    def get(self,
                      start_date = (datetime.utcnow() - timedelta(days=1)).strftime('%Y-%m-%d'),
                      end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d'),
                      save_bd=True):
