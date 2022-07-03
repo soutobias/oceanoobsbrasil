@@ -1,3 +1,4 @@
+from ipaddress import collapse_addresses
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -11,7 +12,7 @@ from dotenv import load_dotenv
 from pysofar.sofar import SofarApi
 from pysofar.spotter import Spotter
 
-class Spotter():
+class SpotterData():
 
     load_dotenv()
     os.environ['WF_API_TOKEN'] = os.getenv("SOFAR_TOKEN")
@@ -20,22 +21,24 @@ class Spotter():
 
         self.api = SofarApi()
         self.devices = self.api.devices
-        self.ids = self.api.device_ids
+        self.ids = [x for x in self.api.device_ids if x[0:7] == 'SPOT-01']
         self.spotters = self.api.get_spotters()
+        self.db = GetData()
+
 
     def get_new_data(self,
-                     start_date = (datetime.utcnow() - timedelta(days=3)).strftime('%Y-%m-%d'),
-                     end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d')):
+                     start_date = (datetime.utcnow() - timedelta(days=1)).strftime('%Y-%m-%d'),
+                     end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d'),
+                     save_bd=True):
 
 
         self.start_date = start_date
         self.end_date = end_date
 
-        self.data = pd.DataFrame()
-        self.data_status = pd.DataFrame()
+        self.result = pd.DataFrame()
         
         for spotter in self.spotters:
-            if spotter.id in self.working_buoys:
+            if spotter.id in self.ids:
                 print(spotter.id)
                 spt_data = spotter.grab_data(
                     limit=100,
@@ -55,20 +58,28 @@ class Spotter():
                 else:
                     sst = None
 
-                self.result = self.merge_values(wind, wave, sst, spotter)
-                if not self.result.empty:
-                    self.result['spotter_id'] = spotter.id
-                    if self.data.empty:
-                        self.data = self.result
+                self.data = self.merge_values(wind, wave, sst, spotter)
+                if not self.data.empty:
+                    self.data['spotter_id'] = spotter.id
+                    if self.result.empty:
+                        self.result = self.data
                     else:
-                        self.data = pd.concat([self.data, self.result])
+                        self.result = pd.concat([self.result, self.data])
 
-                self.status = self.get_last_status(spotter)
-                if not self.status.empty:
-                    if self.data_status.empty:
-                        self.data_status = self.status
-                    else:
-                        self.data_status = pd.concat([self.data_status, self.status])
+        self.result = self.result[['date_time','latitude','longitude','wspd','wdir','swvht','peakPeriod',
+                          'meanDirection', 'sst']]
+                          
+        self.result.columns = ['date_time', 'lat', 'lon', 'wspd', 'wdir', 'swvht', 'tp', 'wvdir','sst']
+        self.convert_to_numeric()
+
+        if save_bd:
+            self.result["institution"] = 'sofar'
+            self.result["data_type"] = 'drifter'
+            self.result["flag"] = False
+
+            self.db.feed_bd(table='data_no_stations', df=self.result, data_type='drifter')
+        else:
+            return self.result
 
     def merge_values(self, wind, wave, sst, spotter):
 
@@ -105,9 +116,9 @@ class Spotter():
 
         spotter_general = wind_spotter.merge(waves_spotter,
                                             on='timestamp',
-                                            how='outer').merge(sst_spotter,
+                                            how='left').merge(sst_spotter,
                                                 on = 'timestamp',
-                                                how = 'outer')
+                                                how = 'left')
 
         spotter_general.rename(columns = {'speed': 'wspd',
                                         'direction': 'wdir',
@@ -119,27 +130,8 @@ class Spotter():
         spotter_general = spotter_general.replace({np.nan:None})
 
         return spotter_general
-    
-    def get_last_status(self, spotter):
-        
-        spotter_id = spotter.id
-        lon = (spotter.lon + 180) % 360 - 180
-        lat = spotter.lat
-        date_time = datetime.strptime(spotter.timestamp, '%Y-%m-%dT%H:%M:%S.000Z')
-        solar_v = float(spotter.solar_voltage)
-        battery_p = float(spotter.battery_power)
-        humidity = float(spotter.humidity)
-        battery_v = float(spotter.battery_voltage)
 
-        status_values = {'spotter_id': [id],
-                        'timestamp': [date],
-                        'latitude': [lat],
-                        'longitude': [lon],
-                        'battery_power': [battery_p],
-                        'battery_voltage': [battery_v],
-                        'humidity': [humidity],
-                        'solar_voltage': [solar_v]}
-
-        status_spotter = pd.DataFrame(status_values)
-        
-        return status_spotter
+    def convert_to_numeric(self):
+        columns = self.result.drop(columns='date_time').columns
+        for column in columns:
+            self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
