@@ -84,7 +84,9 @@ class SEBuoy():
         self.result = pd.DataFrame(values).T
         self.result.columns = columns
 
-        self.result.date_time = pd.to_datetime(self.result.date_time) + timedelta(hours=3)
+        # self.result.date_time = pd.to_datetime(self.result.date_time) + timedelta(hours=3)
+
+        self.result.date_time = pd.to_datetime(self.result.date_time)
 
         self.result['station_id'] = str(self.stations['id'])
 

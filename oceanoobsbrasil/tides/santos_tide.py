@@ -69,7 +69,7 @@ class TideSantos():
 
             self.result['station_id'] = str(station.iloc[0]['id'])
 
-            self.result.date_time = self.result.date_time + timedelta(hours=3)
+            # self.result.date_time = self.result.date_time + timedelta(hours=3)
 
             self.db.feed_bd(table='data_stations', df=self.result)
             print(name + " ok")
