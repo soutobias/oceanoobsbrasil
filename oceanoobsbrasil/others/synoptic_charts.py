@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from PIL import Image
 import requests
 from io import BytesIO
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import cloudinary
@@ -30,7 +29,7 @@ class SynopticChart():
                  days=7):
 
       self.url = 'https://www.marinha.mil.br/chm/sites/www.marinha.mil.br.chm/files/cartas-sinoticas/'
-      self.days = days 
+      self.days = days
 
 
     def get(self):
