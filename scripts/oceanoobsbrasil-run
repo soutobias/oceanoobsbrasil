@@ -61,6 +61,11 @@ if args[0] == 'others_synoptic':
     from oceanoobsbrasil.others.synoptic_charts import SynopticChart
     SynopticChart().get()
 
+if args[0] == 'others_drifter':
+    from oceanoobsbrasil.others.drifters import Drifter
+    Drifter().get()
+    Drifter(platform_type='PROFILING FLOATS AND GLIDERS (GENERIC)').get()
+
 if args[0] == 'remote_sensing_altimeter_download':
     from oceanoobsbrasil.remote_sensing.altimeter import Altimeter
     Altimeter().download_ftplib_nodc()
