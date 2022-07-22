@@ -22,3 +22,6 @@ h5py
 xarray
 lxml
 pysofar
+
+pillow
+cloudinary
