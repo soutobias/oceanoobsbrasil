@@ -11,7 +11,8 @@ from oceanoobsbrasil.db import GetData
 from dotenv import load_dotenv
 import os
 import requests
-
+import warnings
+warnings.filterwarnings("ignore")
 
 
 class Inmet():
@@ -35,7 +36,7 @@ class Inmet():
 
             url = f"{self.api}/estacao/{self.start_date}/{self.end_date}/{station.url}"
 
-            response = requests.get(url)
+            response = requests.get(url,headers={'referer': 'https://www.google.com/'})
             df = pd.DataFrame(response)
 
             if response.status_code == 200:
