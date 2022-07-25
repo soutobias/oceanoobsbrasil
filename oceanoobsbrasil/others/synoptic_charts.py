@@ -62,6 +62,9 @@ class SynopticChart():
               df.loc[x, 'green'] = 255
               df.loc[x, 'blue'] = 255
               df.loc[x, 'opacity'] = 255
+              x = pd.DataFrame(np.array(df['opacity']).reshape(1932, 1449))
+              x[(x!=0)&(x.diff()!=0)&(x.diff(periods=-1)!=0)&(x.diff(axis=1)!=0)&(x.diff(axis=1,periods=-1)!=0)&(x.notna())] = 0
+              df['opacity'] = np.array(x).reshape(1932*1449)
               im = Image.fromarray(np.array(df).reshape(1932, 1449, 4))
               im.save(f'{name}.png')
               response = upload(f'{name}.png', tag='OCEANOBS', public_id=name)

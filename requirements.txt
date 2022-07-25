@@ -1,6 +1,7 @@
 pip
-pip-upgrade
 wheel
+
+pip-upgrade
 twine
 pytest
 
