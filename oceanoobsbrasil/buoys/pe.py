@@ -53,20 +53,20 @@ class PEBuoy():
         # wait = WebDriverWait(self.driver, 15)
         # wait.until(ec.visibility_of_element_located((By.XPATH, "//div[@id='Box01_1631']")))
 
-        mwd = int(self.driver.find_element_by_xpath("//div[@id='Box01_1631']").text)
-        hm0 = float(self.driver.find_element_by_xpath("//div[@id='Box01_718']").text)
-        seapeakdir = int(self.driver.find_element_by_xpath("//div[@id='Box04_1633']").text)
-        seahm0= float(self.driver.find_element_by_xpath("//div[@id='Box04_1627']").text)
-        swellpeakdir = int(self.driver.find_element_by_xpath("//div[@id='Box07_1634']").text)
-        swellhm0 = float(self.driver.find_element_by_xpath("//div[@id='Box07_1624']").text)
+        mwd = int(self.driver.find_element("id", "Box01_1631").text)
+        hm0 = float(self.driver.find_element("id", "Box01_718").text)
+        seapeakdir = int(self.driver.find_element("id", "Box04_1633").text)
+        seahm0= float(self.driver.find_element("id", "Box04_1627").text)
+        swellpeakdir = int(self.driver.find_element("id", "Box07_1634").text)
+        swellhm0 = float(self.driver.find_element("id", "Box07_1624").text)
 
-        date_time = self.driver.find_element_by_xpath("//*[contains(text(), 'Latest data')]").text
+        date_time = self.driver.find_element("xpath", "//*[contains(text(), 'Latest data')]").text
         date_time = datetime.strptime(date_time[13:], '%Y-%m-%d %H:%M')
 
-        self.driver.find_element_by_xpath("//a[contains(text(),'PÍER')]").click()
+        self.driver.find_element("xpath", "//a[contains(text(),'PÍER')]").click()
         time.sleep(10)
 
-        # wait.until(ec.visibility_of_element_located((By.XPATH, "//div[@id='Box01_arrow']")))
+        # wait.until(ec.visibility_of_element_located((By.XPATH, "Box01_arrow")))
 
         soup=BeautifulSoup(self.driver.page_source, 'html.parser')
 
@@ -98,7 +98,7 @@ class PEBuoy():
         # self.result.date_time = self.result.date_time + timedelta(hours=3)
 
         self.result['station_id'] = str(self.stations['id'])
-
+        print(self.result)
         self.db.feed_bd(table='data_stations', df=self.result)
 
         quit_driver(self.driver)

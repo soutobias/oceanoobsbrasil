@@ -26,7 +26,7 @@ class SynopticChart():
     os.environ['CLOUDINARY_URL'] = os.getenv("CLOUDINARY_URL")
     
     def __init__(self,
-                 days=7):
+                 days=5):
 
       self.url = 'https://www.marinha.mil.br/chm/sites/www.marinha.mil.br.chm/files/cartas-sinoticas/'
       self.days = days

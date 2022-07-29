@@ -89,7 +89,7 @@ class SEBuoy():
         self.result.date_time = pd.to_datetime(self.result.date_time)
 
         self.result['station_id'] = str(self.stations['id'])
-
+        print(self.result)
         self.db.feed_bd(table='data_stations', df=self.result)
 
         quit_driver(self.driver)
@@ -104,8 +104,8 @@ class SEBuoy():
 
     def logging(self):
         time.sleep(10)
-        self.driver.find_element_by_css_selector("#id_username").send_keys(os.getenv('SE_USER'))
-        self.driver.find_element_by_css_selector("#id_password").send_keys(os.getenv('SE_PWD'))
-        self.driver.find_element_by_css_selector("#wp-submit").click()
+        self.driver.find_element(By.CSS_SELECTOR, "#id_username").send_keys(os.getenv('SE_USER'))
+        self.driver.find_element(By.CSS_SELECTOR, "#id_password").send_keys(os.getenv('SE_PWD'))
+        self.driver.find_element(By.CSS_SELECTOR, "#wp-submit").click()
         time.sleep(10)
 

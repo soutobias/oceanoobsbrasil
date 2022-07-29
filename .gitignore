@@ -8,3 +8,6 @@ raw_data/
 .env
 *.nc
 *.zip
+*.png
+*.jpg
+*.jpeg
