@@ -66,7 +66,7 @@ class Ndbc():
 
         self.convert_to_numeric()
         self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
-
+        print(self.result.head())
         if save_bd:
             self.result["institution"] = 'ndbc'
             self.result["data_type"] = 'gts'

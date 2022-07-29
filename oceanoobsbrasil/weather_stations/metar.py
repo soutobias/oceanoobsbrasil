@@ -24,7 +24,7 @@ class Metar():
         self.stations = self.db.get(table='stations', institution=['=', 'metar'], data_type=['=', self.equip])
 
     def get(self, save_bd=True):
-        stations_brazil = 'station=SBAF&station=SBAR&station=SBBE&station=SBCB&station=SBCV&station=SBFL&station=SBFS&station=SBFZ&station=SBGL&station=SBIL&station=SBJE&station=SBJP&station=SBJR&station=SBJV&station=SBME&station=SBMO&station=SBMQ&station=SBNF&station=SBNT&station=SBPB&station=SBPG&station=SBPS&station=SBRF&station=SBRG&station=SBRJ&station=SBSC&station=SBSL&station=SBST&station=SBSV&station=SBTC&station=SBVT'
+        stations_brazil = 'station=SBAF&station=SBAR&station=SBBE&station=SBCB&station=SBCV&station=SBFL&station=SBFS&station=SBFZ&station=SBGL&station=SBIL&station=SBJE&station=SBJP&station=SBJR&station=SBJV&station=SBME&station=SBMO&station=SBMQ&station=SBNF&station=SBNT&station=SBPB&station=SBPG&station=SBPS&station=SBRF&station=SBRG&station=SBRJ&station=SBSC&station=SBSL&station=SBST&station=SBSV&station=SBTC&station=SBVT&station=SBFN'
         stations_argentina = 'station=SAAC&station=SAAG&station=SAAJ&station=SAAP&station=SAAR&station=SAAV&station=SABE&station=SACO&station=SADF&station=SADL&station=SADM&station=SADP&station=SAEZ&station=SAME&station=SAMM&station=SAMR&station=SANC&station=SANE&station=SANL&station=SANR&station=SANT&station=SANU&station=SAOC&station=SAOR&station=SAOU&station=SARC&station=SARE&station=SARF&station=SARI&station=SARL&station=SARP&station=SASA&station=SASJ&station=SAST&station=SAVC&station=SAVE&station=SAVT&station=SAVV&station=SAWC&station=SAWE&station=SAWG&station=SAWH&station=SAWT&station=SAZB&station=SAZM&station=SAZN&station=SAZR&station=SAZS'
         stations_chile = "station=SCNT&station=SCCI&station=SCRM"
         stations_uruguai = 'station=SUAA&station=SUAG&station=SUCA&station=SUDU&station=SULS&station=SUMU&station=SURV&station=SUSO'
@@ -48,6 +48,7 @@ class Metar():
 
             self.result = self.result.replace(to_replace =['None', 'NULL', ' ', ''],
                                     value =np.nan)
+            print(self.result.station_id.unique())
             print('ok')
             if save_bd:
                 self.db.feed_bd(table='data_stations', df=self.result)

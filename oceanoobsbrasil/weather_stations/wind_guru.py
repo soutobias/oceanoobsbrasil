@@ -70,7 +70,7 @@ class WindGuru():
             self.result.columns = columns
 
             self.result['station_id'] = str(station['id'])
-
+            print(self.result)
             self.db.feed_bd(table='data_stations', df=self.result)
 
             quit_driver(self.driver)

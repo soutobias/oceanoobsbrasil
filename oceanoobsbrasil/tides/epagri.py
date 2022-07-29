@@ -46,7 +46,7 @@ class EpagriTide():
     def get(self):
 
         self.driver.get(self.url)
-        time.sleep(5)
+        time.sleep(60)
 
         table_NM = pd.read_html(self.driver.page_source)
         self.table_NM = table_NM

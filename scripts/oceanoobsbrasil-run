@@ -122,11 +122,11 @@ if args[0] == 'weather_stations_wind_guru':
 
 if args[0] == 'delete_old_stations':
     from oceanoobsbrasil.db import GetData
-    date_time = (datetime.utcnow() - timedelta(days=4)).strftime("%Y-%m-%d")
+    date_time = (datetime.utcnow() - timedelta(days=6)).strftime("%Y-%m-%d")
 
     GetData().delete(table='data_stations', date_time=['<=', date_time])
 
 if args[0] == 'delete_old_no_stations':
     from oceanoobsbrasil.db import GetData
-    date_time = (datetime.utcnow() - timedelta(days=4)).strftime("%Y-%m-%d")
+    date_time = (datetime.utcnow() - timedelta(days=6)).strftime("%Y-%m-%d")
     GetData().delete(table='data_no_stations', date_time=['<=', date_time])
