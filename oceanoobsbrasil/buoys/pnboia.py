@@ -33,8 +33,6 @@ class Pnboia():
             url=f"https://remobsapi.herokuapp.com/api/v1/data_buoys?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
             response = requests.get(url).json()
             print(station['name']) 
-            print(url)          
-            print(response)
             try:
                 df = pd.DataFrame(response)
                 for i in df.columns:
