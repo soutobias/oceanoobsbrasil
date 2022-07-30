@@ -8,6 +8,9 @@ import pandas as pd
 from datetime import datetime, timedelta
 from oceanoobsbrasil.db import GetData
 
+from itertools import cycle
+from oceanoobsbrasil.utils import *
+
 from dotenv import load_dotenv
 import os
 import requests
@@ -31,41 +34,55 @@ class Inmet():
     def get(self,
         save_bd=True):
 
+        proxies = to_get_proxies()
+        proxyPool = cycle(proxies)         
+
         for index, station in self.stations.iterrows():
             print(station.url)
 
             url = f"{self.api}/estacao/{self.start_date}/{self.end_date}/{station.url}"
 
-            response = requests.get(url,headers={'referer': 'https://www.google.com/'})
-            df = pd.DataFrame(response)
+            for i in range(1, 11):
+                proxy = next(proxyPool)
+                print("Request #%d" % i)
+                x = 1
+                try:
+                    print(url)
+                    response = requests.get(url, timeout=10)
+                    df = pd.DataFrame(response)
+                    if response.status_code == 200:
+                        df = pd.DataFrame(response.json())
+                        df = df[['PRE_INS', 'VEN_DIR', 'DT_MEDICAO', 'VEN_VEL','VEN_RAJ', 'TEM_INS',
+                                'HR_MEDICAO']]
+                        df.columns = ['pres', 'wdir', 'date', 'wspd', 'gust', 'atmp', 'hour']
+                        df['date_time'] = pd.to_datetime(df['date'] + df['hour'], format='%Y-%m-%d%H%M')
+                        df.drop(columns=['date', 'hour'], inplace=True)
+                        df = df[df.date_time <datetime.utcnow()]
 
-            if response.status_code == 200:
-                df = pd.DataFrame(response.json())
-                df = df[['PRE_INS', 'VEN_DIR', 'DT_MEDICAO', 'VEN_VEL','VEN_RAJ', 'TEM_INS',
-                         'HR_MEDICAO']]
-                df.columns = ['pres', 'wdir', 'date', 'wspd', 'gust', 'atmp', 'hour']
-                df['date_time'] = pd.to_datetime(df['date'] + df['hour'], format='%Y-%m-%d%H%M')
-                df.drop(columns=['date', 'hour'], inplace=True)
-                df = df[df.date_time <datetime.utcnow()]
+                        self.result = df.replace(to_replace =['None', 'NULL', ' ', ''],
+                                                value =np.nan)
 
-                self.result = df.replace(to_replace =['None', 'NULL', ' ', ''],
-                                        value =np.nan)
+                        self.result.date_time = self.result.date_time + timedelta(hours=3)
 
-                self.result.date_time = self.result.date_time + timedelta(hours=3)
+                        self.result['gust'] = pd.to_numeric(self.result['gust'], errors='coerce')
+                        self.result.gust[self.result.gust.notnull()] = (self.result.gust[self.result.gust.notnull()]*1.94384).round(decimals=1)
+                        self.result['wspd'] = pd.to_numeric(self.result['wspd'], errors='coerce')
+                        self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
 
-                self.result['gust'] = pd.to_numeric(self.result['gust'], errors='coerce')
-                self.result.gust[self.result.gust.notnull()] = (self.result.gust[self.result.gust.notnull()]*1.94384).round(decimals=1)
-                self.result['wspd'] = pd.to_numeric(self.result['wspd'], errors='coerce')
-                self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
+                        if save_bd:
+                            self.result['station_id'] = str(station['id'])
+                            self.db.feed_bd(table='data_stations', df=self.result)
+                        else:
+                            return self.result
+                    x = 1
+                except:
+                    x = 0
+                if x==1:
+                    break
 
-
-                if save_bd:
-                    self.result['station_id'] = str(station['id'])
-                    self.db.feed_bd(table='data_stations', df=self.result)
-                else:
-                    return self.result
             else:
                 print ("Nao ha dados para essa estação")
 
 if __name__ == '__main__':
     Inmet().get(save_bd=True)
+
