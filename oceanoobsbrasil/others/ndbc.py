@@ -59,9 +59,8 @@ class Ndbc():
 
         df.hour = (df.hour.astype(int)/100).astype(int)
         df['date_time'] = df['hour'].apply(lambda x: self.calculate_date(x))
-
-        self.result = df[['date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']].copy()
-        self.result.columns = ['date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
+        self.result = df[['ID','date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']].copy()
+        self.result.columns = ['name', 'date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
 
 
         self.convert_to_numeric()
@@ -91,7 +90,7 @@ class Ndbc():
         return value
 
     def convert_to_numeric(self):
-        columns = self.result.drop(columns='date_time').columns
+        columns = self.result.drop(columns=['date_time', 'name']).columns
         for column in columns:
             self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
 

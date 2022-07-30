@@ -21,7 +21,7 @@ class Drifter():
         platform_type = "DRIFTING BUOYS (GENERIC)"):
 
         self.db = GetData()
-        self.url = 'http://osmc.noaa.gov/erddap/tabledap/OSMC_30day.htmlTable?platform_type,time,latitude,longitude,observation_depth,sst,atmp,ztmp,slp,wvht'
+        self.url = 'http://osmc.noaa.gov/erddap/tabledap/OSMC_30day.htmlTable?platform_code,platform_type,time,latitude,longitude,observation_depth,sst,atmp,ztmp,slp,wvht'
 
         if platform_type == "DRIFTING BUOYS (GENERIC)":
           self.data_type = 'drifter'
@@ -47,8 +47,8 @@ class Drifter():
         df.columns = df.columns.droplevel(level=1)
         df = df.loc[df['observation_depth']>=-1]
         df.sst.fillna(df.ztmp.dropna(), inplace=True)
-        df = df[['time', 'latitude', 'longitude','sst', 'atmp', 'slp', 'wvht']]
-        df.columns = ['date_time', 'lat', 'lon', 'sst', 'atmp', 'pres', 'swvht']
+        df = df[['platform_code', 'time', 'latitude', 'longitude','sst', 'atmp', 'slp', 'wvht']]
+        df.columns = ['name', 'date_time', 'lat', 'lon', 'sst', 'atmp', 'pres', 'swvht']
         df['date_time'] = pd.to_datetime(df['date_time'], format="%Y-%m-%dT%H:%M:%SZ")
         df.fillna(np.nan, inplace=True)
         self.result = df

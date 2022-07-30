@@ -66,10 +66,10 @@ class SpotterData():
                     else:
                         self.result = pd.concat([self.result, self.data])
 
-        self.result = self.result[['date_time','latitude','longitude','wspd','wdir','swvht','peakPeriod',
+        self.result = self.result[['name', 'date_time','latitude','longitude','wspd','wdir','swvht','peakPeriod',
                           'meanDirection', 'sst']]
                           
-        self.result.columns = ['date_time', 'lat', 'lon', 'wspd', 'wdir', 'swvht', 'tp', 'wvdir','sst']
+        self.result.columns = ['name', 'date_time', 'lat', 'lon', 'wspd', 'wdir', 'swvht', 'tp', 'wvdir','sst']
         self.convert_to_numeric()
 
         if save_bd:
@@ -128,10 +128,11 @@ class SpotterData():
                                         }, inplace = True)
 
         spotter_general = spotter_general.replace({np.nan:None})
+        spotter_general['name'] = spotter.id
 
         return spotter_general
 
     def convert_to_numeric(self):
-        columns = self.result.drop(columns='date_time').columns
+        columns = self.result.drop(columns=['name', 'date_time']).columns
         for column in columns:
             self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
