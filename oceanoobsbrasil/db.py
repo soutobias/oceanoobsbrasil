@@ -49,6 +49,9 @@ class GetData():
             institution = list(df.institution.unique())
             self.delete(table=table, institution=['in', institution], data_type=['=', data_type], date_time=['>=', df['date_time'].min()])
 
+        elif table == 'warnings':
+            self.delete(table=table, date_time=['>=', df['date_time'].min()])
+
         df.to_sql(con=self.engine, name=table, if_exists='append', index=False)
 
     def delete(self, table, **kwargs):

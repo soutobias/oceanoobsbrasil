@@ -61,6 +61,10 @@ if args[0] == 'others_synoptic':
     from oceanoobsbrasil.others.synoptic_charts import SynopticChart
     SynopticChart().get()
 
+if args[0] == 'others_chm_warnings':
+    from oceanoobsbrasil.others.weather_warning import WeatherWarning
+    WeatherWarning().get()
+
 if args[0] == 'others_drifter':
     from oceanoobsbrasil.others.drifters import Drifter
     Drifter().get()
