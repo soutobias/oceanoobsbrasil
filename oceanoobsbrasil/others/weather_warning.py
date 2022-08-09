@@ -28,6 +28,7 @@ class WeatherWarning():
         soup = BeautifulSoup(response.text,'html.parser')
 
         all = soup.find("div",  {"class": "region region-content"})
+        self.all = all
         ps = all.find_all("p")
 
 
@@ -54,19 +55,32 @@ class WeatherWarning():
                     param = {}
                     hour = datetime.utcnow().hour//6*6
                     date_time = datetime.utcnow().replace(hour=hour)
-
+                    
                     param['date_time'] = date_time.strftime(format=f'%Y-%m-%d %H:01:00')
                     param['region'] = region
                     param['warning_number'] = r.text.strip()
                     param['warning_number'] = re.findall('[0-9]+/[0-9]+', param['warning_number'])[0]
-                    all = ps[i].text.strip()
-                    all = all.replace('\t', '').split('\n')
-                    param['warning_type'] = all[1].replace('AVISO DE', '').strip()
-                    param['start_date'] = all[2].replace('EMITIDO ÀS', '').strip()
-                    param['description'] = all[3].strip()
-                    param['end_date'] = all[4].replace('VÁLIDO ATÉ', '').replace('.', '').strip()
-                    param['institution'] = 'CHM'
-                    self.params.append(param)
+                    try:
+                        try:
+                            all = ps[i].text.strip()
+                            all = all.replace('\t', '').split('\n')
+                            param['warning_type'] = all[1].replace('AVISO DE', '').strip()
+                            param['start_date'] = all[2].replace('EMITIDO ÀS', '').strip()
+                            param['description'] = all[3].strip()
+                            param['end_date'] = all[4].replace('VÁLIDO ATÉ', '').replace('.', '').strip()
+                            param['institution'] = 'CHM'
+                        except:
+                            i = i+1
+                            all = ps[i].text.strip()
+                            all = all.replace('\t', '').split('\n')
+                            param['warning_type'] = all[0].replace('AVISO DE', '').strip()
+                            param['start_date'] = all[1].replace('EMITIDO ÀS', '').strip()
+                            param['description'] = all[2].strip()
+                            param['end_date'] = all[3].replace('VÁLIDO ATÉ', '').replace('.', '').strip()
+                        param['institution'] = 'CHM'
+                        self.params.append(param)
+                    except:
+                        continue
 
         self.result = pd.DataFrame(self.params)
         print(self.result.region.unique())
