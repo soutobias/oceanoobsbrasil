@@ -53,7 +53,7 @@ class WeatherWarning():
                 r = ps[i].strong
                 if r:
                     param = {}
-                    hour = datetime.utcnow().hour//6*6
+                    hour = (datetime.utcnow().hour//6)*6
                     date_time = datetime.utcnow().replace(hour=hour)
                     
                     param['date_time'] = date_time.strftime(format=f'%Y-%m-%d %H:01:00')
