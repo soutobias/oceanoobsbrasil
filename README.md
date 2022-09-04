@@ -4,6 +4,40 @@ A pip python package for retrieving weather and ocean data for the Brazilian Coa
 
 Acess website: www.oceano.live
 
+## Fonte dos dados:
+
+a) Boias
+- PNBOIA
+- PIRATA
+- SIMCOSTA
+- Projeto Aqualink
+- Boias de empresas em ES, PE e SE
+
+b) Observações visuais
+- RICO SURF
+- WAVE CHECK
+
+c) SENSORIAMENTO REMOTO
+- Escaterômetro
+- Jason3
+
+d) ESTAÇÕES MAREGRÁFICAS
+- Epagri
+- Simcosta
+- Gloss
+- Empresas
+
+e) ESTAÇÕES METEOROLÓGICAS
+- INMET
+- Aeroportos (METAR)
+- Empresas privadas
+
+f) OUTROS
+- Boias de deriva NOAA
+- GTS NDBC
+- Avisos de mau tempo marinha
+- Cartas sinóticas
+
 # Setup
 
 ## PostgreSQL
