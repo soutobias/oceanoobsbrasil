@@ -67,7 +67,7 @@ class SynopticChart():
               x[(x!=0)&(x.diff()!=0)&(x.diff(periods=-1)!=0)&(x.diff(axis=1)!=0)&(x.diff(axis=1,periods=-1)!=0)&(x.notna())] = 0
               df['opacity'] = np.array(x).reshape(1932*1449)
               im = Image.fromarray(np.array(df).reshape(1932, 1449, 4))
-              im.save(f'images/{name}.png')
+              im.save(f'{name}.png')
 
               self.add_image(name)
             except Exception as e:
@@ -90,7 +90,7 @@ class SynopticChart():
       ftp = ftplib.FTP(os.getenv("FTP_SERVER"))
       ftp.login(user=os.getenv("FTP_USER"), passwd=os.getenv("FTP_PWD"))
       ftp.cwd(directory)
-      file = open(f'images/{name}.png','rb')
+      file = open(f'{name}.png','rb')
       ftp.storbinary(f'STOR {name}.png', file)
       file.close()
       ftp.quit()
