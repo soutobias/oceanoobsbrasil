@@ -18,11 +18,6 @@ import pandas as pd
 # from cloudinary.uploader import upload
 # from cloudinary.utils import cloudinary_url
 import ftplib
-import base64
-
-import asyncio
-import sys
-import pyimgbox
 
 class SynopticChart():
 
@@ -78,14 +73,6 @@ class SynopticChart():
             except Exception as e:
               print(e)
 
-            # with open(f"images/{name}.png", "rb") as file:
-            #     url = "https://api.imgbb.com/1/upload"
-            #     payload = {
-            #         "key": '20c880250db690b32a0410ce3b17ee6a',
-            #         "image": base64.b64encode(file.read()),
-            #     }
-            #     res = requests.post(url, payload)
-            #     print(res)
 
     def delete(self):
       response = resources_by_tag('OCEANOBS')
@@ -97,18 +84,6 @@ class SynopticChart():
       delete_resources_by_tag(DEFAULT_TAG)
       print("Done!")
       
-    # async def add_imgbox(self, name):
-    #   with pyimgbox.Gallery(title="Hello, World!") as gallery:
-    #       submission1 = await gallery.upload(f'{name}.png')
-    #       result = {'file_name': name, 'image_url': submission.image_url}
-    #       self.result = pd.DataFrame([result])
-    #       self.db.feed_bd(table='images', df=self.result)
-    #       print('ok')
-      
-      
-    #   # loop = asyncio.get_event_loop()
-    #   # loop.run_until_complete(upp_image(name))
-    #   # loop.close()
         
     def add_image(self, name):
       directory = '/images/synoptic_charts/'
