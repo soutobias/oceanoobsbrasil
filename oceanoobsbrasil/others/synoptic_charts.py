@@ -11,14 +11,18 @@ import requests
 from io import BytesIO
 import numpy as np
 import pandas as pd
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+# import cloudinary
+# import cloudinary.uploader
+# import cloudinary.api
+# from cloudinary.api import delete_resources_by_tag, resources_by_tag
+# from cloudinary.uploader import upload
+# from cloudinary.utils import cloudinary_url
+import ftplib
+import base64
 
-from cloudinary.api import delete_resources_by_tag, resources_by_tag
-from cloudinary.uploader import upload
-from cloudinary.utils import cloudinary_url
-
+import asyncio
+import sys
+import pyimgbox
 
 class SynopticChart():
 
@@ -30,10 +34,12 @@ class SynopticChart():
 
       self.url = 'https://www.marinha.mil.br/chm/sites/www.marinha.mil.br.chm/files/cartas-sinoticas/'
       self.days = days
+      self.db = GetData()
+
 
 
     def get(self):
-      self.delete()
+      # self.delete()
       for i in range(7):
           for ii in ['00', '12']:
             name = datetime.strftime(datetime.now() - timedelta(days=i), format='%y%m%d'+ii)
@@ -66,10 +72,20 @@ class SynopticChart():
               x[(x!=0)&(x.diff()!=0)&(x.diff(periods=-1)!=0)&(x.diff(axis=1)!=0)&(x.diff(axis=1,periods=-1)!=0)&(x.notna())] = 0
               df['opacity'] = np.array(x).reshape(1932*1449)
               im = Image.fromarray(np.array(df).reshape(1932, 1449, 4))
-              im.save(f'{name}.png')
-              response = upload(f'{name}.png', tag='OCEANOBS', public_id=name)
-            except:
-              print('no image found')
+              im.save(f'images/{name}.png')
+
+              self.add_image(name)
+            except Exception as e:
+              print(e)
+
+            # with open(f"images/{name}.png", "rb") as file:
+            #     url = "https://api.imgbb.com/1/upload"
+            #     payload = {
+            #         "key": '20c880250db690b32a0410ce3b17ee6a',
+            #         "image": base64.b64encode(file.read()),
+            #     }
+            #     res = requests.post(url, payload)
+            #     print(res)
 
     def delete(self):
       response = resources_by_tag('OCEANOBS')
@@ -80,3 +96,26 @@ class SynopticChart():
       print("Deleting {0:d} images...".format(len(resources)))
       delete_resources_by_tag(DEFAULT_TAG)
       print("Done!")
+      
+    # async def add_imgbox(self, name):
+    #   with pyimgbox.Gallery(title="Hello, World!") as gallery:
+    #       submission1 = await gallery.upload(f'{name}.png')
+    #       result = {'file_name': name, 'image_url': submission.image_url}
+    #       self.result = pd.DataFrame([result])
+    #       self.db.feed_bd(table='images', df=self.result)
+    #       print('ok')
+      
+      
+    #   # loop = asyncio.get_event_loop()
+    #   # loop.run_until_complete(upp_image(name))
+    #   # loop.close()
+        
+    def add_image(self, name):
+      directory = '/images/synoptic_charts/'
+      ftp = ftplib.FTP(os.getenv("FTP_SERVER"))
+      ftp.login(user=os.getenv("FTP_USER"), passwd=os.getenv("FTP_PWD"))
+      ftp.cwd(directory)
+      file = open(f'images/{name}.png','rb')
+      ftp.storbinary(f'STOR {name}.png', file)
+      file.close()
+      ftp.quit()
