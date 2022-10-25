@@ -36,7 +36,11 @@ class WeatherWarning():
         regions = []
         for i in range(len(ps)):
             r = ps[i].find("span", {'style': "color:#ff0000;"})
+            r1 = ps[i].find("span", {'style': "color:#FF0000;"})
+            if r1:
+                r = r1
             if r:
+                r1 = r
                 for rr in self.regions:
                     if rr in r.text:
                         regions.append(rr)
