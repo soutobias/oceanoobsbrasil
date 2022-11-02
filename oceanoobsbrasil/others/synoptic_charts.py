@@ -40,7 +40,7 @@ class SynopticChart():
             name = datetime.strftime(datetime.now() - timedelta(days=i), format='%y%m%d'+ii)
             print(name)
             try:
-              response = requests.get(f'{self.url}c{name}.png')
+              response = requests.get(f'{self.url}c{name}.png', verify=False)
               img = Image.open(BytesIO(response.content))
               left = 26
               top = 222
