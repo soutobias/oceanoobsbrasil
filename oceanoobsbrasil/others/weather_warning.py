@@ -24,7 +24,7 @@ class WeatherWarning():
                         'GOLF', 'HOTEL', 'SUL', 'NORTE']
 
     def get(self):
-        response = requests.get(self.url)
+        response = requests.get(self.url, verify = False)
         soup = BeautifulSoup(response.text,'html.parser')
 
         all = soup.find("div",  {"class": "region region-content"})
