@@ -8,7 +8,6 @@ from oceanoobsbrasil.db import GetData
 
 from harmony import BBox, Client, Collection, Request, Environment, LinkType
 import os
-import glob
 
 from dotenv import load_dotenv
 
