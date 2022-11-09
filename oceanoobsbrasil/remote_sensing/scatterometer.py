@@ -1,18 +1,14 @@
 import pandas as pd
 import xarray as xr
 import numpy as np
+import tempfile
 
 from datetime import datetime, timedelta
 from oceanoobsbrasil.db import GetData
 
-from podaac import podaac
-from podaac import podaac_utils as utils
-from podaac import drive as drive
-from podaac import l2ss
+from harmony import BBox, Client, Collection, Request, Environment, LinkType
 import os
 import glob
-
-from os.path import expanduser
 
 from dotenv import load_dotenv
 
@@ -21,28 +17,22 @@ class Metop():
     load_dotenv()
 
     def __init__(self,
-        lat=[-35, 7],
-        lon=[-55, -20],
+        b_box=(-55,-35,20,7),
         step=20,
-        webdav_url = 'https://podaac-tools.jpl.nasa.gov/drive/files',
-        datasets = ['PODAAC-ASOP2-25B01', 'PODAAC-ASOP2-25C01'],
-        start_date = datetime.strftime(datetime.utcnow()-timedelta(days=4), "%Y-%m-%dT%H:%M:%SZ"),
-        end_date = datetime.strftime(datetime.utcnow()+timedelta(days=1), "%Y-%m-%dT%H:%M:%SZ")):
+        datasets = ['C2075141559-POCLOUD'],
+        start_date = datetime.utcnow()-timedelta(days=2),
+        end_date = datetime.utcnow()+timedelta(days=1)):
 
         self.db = GetData()
-        home = expanduser("~")
-        self.path = f"{home}/data"
-        self.lat = lat
-        self.lon = lon
+        self.b_box = BBox(b_box[0], b_box[1], b_box[2], b_box[3])
         self.step = step
         self.start_date = start_date
         self.end_date = end_date
 
         self.datasets = datasets
 
-        self.webdav_url = webdav_url
-        self.username=os.getenv('PODAAC_USR')
-        self.password=os.getenv('PODAAC_PWD')
+        self.username=os.getenv('EDL_USR')
+        self.password=os.getenv('EDL_PWD')
 
 
     def get(self):
@@ -54,18 +44,18 @@ class Metop():
         wind_lat = pd.DataFrame([], dtype = 'float64')
         wind_lon = pd.DataFrame([], dtype = 'float64')
 
-        self.get_nc_files()
-
-        for f in  self.nc_files:
-            print(f)
-            ds = xr.open_dataset(f)
-            wind_flag = wind_flag.append(pd.DataFrame(ds['wvc_quality_flag'].values))
-            wind_dir = wind_dir.append(pd.DataFrame(ds['wind_dir'].values))
-            wind_speed = wind_speed.append(pd.DataFrame(ds['wind_speed'].values))
-            wind_time = wind_time.append(pd.DataFrame(ds['time'].values))
-            wind_lat = wind_lat.append(pd.DataFrame(ds['lat'].values))
-            wind_lon = wind_lon.append(pd.DataFrame(ds['lon'].values))
-            os.remove(f)
+        for collection in self.datasets:
+            self.download(collection)
+            for f in  self.nc_files:
+                print(f)
+                ds = xr.open_dataset(f)
+                wind_flag = wind_flag.append(pd.DataFrame(ds['wvc_quality_flag'].values))
+                wind_dir = wind_dir.append(pd.DataFrame(ds['wind_dir'].values))
+                wind_speed = wind_speed.append(pd.DataFrame(ds['wind_speed'].values))
+                wind_time = wind_time.append(pd.DataFrame(ds['time'].values))
+                wind_lat = wind_lat.append(pd.DataFrame(ds['lat'].values))
+                wind_lon = wind_lon.append(pd.DataFrame(ds['lon'].values))
+                os.remove(f)
 
         date_time = np.array(pd.melt(wind_time, value_name = 'date_time')['date_time'])
         wdir = np.array(pd.melt(wind_dir, value_name = 'wdir')['wdir'])
@@ -103,53 +93,27 @@ class Metop():
         else:
             print('Não há dados')
 
-    def download(self):
+    def download(self, collection):
 
-        p = podaac.Podaac()
-        u = utils.PodaacUtils()
+        harmony_client = Client(auth=(self.username, self.password))
+        collection_id = Collection(collection) 
 
-        d = drive.Drive(file = '', username=self.username, password=self.password, webdav_url=self.webdav_url)
-
-        box = ','.join([str(self.lon[0]), str(self.lat[0]), str(self.lon[1]), str(self.lat[1])])
-
-        for dataset in self.datasets:
-            print(dataset)
-            newData = p.granule_search(dataset_id = dataset,
-                                    start_time = self.start_date,
-                                    end_time = self.end_date,
-                                    bbox = box,
-                                    sort_by = 'timeAsc',
-                                    items_per_page = '400',
-                                    _format = 'atom')
-
-
-            if newData:
-                granules = d.mine_drive_urls_from_granule_search(granule_search_response = (str(newData)))
-                list_granules = u.mine_granules_from_granule_search(granule_search_response=str(newData))
-
-                l = l2ss.L2SS()
-
-                query = {
-                    "email": '',
-                    'query':
-                    [
-                        {
-                            "compact": "false",
-                            "datasetId": dataset,
-                            "bbox": box,
-                            "variables": ["lat","lon","time","wind_speed","wind_dir","wvc_quality_flag"],
-                            "granuleIds": list_granules
-                        }
-                    ]
-                }
-                os.chdir(self.path)
-
-                l.granule_download(query_string = query, path=self.path)
-
-    def get_nc_files(self):
-        self.nc_files = []
-        for file in glob.glob(f"{self.path}/*l2.nc", recursive=True):
-            self.nc_files.append(os.path.abspath(file))
+        request = Request(
+            collection=collection_id,
+            temporal={
+                'start': self.start_date,
+                'stop': self.end_date
+            },
+            spatial=BBox(-55,-35,20,7) #  lat: (-45.75:45), lon: (-90:90)
+        )
+        if request.is_valid():
+            job_id = harmony_client.submit(request)
+            print('\n Waiting for the job to finish. . .\n')
+            response = harmony_client.result_json(job_id, show_progress=True)
+            print("\n. . .DONE!")
+        temp_dir = tempfile.mkdtemp()
+        futures = harmony_client.download_all(job_id, directory=temp_dir, overwrite=True)
+        self.nc_files = [f.result() for f in futures]
 
 if __name__ == '__main__':
     Metop().get()

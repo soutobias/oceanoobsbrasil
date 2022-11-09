@@ -19,12 +19,16 @@ psycopg2-binary
 chromedriver-binary==103.0.5060.53
 erddapy
 podaacpy
+certifi
 
 netcdf4
 h5py
 xarray
 lxml
 pysofar
+dask
+harmony
+harmony-py
 
 pillow
 cloudinary
