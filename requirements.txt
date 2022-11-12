@@ -27,7 +27,6 @@ xarray
 lxml
 pysofar
 dask
-harmony
 harmony-py
 
 pillow

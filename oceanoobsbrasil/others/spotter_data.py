@@ -21,7 +21,7 @@ class SpotterData():
 
         self.api = SofarApi()
         self.devices = self.api.devices
-        self.ids = [x for x in self.api.device_ids if x[0:7] == 'SPOT-01']
+        self.ids = [x for x in self.api.device_ids]
         self.spotters = self.api.get_spotters()
         self.db = GetData()
 
