@@ -30,7 +30,7 @@ class Pnboia():
 
     def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
-            url=f"https://remobsapi.herokuapp.com/api/v1/data_buoys?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
+            url=f"https://remobsapi.herokuapp.com/api/v2/qualified_values?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
             response = requests.get(url).json()
             print(station['name']) 
             try:
@@ -42,11 +42,14 @@ class Pnboia():
                         pass
                 df['date_time'] = pd.to_datetime(df['date_time'], format='%Y-%m-%dT%H:%M:%S.000Z')
                 df.sort_values('date_time', inplace=True)
+                if station['url'] in [31, 32]:
+                    print(station)
+                    df = df[df['swvht1'].notna()]
 
                 df = df[['date_time', 'rh', 'pres', 'atmp',
-                       'dewpt', 'wspd', 'wdir',
-                       'gust', 'sst',
-                       'swvht1', 'mxwvht1', 'tp1','wvdir1']]
+                    'dewpt', 'wspd1', 'wdir1',
+                    'gust1', 'sst',
+                    'swvht1', 'mxwvht1', 'tp1','wvdir1']]
 
                 df.columns = ['date_time', 'rh', 'pres', 'atmp',
                        'dewpt', 'wspd', 'wdir',
