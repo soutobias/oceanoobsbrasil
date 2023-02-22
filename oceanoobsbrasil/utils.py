@@ -50,11 +50,8 @@ def def_args_prefs(options, args, preferences):
         else:
             options.add_argument(arg)
 
-    for preference in preferences:
-        if type(preference) == list:
-            options.set_preference(preference[0], preference[1])
-        else:
-            options.set_preference(preference[0])
+    if preferences != []:
+        options.add_experimental_option("prefs", preferences)
 
     return options
 

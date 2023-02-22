@@ -1,0 +1,152 @@
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/gimp/2.0/help /usr/share/gimp/2.0/help none bind,ro 0 0): cannot open directory "/var/lib": permission denied
+update.go:85: cannot change mount namespace according to change mount (/var/lib/snapd/hostfs/usr/share/xubuntu-docs /usr/share/xubuntu-docs none bind,ro 0 0): cannot open directory "/var/lib": permission denied
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677074624351	geckodriver	INFO	Listening on 127.0.0.1:57173
+1677074624654	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "52873" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileaSArf0"
+*** You are running in headless mode.
+Gtk-Message: 11:03:44.700: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677074625374	Marionette	INFO	Marionette enabled
+1677074625380	Marionette	INFO	Listening on port 41149
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+Read port: 41149
+WebDriver BiDi listening on ws://127.0.0.1:52873
+1677074625654	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileaSArf0/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:52873/devtools/browser/5166dc6a-ada2-419c-8dfb-0daf8a7968fc
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677074710274	geckodriver	INFO	Listening on 127.0.0.1:48355
+1677074710708	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "36453" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilezcSz5u"
+*** You are running in headless mode.
+Gtk-Message: 11:05:10.742: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677074711116	Marionette	INFO	Marionette enabled
+1677074711121	Marionette	INFO	Listening on port 45503
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+Read port: 45503
+WebDriver BiDi listening on ws://127.0.0.1:36453
+1677074711320	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezcSz5u/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:36453/devtools/browser/dab65475-f8ff-4b71-87cb-08761d2d5bf9
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677081495285	geckodriver	INFO	Listening on 127.0.0.1:42161
+1677081495969	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "48261" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilezyJYzD"
+*** You are running in headless mode.
+Gtk-Message: 12:58:16.000: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677081496378	Marionette	INFO	Marionette enabled
+1677081496382	Marionette	INFO	Listening on port 43307
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+WebDriver BiDi listening on ws://127.0.0.1:48261
+Read port: 43307
+1677081496642	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilezyJYzD/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:48261/devtools/browser/8f4d3ad1-bf46-4d02-a18d-1b49a49caecc
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677081741897	geckodriver	INFO	Listening on 127.0.0.1:34487
+1677081742326	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "41469" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileAce1Fn"
+*** You are running in headless mode.
+Gtk-Message: 13:02:22.347: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677081742567	Marionette	INFO	Marionette enabled
+1677081742570	Marionette	INFO	Listening on port 36557
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+Read port: 36557
+WebDriver BiDi listening on ws://127.0.0.1:41469
+1677081742670	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileAce1Fn/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:41469/devtools/browser/ac598dee-ba9f-47c0-8014-529848dc1c6d
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677083632117	geckodriver	INFO	Listening on 127.0.0.1:48873
+1677083632486	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "34285" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileRMRdC2"
+*** You are running in headless mode.
+Gtk-Message: 13:33:52.510: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677083632917	Marionette	INFO	Marionette enabled
+1677083632923	Marionette	INFO	Listening on port 37507
+Read port: 37507
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+WebDriver BiDi listening on ws://127.0.0.1:34285
+1677083633121	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofileRMRdC2/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:34285/devtools/browser/f145bc50-0332-47cc-a85a-feb033d28716
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677083672591	geckodriver	INFO	Listening on 127.0.0.1:51005
+1677083673061	mozrunner::runner	INFO	Running command: "/snap/firefox/current/firefox.launcher" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "50541" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilesVS2e5"
+*** You are running in headless mode.
+Gtk-Message: 13:34:33.085: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+1677083673316	Marionette	INFO	Marionette enabled
+1677083673319	Marionette	INFO	Listening on port 36209
+console.error: "Warning: unrecognized command line flag -disable-dev-shm-usage\n"
+Read port: 36209
+WebDriver BiDi listening on ws://127.0.0.1:50541
+1677083673444	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.error: ({})
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new NotFoundError("Could not open the file at /tmp/rust_mozprofilesVS2e5/search.json.mozlz4", (void 0)))
+DevTools listening on ws://127.0.0.1:50541/devtools/browser/e1cc0413-69c5-40f3-ba03-365295330963
+console.warn: services.settings: Ignoring preference override of remote settings server
+console.warn: services.settings: Allow by setting MOZ_REMOTE_SETTINGS_DEVTOOLS=1 in the environment
+console.error: (new TypeError("lazy.AsyncShutdown.profileBeforeChange is undefined", "resource://services-settings/Database.jsm", 603))
+ALSA lib conf.c:4120:(snd_config_update_r) Cannot access file /usr/share/alsa/alsa.conf
+ALSA lib seq.c:935:(snd_seq_open_noupdate) Unknown SEQ default
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.

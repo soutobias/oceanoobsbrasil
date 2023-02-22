@@ -16,10 +16,12 @@ psutil
 sqlalchemy
 psycopg2-binary
 
-chromedriver-binary==103.0.5060.53
+chromedriver-binary==110.0.5481.77.0
 erddapy
 podaacpy
 certifi
+
+html5lib
 
 netcdf4
 h5py

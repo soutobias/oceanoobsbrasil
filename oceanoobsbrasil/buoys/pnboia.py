@@ -30,7 +30,7 @@ class Pnboia():
 
     def get(self, save_bd=True):
         for index, station in self.stations.iterrows():
-            url=f"https://remobsapi.herokuapp.com/api/v2/qualified_values?buoy={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
+            url=f"http://52.67.222.63/v1/qualified_data/qualified_data?buoy_id={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
             response = requests.get(url).json()
             print(station['name']) 
             try:
@@ -40,7 +40,7 @@ class Pnboia():
                         df[i] = pd.to_numeric(df[i])
                     except:
                         pass
-                df['date_time'] = pd.to_datetime(df['date_time'], format='%Y-%m-%dT%H:%M:%S.000Z')
+                df['date_time'] = pd.to_datetime(df['date_time'], format='%Y-%m-%dT%H:%M:%S')
                 df.sort_values('date_time', inplace=True)
                 if station['url'] in [31, 32]:
                     print(station)
