@@ -45,10 +45,11 @@ class AqualinkBuoy():
   def get(self):
     for index, station in self.stations.iterrows():
       url=f"{self.url}{station.url}"
+      print(url)
       self.driver.get(url)
       time.sleep(10)
       soup=BeautifulSoup(self.driver.page_source, 'html.parser')
-      l = soup.find_all(attrs={'class': 'MuiCard-root'})[3]
+      l = soup.find_all(attrs={'class': 'MuiCard-root'})[4]
       text = l.text
       print(text)
       text = text.replace('WINDSPEED', '')

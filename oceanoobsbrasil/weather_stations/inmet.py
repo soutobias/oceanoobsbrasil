@@ -18,6 +18,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.chrome.options import Options
 import chromedriver_binary
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from dotenv import load_dotenv
 import os
@@ -27,13 +29,16 @@ warnings.filterwarnings("ignore")
 
 
 class Inmet():
-
     def __init__(self,
         start_date=(datetime.utcnow() - timedelta(days=3)).strftime('%Y-%m-%d'),
         end_date = (datetime.utcnow() + timedelta(days=1)).strftime('%Y-%m-%d'),
-        args=["-headless", "--disable-dev-shm-usage"],
+        args=["-headless", "--start-maximized", '--disable-gpu', '--no-sandbox', '--log-level=3', "user-agent=Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.100 Safari/537.36"],
         preferences={"dom.disable_beforeunload": True, "browser.tabs.warnOnClose": False},
         api="https://apitempo.inmet.gov.br"):
+
+
+# options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+#     options.setExperimentalOption("useAutomationExtension", false);
 
         self.db = GetData()
         self.api = 'https://tempo.inmet.gov.br/TabelaEstacoes/'
@@ -55,10 +60,14 @@ class Inmet():
 
             url = f"{self.api}{station.url}"
             try:
+                print(url)
                 self.driver = webdriver.Chrome(options=self.options)
                 self.driver.get(url)
+                print('XXXXXXXXXXXX')
                 time.sleep(8)
+                print('XXXXXXXXXXXX')
                 df = pd.read_html(self.driver.page_source, decimal=',', thousands='.')
+
                 if df[0].isna().sum().sum() != 408:
                     df = df[0].iloc[:,[0,1, 2, 11, 14, 15, 16]]
                     df.columns = ['date', 'hour', 'atmp', 'pres', 'wspd', 'wdir', 'gust']
@@ -71,13 +80,13 @@ class Inmet():
                                             value =np.nan)
 
                     self.result.date_time = self.result.date_time + timedelta(hours=3)
-                    self.result = self.result[self.result.date_time <datetime.datetime.utcnow()]
+                    self.result = self.result[self.result.date_time <datetime.utcnow()]
 
                     self.result['gust'] = pd.to_numeric(self.result['gust'], errors='coerce')
                     self.result.gust[self.result.gust.notnull()] = (self.result.gust[self.result.gust.notnull()]*1.94384).round(decimals=1)
                     self.result['wspd'] = pd.to_numeric(self.result['wspd'], errors='coerce')
                     self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
-
+                    print(self.result)
                     if save_bd:
                         self.result['station_id'] = str(station['id'])
                         self.db.feed_bd(table='data_stations', df=self.result)

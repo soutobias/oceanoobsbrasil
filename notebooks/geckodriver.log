@@ -150,3 +150,31 @@ Exiting due to channel error.
 Exiting due to channel error.
 Exiting due to channel error.
 Exiting due to channel error.
+1677443748843	geckodriver	INFO	Listening on 127.0.0.1:41503
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677443749454	mozrunner::runner	INFO	Running command: "/snap/bin/firefox" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "42329" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofilenz1QBV"
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+*** You are running in headless mode.
+Gtk-Message: 17:35:49.575: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1677443826288	geckodriver	INFO	Listening on 127.0.0.1:57159
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677443826907	mozrunner::runner	INFO	Running command: "/snap/bin/firefox" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "47099" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileWfsfPw"
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+*** You are running in headless mode.
+Gtk-Message: 17:37:07.045: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1677443921538	geckodriver	INFO	Listening on 127.0.0.1:56215
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677443922169	mozrunner::runner	INFO	Running command: "/snap/bin/firefox" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "42791" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofiledHGOyg"
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+*** You are running in headless mode.
+Gtk-Message: 17:38:42.283: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1677443984590	geckodriver	INFO	Listening on 127.0.0.1:60777
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1677443985232	mozrunner::runner	INFO	Running command: "/snap/bin/firefox" "--marionette" "-headless" "--disable-dev-shm-usage" "--remote-debugging-port" "48415" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "/tmp/rust_mozprofileqszAcF"
+/bin/bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+*** You are running in headless mode.
+Gtk-Message: 17:39:45.338: Not loading module "atk-bridge": The functionality is provided by GTK natively. Please try to not load it.
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt

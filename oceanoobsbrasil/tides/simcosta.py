@@ -28,6 +28,7 @@ class SimcostaTide():
 
     def get(self):
         for index, station in self.stations.iterrows():
+            print(station.name)
             url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=water_l1"
             with urllib.request.urlopen(url_address) as url:
                 data = json.loads(url.read().decode())
