@@ -84,9 +84,8 @@ class SynopticChart():
       delete_resources_by_tag(DEFAULT_TAG)
       print("Done!")
       
-        
     def add_image(self, name):
-      directory = '/images/synoptic_charts/'
+      directory = os.getenv("FTP_DIRECTORY")
       ftp = ftplib.FTP(os.getenv("FTP_SERVER"))
       ftp.login(user=os.getenv("FTP_USER"), passwd=os.getenv("FTP_PWD"))
       ftp.cwd(directory)
