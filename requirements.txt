@@ -13,10 +13,10 @@ selenium
 python-dotenv
 psutil
 
-sqlalchemy
+sqlalchemy<2.0.0
 psycopg2-binary
 
-chromedriver-binary==110.0.5481.77.0
+chromedriver-binary==112.0.5615.49
 erddapy
 podaacpy
 certifi

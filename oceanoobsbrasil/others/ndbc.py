@@ -15,8 +15,11 @@ from oceanoobsbrasil.db import GetData
 
 class Ndbc():
 
-    def __init__(self, lat=[-35.8333, 7],
-        lon=[-55.20, 20],
+    # def __init__(self, lat=[-35.8333, 7],
+    #     lon=[-55.20, 20],
+    #     hours=12):
+    def __init__(self, lat=[-15],
+        lon=[-18],
         hours=12):
 
         self.db = GetData()
@@ -26,14 +29,16 @@ class Ndbc():
 
         self.start_date = datetime.utcnow()-timedelta(hours=self.hours)
         self.end_date = datetime.utcnow()
-
-        self.url=f"https://www.ndbc.noaa.gov/box_search.php?lat1={lat[0]}&lat2={lat[1]}&lon1={lon[0]}&lon2={lon[1]}&uom=M&ot=A&time={hours}"
-
+        self.url=f"https://www.ndbc.noaa.gov/radial_search.php?lat1={lat[0]}&lon1={lon[0]}&uom=M&dist=4000&ot=A&time={hours}"
+        
     def get(self, save_bd=True):
 
         resp = requests.get(self.url)
+        
+        print(self.url)
 
         soup = BeautifulSoup(resp.text,'html.parser')
+        self.soup = soup
 
         lines = soup.find_all('span', attrs={'style': 'background-color: #f0f8fe'})
         values=[]

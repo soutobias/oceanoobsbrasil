@@ -62,7 +62,7 @@ class GetData():
         query = f"DELETE FROM {table} WHERE true"
         if kwargs:
             query = self.create_query(query, kwargs)
-
+            
         self.engine.execute(query)
 
 

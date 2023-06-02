@@ -48,12 +48,12 @@ class Metop():
             for f in  self.nc_files:
                 print(f)
                 ds = xr.open_dataset(f)
-                wind_flag = wind_flag.append(pd.DataFrame(ds['wvc_quality_flag'].values))
-                wind_dir = wind_dir.append(pd.DataFrame(ds['wind_dir'].values))
-                wind_speed = wind_speed.append(pd.DataFrame(ds['wind_speed'].values))
-                wind_time = wind_time.append(pd.DataFrame(ds['time'].values))
-                wind_lat = wind_lat.append(pd.DataFrame(ds['lat'].values))
-                wind_lon = wind_lon.append(pd.DataFrame(ds['lon'].values))
+                wind_flag = pd.concat([wind_flag, pd.DataFrame(ds['wvc_quality_flag'].values)], axis=0)
+                wind_dir = pd.concat([wind_dir, pd.DataFrame(ds['wind_dir'].values)], axis=0)
+                wind_speed = pd.concat([wind_speed, pd.DataFrame(ds['wind_speed'].values)], axis=0)
+                wind_time = pd.concat([wind_time, pd.DataFrame(ds['time'].values)], axis=0)
+                wind_lat = pd.concat([wind_lat, pd.DataFrame(ds['lat'].values)], axis=0)
+                wind_lon = pd.concat([wind_lon, pd.DataFrame(ds['lon'].values)], axis=0)
                 os.remove(f)
 
         date_time = np.array(pd.melt(wind_time, value_name = 'date_time')['date_time'])
