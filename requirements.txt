@@ -16,7 +16,7 @@ psutil
 sqlalchemy<2.0.0
 psycopg2-binary
 
-chromedriver-binary==112.0.5615.49
+chromedriver-binary==115.0.5790.102
 erddapy
 podaacpy
 certifi
@@ -34,3 +34,6 @@ harmony-py
 pillow
 cloudinary
 sphinx
+black
+pylint
+isort

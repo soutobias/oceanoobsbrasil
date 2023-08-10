@@ -1,27 +1,26 @@
 import os
 import time
-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 from datetime import datetime, timedelta
+
+import chromedriver_binary
 import pandas as pd
+from dotenv import load_dotenv
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 
 from oceanoobsbrasil.db import GetData
 from oceanoobsbrasil.utils import *
 
-import chromedriver_binary
 
-from dotenv import load_dotenv
-
-class TideSantos():
-    
+class TideSantos:
     load_dotenv()
 
-    def __init__(self,
+    def __init__(
+        self,
         args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"],
-        preferences=[]):
-
+        preferences=[],
+    ):
         self.options = Options()
         self.args = args
         self.preferences = preferences
@@ -29,18 +28,18 @@ class TideSantos():
         self.driver = webdriver.Chrome(options=self.options)
 
         self.db = GetData()
-        self.stations = self.db.get(table='stations', institution=['=', 'SantosPilot'])
+        self.stations = self.db.get(table="stations", institution=["=", "SantosPilot"])
 
         self.url = os.getenv("SITE_SANTOS")
         self.user = os.getenv("USER_SANTOS")
         self.pwd = os.getenv("PWD_SANTOS")
 
-        
     def get(self):
-        
         self.login()
 
-        self.points_of_tide = self.driver.find_elements_by_xpath("//img[@alt='Ver Marégrafo']")
+        self.points_of_tide = self.driver.find_elements_by_xpath(
+            "//img[@alt='Ver Marégrafo']"
+        )
         xpath_close_box = '//*[@id="fancybox-close"]'
 
         for point in self.points_of_tide:
@@ -54,24 +53,27 @@ class TideSantos():
             station = self.stations[self.stations.url == name]
 
             df = pd.read_html(self.driver.page_source)[1]
-            df['HORA'] = pd.to_datetime((datetime.utcnow()-timedelta(hours=3)).strftime("%Y-%m-%d") + df['HORA'], format='%Y-%m-%d%H:%M')
-            df['HORA'] = df['HORA'] + timedelta(hours=3)
+            df["HORA"] = pd.to_datetime(
+                (datetime.utcnow() - timedelta(hours=3)).strftime("%Y-%m-%d")
+                + df["HORA"],
+                format="%Y-%m-%d%H:%M",
+            )
+            df["HORA"] = df["HORA"] + timedelta(hours=3)
 
-            df.columns = ['date_time', 'water_level_pred', 'water_level']
+            df.columns = ["date_time", "water_level_pred", "water_level"]
             df = df[df.date_time < datetime.utcnow()]
 
-            df['meteorological_tide'] = df['water_level'] - df['water_level_pred']
+            df["meteorological_tide"] = df["water_level"] - df["water_level_pred"]
 
-            df.drop(columns='water_level_pred', inplace=True)
+            df.drop(columns="water_level_pred", inplace=True)
 
-            self.result = df.replace(to_replace =['None', 'NULL', ' ', ''],
-                                    value =np.nan)
+            self.result = df.replace(to_replace=["None", "NULL", " ", ""], value=np.nan)
 
-            self.result['station_id'] = str(station.iloc[0]['id'])
+            self.result["station_id"] = str(station.iloc[0]["id"])
 
             # self.result.date_time = self.result.date_time + timedelta(hours=3)
 
-            self.db.feed_bd(table='data_stations', df=self.result)
+            self.db.feed_bd(table="data_stations", df=self.result)
             print(name + " ok")
             self.driver.switch_to.default_content()
             self.driver.find_element_by_xpath(xpath_close_box).click()
@@ -89,10 +91,12 @@ class TideSantos():
         psw_elem = self.driver.find_element_by_xpath("//*[@id='CustomerPassword']")
         psw_elem.send_keys(self.pwd)
 
-
-        login_bt = self.driver.find_element_by_xpath("/html/body/div[1]/div/div[2]/div[3]/form/div[2]/input")
+        login_bt = self.driver.find_element_by_xpath(
+            "/html/body/div[1]/div/div[2]/div[3]/form/div[2]/input"
+        )
         login_bt.click()
         time.sleep(5)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     TideSantos().get()

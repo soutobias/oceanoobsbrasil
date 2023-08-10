@@ -1,47 +1,42 @@
-
-
-import time
 import datetime
-import urllib.request, json
-import requests
+import json
+import re
+import time
+import urllib.request
+from datetime import datetime, timedelta
 
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
+import requests
 from bs4 import BeautifulSoup
-import re
+
 from oceanoobsbrasil.db import GetData
 
 
-class Ndbc():
-
+class Ndbc:
     # def __init__(self, lat=[-35.8333, 7],
     #     lon=[-55.20, 20],
     #     hours=12):
-    def __init__(self, lat=[-15],
-        lon=[-18],
-        hours=12):
-
+    def __init__(self, lat=[-15], lon=[-18], hours=12):
         self.db = GetData()
         self.lat = lat
         self.lon = lon
         self.hours = hours
 
-        self.start_date = datetime.utcnow()-timedelta(hours=self.hours)
+        self.start_date = datetime.utcnow() - timedelta(hours=self.hours)
         self.end_date = datetime.utcnow()
-        self.url=f"https://www.ndbc.noaa.gov/radial_search.php?lat1={lat[0]}&lon1={lon[0]}&uom=M&dist=4000&ot=A&time={hours}"
-        
-    def get(self, save_bd=True):
+        self.url = f"https://www.ndbc.noaa.gov/radial_search.php?lat1={lat[0]}&lon1={lon[0]}&uom=M&dist=4000&ot=A&time={hours}"
 
+    def get(self, save_bd=True):
         resp = requests.get(self.url)
-        
+
         print(self.url)
 
-        soup = BeautifulSoup(resp.text,'html.parser')
+        soup = BeautifulSoup(resp.text, "html.parser")
         self.soup = soup
 
-        lines = soup.find_all('span', attrs={'style': 'background-color: #f0f8fe'})
-        values=[]
+        lines = soup.find_all("span", attrs={"style": "background-color: #f0f8fe"})
+        values = []
 
         for line in lines:
             line = line.get_text(strip=True)
@@ -49,38 +44,100 @@ class Ndbc():
             line = re.sub(" +", ",", line).split(",")
             values.append(line)
 
-        lines = soup.find_all('span', attrs={'style': 'background-color: #fffff0'})
+        lines = soup.find_all("span", attrs={"style": "background-color: #fffff0"})
         for line in lines:
             line = line.get_text(strip=True)
             line = line.replace("B", " B")
             line = re.sub(" +", ",", line).split(",")
             values.append(line)
 
-        columns=['ID','T1','hour','LAT','LON','WDIR','WSPD','GST','WVHT','DPD','APD','MWD','PRES','PTDY','ATMP','WTMP','DEWP','VIS','TCC','TIDE','S1HT','S1PD','S1DIR','S2HT','S2PD','S2DIR']
+        columns = [
+            "ID",
+            "T1",
+            "hour",
+            "LAT",
+            "LON",
+            "WDIR",
+            "WSPD",
+            "GST",
+            "WVHT",
+            "DPD",
+            "APD",
+            "MWD",
+            "PRES",
+            "PTDY",
+            "ATMP",
+            "WTMP",
+            "DEWP",
+            "VIS",
+            "TCC",
+            "TIDE",
+            "S1HT",
+            "S1PD",
+            "S1DIR",
+            "S2HT",
+            "S2PD",
+            "S2DIR",
+        ]
 
-        df = pd.DataFrame(values).iloc[: , :26]
+        df = pd.DataFrame(values).iloc[:, :26]
         df.columns = columns
-        df.replace('-', np.nan, inplace=True)
+        df.replace("-", np.nan, inplace=True)
 
-        df.hour = (df.hour.astype(int)/100).astype(int)
-        df['date_time'] = df['hour'].apply(lambda x: self.calculate_date(x))
-        self.result = df[['ID','date_time','LAT','LON','WDIR','WSPD','WVHT','DPD','MWD','PRES','ATMP','WTMP','DEWP','S1HT','S1DIR']].copy()
-        self.result.columns = ['name', 'date_time', 'lat', 'lon', 'wdir', 'wspd', 'swvht', 'tp', 'wvdir', 'pres', 'atmp', 'sst', 'dewpt', 'swvht_swell', 'wvdir_swell']
-
+        df.hour = (df.hour.astype(int) / 100).astype(int)
+        df["date_time"] = df["hour"].apply(lambda x: self.calculate_date(x))
+        self.result = df[
+            [
+                "ID",
+                "date_time",
+                "LAT",
+                "LON",
+                "WDIR",
+                "WSPD",
+                "WVHT",
+                "DPD",
+                "MWD",
+                "PRES",
+                "ATMP",
+                "WTMP",
+                "DEWP",
+                "S1HT",
+                "S1DIR",
+            ]
+        ].copy()
+        self.result.columns = [
+            "name",
+            "date_time",
+            "lat",
+            "lon",
+            "wdir",
+            "wspd",
+            "swvht",
+            "tp",
+            "wvdir",
+            "pres",
+            "atmp",
+            "sst",
+            "dewpt",
+            "swvht_swell",
+            "wvdir_swell",
+        ]
 
         self.convert_to_numeric()
-        self.result.wspd[self.result.wspd.notnull()] = (self.result.wspd[self.result.wspd.notnull()]*1.94384).round(decimals=1)
+        self.result.wspd[self.result.wspd.notnull()] = (
+            self.result.wspd[self.result.wspd.notnull()] * 1.94384
+        ).round(decimals=1)
         print(self.result.head())
         if save_bd:
-            self.result["institution"] = 'ndbc'
-            self.result["data_type"] = 'gts'
+            self.result["institution"] = "ndbc"
+            self.result["data_type"] = "gts"
 
-            self.db.feed_bd(table='data_no_stations', df=self.result, data_type='gts')
+            self.db.feed_bd(table="data_no_stations", df=self.result, data_type="gts")
         else:
             return self.result
 
     def calculate_date(self, x):
-        start_date = datetime.utcnow()-timedelta(hours=12)
+        start_date = datetime.utcnow() - timedelta(hours=12)
         end_date = datetime.utcnow()
         if x >= end_date.hour + 2:
             value = start_date
@@ -95,9 +152,10 @@ class Ndbc():
         return value
 
     def convert_to_numeric(self):
-        columns = self.result.drop(columns=['date_time', 'name']).columns
+        columns = self.result.drop(columns=["date_time", "name"]).columns
         for column in columns:
-            self.result[column] = pd.to_numeric(self.result[column], errors='coerce')
+            self.result[column] = pd.to_numeric(self.result[column], errors="coerce")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     Ndbc().get(save_bd=True)
