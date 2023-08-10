@@ -2,103 +2,154 @@
 
 A pip python package for retrieving weather and ocean data for the Brazilian Coast. These data came from more than 1100 sources, like buoys, tide gauges, weather stations, satelites and ships. The data are merged in a single postgre DB. Use of BS4, selenium, xarray, requests, packegenlite, pandas, sqlalchemy. Codes are running in a AWS EC2.
 
-Acess website: www.oceano.live
+Acess website: www.oceanum.live
 
-## Fonte dos dados:
+## Data sources:
 
-a) Boias
+a) Buoys
 - PNBOIA
 - PIRATA
 - SIMCOSTA
-- Projeto Aqualink
-- Boias de empresas em ES, PE e SE
+- Aqualink
+- Other buoys
 
-b) Observações visuais
+b) Visual observations
 - RICO SURF
 - WAVE CHECK
 
-c) SENSORIAMENTO REMOTO
-- Escaterômetro
-- Jason3
+c) Remote sensing
+- Scaterometter
+- Altimeter
 
-d) ESTAÇÕES MAREGRÁFICAS
+d) Tide gaudes
 - Epagri
 - Simcosta
 - Gloss
-- Empresas
+- Port authorities
 
-e) ESTAÇÕES METEOROLÓGICAS
+e) Weather stations
 - INMET
-- Aeroportos (METAR)
-- Empresas privadas
+- METAR
+- Others
 
-f) OUTROS
-- Boias de deriva NOAA
+f) Others
+- Drifters (GDP)
 - GTS NDBC
-- Avisos de mau tempo marinha
-- Cartas sinóticas
+- Weather warnings from the Brazilian Navy
+- Synoptic Charts 
 
 # Setup
 
-## PostgreSQL
-
-[PostgreSQL](https://www.postgresql.org/) é um sistema de banco de dados robusto e de código aberto pronto para produção. E é o banco de dados usado atualmente no REMObs
-
-Vamos instalá-lo agora.
-
-Execute os seguintes comandos:
-
 ```bash
-sudo apt install -y postgresql postgresql-contrib libpq-dev build-essential
+pip install git+git@github.com:soutobias/oceanoobsbrasil.git
 ```
 
-```bash
-sudo -u postgres psql --command "CREATE ROLE \"`whoami`\" LOGIN createdb;"
+# Usage
 
-## Configurando o banco de dados
-
-Entrar no aplicativo de banco de dados
+Depending the type of the data you want to have access, run the following command:
 
 ```bash
-sudo -u postgres psql
+oceanoobsbrasil-run buoys_es
+
+oceanoobsbrasil-run buoys_pe
+
+oceanoobsbrasil-run buoys_pnboia
+
+oceanoobsbrasil-run buoys_se
+
+oceanoobsbrasil-run buoys_simcosta
+
+oceanoobsbrasil-run buoys_pirata
+
+oceanoobsbrasil-run buoys_aqualink
+
+oceanoobsbrasil-run observational_data_ricosurf
+
+oceanoobsbrasil-run observational_data_wavecheck
+
+oceanoobsbrasil-run others_clean_beach
+
+oceanoobsbrasil-run others_ndbc
+
+oceanoobsbrasil-run others_spotter_data
+
+oceanoobsbrasil-run others_synoptic
+
+oceanoobsbrasil-run others_chm_warnings
+
+oceanoobsbrasil-run others_drifter
+
+oceanoobsbrasil-run remote_sensing_altimeter_download
+
+oceanoobsbrasil-run remote_sensing_altimeter
+
+oceanoobsbrasil-run remote_sensing_scatterometer
+
+oceanoobsbrasil-run remote_sensing_scatterometer_download
+
+oceanoobsbrasil-run remote_sensing_sst
+
+oceanoobsbrasil-run tides_epagri
+
+oceanoobsbrasil-run tides_ilha_fiscal_tide
+
+oceanoobsbrasil-run tides_santos_tide
+
+oceanoobsbrasil-run tides_simcosta
+
+oceanoobsbrasil-run tides_gloss
+
+oceanoobsbrasil-run weather_stations_inmet
+
+oceanoobsbrasil-run weather_stations_metar
+
+oceanoobsbrasil-run weather_stations_wind_guru
 ```
 
-Criar o banco de dados e adicionar as autorizações
 
-```bash
-create database oceanobs;
-create user oceanobs with encrypted password 'OHW22ok.';
-ALTER ROLE oceanobs SUPERUSER;
-grant all privileges on database oceanobs to oceanobs;
-\connect oceanobs;
-grant usage on schema oceanobs to oceanobs;
-GRANT USAGE ON SCHEMA oceanobs TO oceanobs ;
-GRANT USAGE ON SCHEMA oceanobs TO oceanobs ;
+## ENV file
 
-GRANT SELECT ON ALL TABLES IN SCHEMA oceanobs TO oceanobs ;
-GRANT SELECT ON ALL SEQUENCES IN SCHEMA oceanobs TO oceanobs ;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA oceanobs TO oceanobs ;
+Before start using the package, you need to set some ENV var:
 
-GRANT ALL ON ALL TABLES IN SCHEMA oceanobs TO oceanobs ;
-GRANT ALL ON ALL SEQUENCES IN SCHEMA oceanobs TO oceanobs ;
-GRANT ALL ON ALL FUNCTIONS IN SCHEMA oceanobs TO oceanobs ;
+```
+POSTGRE_USER=
+POSTGRE_LOCAL=
+POSTGRE_BD=
+POSTGRE_PWD=
+ES_USER=
+ES_PWD=
+ES_URL_OLD=
+ES_URL=
+PE_URL=
+SE_USER=
+SE_PWD=
+SE_URL=
+SITE_ILHAFISCAL=
+SITE_ILHAFISCAL_REPORT=
+USER_ILHAFISCAL=
+PWD_ILHAFISCAL=
+SITE_CURUA=
+USER_CURUA=
+PWD_CURUA=
+SITE_SANTOS=
+USER_SANTOS=
+PWD_SANTOS=
+PODAAC_USR=
+PODAAC_PWD=
+EDL_USR=
+EDL_PWD=
+REMOBS_TOKEN=
+GLOSS_APIKEY=
+GLOSS_CLIENT=
+SOFAR_TOKEN=
+CLOUDINARY_URL=
+SELF_PATH=
+FTP_SERVER=
+FTP_USER=
+FTP_DIRECTORY=
+FTP_PWD=
+DATABASE_URL=
 ```
 
-Adicionar os dados do banco de dados já existente ao seu banco local
-```bash
-pg_restore -d oceanobs oceanobs.sql 
-```
-
-## DBeaver
-
-Baixe e instale o [DBeaver](https://dbeaver.io/), uma ferramenta open source para conectar com qualquer banco de dados, explorar os schema e até **rodar SQL queries**.
-
-### Conecte o DBeabver ao seu banco de dados
-
-
-Clique em "NewDatabase connection"
-Escolha "Postgresql"
-Coloque as informações do banco de dados:
-
-![Imagem do Banco](images/dbeaver.png)
+Please contact the repo owner to have access to these values
 
