@@ -25,70 +25,46 @@ class Ndbc:
 
         self.start_date = datetime.utcnow() - timedelta(hours=self.hours)
         self.end_date = datetime.utcnow()
-        self.url = f"https://www.ndbc.noaa.gov/radial_search.php?lat1={lat[0]}&lon1={lon[0]}&uom=M&dist=4000&ot=A&time={hours}"
+        self.url = f"https://www.ndbc.noaa.gov/ship_obs.php?uom=M&time=12"
 
     def get(self, save_bd=True):
         resp = requests.get(self.url)
 
-        print(self.url)
-
         soup = BeautifulSoup(resp.text, "html.parser")
-        self.soup = soup
 
-        lines = soup.find_all("span", attrs={"style": "background-color: #f0f8fe"})
-        values = []
-
+        lines = soup.find_all("pre")
+        data = []
+        first_loop = True
         for line in lines:
-            line = line.get_text(strip=True)
-            line = line.replace("B", " B")
-            line = re.sub(" +", ",", line).split(",")
-            values.append(line)
+            inner_lines = line.find_all('span')
+            first_element = 1
+            for inner_line in inner_lines:
+                if first_element:
+                    first_element = 0
+                    new_header = inner_line.get_text(strip=True)
+                    new_header = new_header.replace("B", " B")
+                    new_header = re.sub(" +", ",", new_header).split(",")
+                else:
+                    new_data = inner_line.get_text(strip=True)
+                    new_data = new_data.replace("B", " B")
+                    new_data = re.sub(" +", ",", new_data).split(",")
+                    data.append(new_data)
+            if first_loop:
+                first_loop = False
+                df = pd.DataFrame(data)
+            else:
+                array = pd.DataFrame(data)
 
-        lines = soup.find_all("span", attrs={"style": "background-color: #fffff0"})
-        for line in lines:
-            line = line.get_text(strip=True)
-            line = line.replace("B", " B")
-            line = re.sub(" +", ",", line).split(",")
-            values.append(line)
-
-        columns = [
-            "ID",
-            "T1",
-            "hour",
-            "LAT",
-            "LON",
-            "WDIR",
-            "WSPD",
-            "GST",
-            "WVHT",
-            "DPD",
-            "APD",
-            "MWD",
-            "PRES",
-            "PTDY",
-            "ATMP",
-            "WTMP",
-            "DEWP",
-            "VIS",
-            "TCC",
-            "TIDE",
-            "S1HT",
-            "S1PD",
-            "S1DIR",
-            "S2HT",
-            "S2PD",
-            "S2DIR",
-        ]
-
-        df = pd.DataFrame(values).iloc[:, :26]
-        df.columns = columns
+                df = pd.concat([df, array])
+                
+        df.columns = new_header[:25]
         df.replace("-", np.nan, inplace=True)
 
-        df.hour = (df.hour.astype(int) / 100).astype(int)
-        df["date_time"] = df["hour"].apply(lambda x: self.calculate_date(x))
+        df['HOUR'] = (df['HOUR'].astype(int) / 100).astype(int)
+        df["date_time"] = df['HOUR'].apply(lambda x: self.calculate_date(x))
         self.result = df[
             [
-                "ID",
+                "SHIP",
                 "date_time",
                 "LAT",
                 "LON",
@@ -96,7 +72,6 @@ class Ndbc:
                 "WSPD",
                 "WVHT",
                 "DPD",
-                "MWD",
                 "PRES",
                 "ATMP",
                 "WTMP",
@@ -114,7 +89,6 @@ class Ndbc:
             "wspd",
             "swvht",
             "tp",
-            "wvdir",
             "pres",
             "atmp",
             "sst",
@@ -127,7 +101,7 @@ class Ndbc:
         self.result.wspd[self.result.wspd.notnull()] = (
             self.result.wspd[self.result.wspd.notnull()] * 1.94384
         ).round(decimals=1)
-        print(self.result.head())
+        self.result = self.result[(self.result.lat>-40)  & (self.result.lat < 15) & (self.result.lon < -8) & (self.result.lon > -60)]
         if save_bd:
             self.result["institution"] = "ndbc"
             self.result["data_type"] = "gts"

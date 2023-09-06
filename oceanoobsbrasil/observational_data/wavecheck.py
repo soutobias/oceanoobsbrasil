@@ -27,12 +27,13 @@ class Wave:
             response = requests.get(station["url"])
 
             soup = BeautifulSoup(response.text, "html.parser")
-            no_data = soup.find("p", {"class": "alerta-pico-desatualizado"})
+            has_data = soup.find("div", {"class": "pico_header_pico"})
+            self.soup = soup
             print(station["name"])
-            if not no_data:
+            if has_data:
                 print("Tem dados para esse pico")
-
                 l = soup.find("td", {"id": "forecast_wave_size"}).get_text(strip=True)
+
                 try:
                     [k1, k2] = l.split("m")
                     swvht = float(k1)
