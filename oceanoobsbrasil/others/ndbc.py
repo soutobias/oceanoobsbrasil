@@ -56,8 +56,9 @@ class Ndbc:
                 array = pd.DataFrame(data)
 
                 df = pd.concat([df, array])
+        
                 
-        df.columns = new_header[:25]
+        df.columns = new_header[:len(df.columns)]
         df.replace("-", np.nan, inplace=True)
 
         df['HOUR'] = (df['HOUR'].astype(int) / 100).astype(int)
