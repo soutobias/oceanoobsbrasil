@@ -1,10 +1,3 @@
-# import cloudinary
-# import cloudinary.uploader
-# import cloudinary.api
-# from cloudinary.api import delete_resources_by_tag, resources_by_tag
-# from cloudinary.uploader import upload
-# from cloudinary.utils import cloudinary_url
-import ftplib
 import os
 from datetime import datetime, timedelta
 from io import BytesIO
@@ -15,10 +8,13 @@ import requests
 from dotenv import load_dotenv
 from PIL import Image
 
+from oceanoobsbrasil.access_bucket import AccessBucket
 from oceanoobsbrasil.db import GetData
 
 
 class SynopticChart:
+    """get images from marinha.mil.br and save to bucket"""
+
     load_dotenv()
     os.environ["CLOUDINARY_URL"] = os.getenv("CLOUDINARY_URL")
 
@@ -28,6 +24,7 @@ class SynopticChart:
         self.db = GetData()
 
     def get(self):
+        """get images from marinha.mil.br and save to bucket"""
         # self.delete()
         for i in range(7):
             for ii in ["00", "12"]:
@@ -93,26 +90,20 @@ class SynopticChart:
                     im = Image.fromarray(np.array(df).reshape(1932, 1449, 4))
                     im.save(f"{name}.png")
 
-                    self.add_image(name)
+                    self.add_image(f"{name}.png")
                 except Exception as e:
                     print(e)
 
-    def delete(self):
-        response = resources_by_tag("OCEANOBS")
-        resources = response.get("resources", [])
-        if not resources:
-            print("No images found")
-            return
-        print("Deleting {0:d} images...".format(len(resources)))
-        delete_resources_by_tag(DEFAULT_TAG)
-        print("Done!")
-
     def add_image(self, name):
-        directory = os.getenv("FTP_DIRECTORY")
-        ftp = ftplib.FTP(os.getenv("FTP_SERVER"))
-        ftp.login(user=os.getenv("FTP_USER"), passwd=os.getenv("FTP_PWD"))
-        ftp.cwd(directory)
-        file = open(f"{name}.png", "rb")
-        ftp.storbinary(f"STOR {name}.png", file)
-        file.close()
-        ftp.quit()
+        """add image to bucket
+
+        Args:
+            name (string): image to be uploaded to the bucket
+        """
+        bucket_access = AccessBucket(bucket=os.environ.get("BUCKET_NAME"))
+        bucket_access.upload(
+            file_names=[name],
+            path="./",
+            bucket_folder=os.environ.get("BUCKET_PATH"),
+            verbose=1,
+        )

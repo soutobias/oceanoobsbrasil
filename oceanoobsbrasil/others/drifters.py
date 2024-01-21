@@ -63,6 +63,7 @@ class Drifter:
         df["date_time"] = pd.to_datetime(df["date_time"], format="%Y-%m-%dT%H:%M:%SZ")
         df.fillna(np.nan, inplace=True)
         self.result = df
+        print(self.result.shape)
         if save_bd:
             self.result["institution"] = "gdp"
             self.result["data_type"] = self.data_type

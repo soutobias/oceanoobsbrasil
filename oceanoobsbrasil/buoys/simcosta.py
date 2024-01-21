@@ -32,6 +32,7 @@ class Simcosta:
             print(station.url)
             if int(station.url) > 100:
                 url_address = f"https://simcosta.furg.br/api/intrans_data?boiaID={station['url']}&type=json&time1={self.start_date}&time2={self.end_date}&params=H10,HAvg,Hsig,HM0,Avg_Wv_Dir,Hmax,ZCN,Tp5,Tz,TAvg,T10,Tsig,Avg_Wv_Spread,Tp,Avg_Sal,Avg_W_Tmp1,Avg_W_Tmp2,Avg_Chl,Avg_Turb,Avg_Wnd_Dir_N,Gust_Sp,Avg_Dew,Avg_Air_Press,Avg_Sol_Rad,Avg_Air_Tmp,Avg_Hmt,Avg_Hmt,Avg_Wnd_Sp"
+                print(url_address)
                 with urllib.request.urlopen(url_address) as url:
                     data = json.loads(url.read().decode())
                     self.data = pd.DataFrame(data)

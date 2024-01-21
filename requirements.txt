@@ -37,3 +37,4 @@ sphinx
 black
 pylint
 isort
+boto3

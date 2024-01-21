@@ -14,9 +14,6 @@ from oceanoobsbrasil.db import GetData
 
 
 class Ndbc:
-    # def __init__(self, lat=[-35.8333, 7],
-    #     lon=[-55.20, 20],
-    #     hours=12):
     def __init__(self, lat=[-15], lon=[-18], hours=12):
         self.db = GetData()
         self.lat = lat
@@ -36,7 +33,7 @@ class Ndbc:
         data = []
         first_loop = True
         for line in lines:
-            inner_lines = line.find_all('span')
+            inner_lines = line.find_all("span")
             first_element = 1
             for inner_line in inner_lines:
                 if first_element:
@@ -56,13 +53,12 @@ class Ndbc:
                 array = pd.DataFrame(data)
 
                 df = pd.concat([df, array])
-        
-                
-        df.columns = new_header[:len(df.columns)]
+
+        df.columns = new_header[: len(df.columns)]
         df.replace("-", np.nan, inplace=True)
 
-        df['HOUR'] = (df['HOUR'].astype(int) / 100).astype(int)
-        df["date_time"] = df['HOUR'].apply(lambda x: self.calculate_date(x))
+        df["HOUR"] = (df["HOUR"].astype(int) / 100).astype(int)
+        df["date_time"] = df["HOUR"].apply(lambda x: self.calculate_date(x))
         self.result = df[
             [
                 "SHIP",
@@ -102,7 +98,13 @@ class Ndbc:
         self.result.wspd[self.result.wspd.notnull()] = (
             self.result.wspd[self.result.wspd.notnull()] * 1.94384
         ).round(decimals=1)
-        self.result = self.result[(self.result.lat>-40)  & (self.result.lat < 15) & (self.result.lon < -8) & (self.result.lon > -60)]
+        self.result = self.result[
+            (self.result.lat > -40)
+            & (self.result.lat < 15)
+            & (self.result.lon < -8)
+            & (self.result.lon > -60)
+        ]
+        print(self.result.shape)
         if save_bd:
             self.result["institution"] = "ndbc"
             self.result["data_type"] = "gts"

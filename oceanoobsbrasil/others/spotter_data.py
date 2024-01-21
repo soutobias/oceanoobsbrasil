@@ -1,4 +1,3 @@
-import glob
 import os
 from datetime import datetime, timedelta
 from ipaddress import collapse_addresses
@@ -45,7 +44,7 @@ class SpotterData:
                     include_track=True,
                     include_wind=True,
                     include_surface_temp_data=True,
-                    include_frequency_data=False,
+                    include_frequency_data=True,
                     include_directional_moments=True,
                 )
 

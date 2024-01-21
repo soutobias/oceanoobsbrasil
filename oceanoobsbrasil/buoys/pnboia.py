@@ -19,8 +19,10 @@ class Pnboia:
     def __init__(
         self,
         equip="buoy",
-        start_date=(datetime.utcnow() - timedelta(days=1)).strftime("%Y-%m-%d"),
-        end_date=(datetime.utcnow() + timedelta(days=2)).strftime("%Y-%m-%d"),
+        start_date=(datetime.utcnow() - timedelta(days=1)).strftime(
+            "%Y-%m-%dT%H:%M:%S"
+        ),
+        end_date=(datetime.utcnow() + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S"),
     ):
         self.db = GetData()
         self.equip = equip
@@ -34,7 +36,8 @@ class Pnboia:
         for index, station in self.stations.iterrows():
             url = f"http://52.67.222.63/v1/qualified_data/qualified_data?buoy_id={station['url']}&start_date={self.start_date}&end_date={self.end_date}&token={os.getenv('REMOBS_TOKEN')}"
             response = requests.get(url).json()
-            print(station["name"])
+            print(station["name"], station["url"])
+            # print(response)
             try:
                 df = pd.DataFrame(response)
                 for i in df.columns:
