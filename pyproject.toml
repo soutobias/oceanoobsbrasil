@@ -1,0 +1,55 @@
+[project]
+name = "oceanobs"
+version = "0.1.0"
+description = "Handle data weather and ocean data collected in real-time"
+authors = [
+    {name = "tobias ferreira",email = "soutobias@yahoo.com.br"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "*"
+pandas = "*"
+bs4 = "*"
+selenium = "*"
+python-dotenv = "*"
+psutil = "*"
+sqlalchemy = "<2.0.0"
+psycopg2-binary = "*"
+chromedriver-binary = "==115.0.5790.102"
+erddapy = "*"
+podaacpy = "*"
+certifi = "*"
+html5lib = "*"
+netcdf4 = "*"
+h5py = "*"
+xarray = "*"
+lxml = "*"
+pysofar = "*"
+dask = "*"
+harmony-py = "*"
+pillow = "*"
+cloudinary = "*"
+boto3 = "*"
+
+[tool.poetry.group.dev.dependencies]
+pip = "*"
+wheel = "*"
+twine = "*"
+pytest = "*"
+sphinx = "*"
+black = "*"
+pylint = "*"
+isort = "*"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+oceanoobsbrasil-run = "oceanoobsbrasil.__main__:main"
