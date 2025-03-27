@@ -1,3 +1,6 @@
+
+"""Class to get data from the Espirito Santo buoys"""
+import json
 import os
 from datetime import datetime, timedelta
 
@@ -6,42 +9,79 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+import geopandas as gpd
 
-from oceanoobsbrasil.db import GetData
+from oceanobs.oceanobs import Oceanobs
 
+load_dotenv()
 
-class ESBuoy:
-    load_dotenv()
+class ESBuoy(Oceanobs):
+    """Get data from Espirito Santo buoys"""
+    def __init__(
+        self,
+        **kwargs,
+    ):
+        super().__init__()
+        self.base_url = os.getenv("ES_URL")
 
-    def __init__(self, equip="buoy"):
-        self.db = GetData()
-        self.url = os.getenv("ES_URL")
+    def get_stations(self) -> pd.DataFrame:
+        """Get stations from Espirito Santo buoys
 
-        self.equip = equip
-        self.stations = self.db.get(
-            table="stations", institution=["=", "codesa"], data_type=["=", self.equip]
-        ).iloc[0]
+        The stations are read from a json file.
 
-    def get(self):
-        resp = requests.get(self.url)
+        Returns
+        -------
+        pd.DataFrame
+            The stations
+        """
+        file_path = os.path.join(os.path.dirname(__file__), "../data/buoy_es.json")
 
-        self.soup = BeautifulSoup(resp.text, "html.parser")
+        with open(file_path, "r") as file:
+            stations = json.load(file)
+
+        stations = pd.DataFrame(stations)
+        stations = self._convert_to_gdf(stations)
+        return stations
+
+    def get_data(self,
+                 station,
+                 add_columns: list = None) -> tuple:
+        """ Get data from a station
+
+        Parameters
+        ----------
+        station : dict
+            The station information
+
+        Returns
+        -------
+        tuple
+            The data and the error message
+        """
+        if not add_columns:
+            add_columns = ["name"]
+        response = requests.get(self.base_url)
+        soup = BeautifulSoup(response.text, "html.parser")
 
         try:
-            date_time = self.soup.find("h4", {"class": "titulo"}).text
+            date_time = soup.find("h4", {"class": "titulo"}).text
             date_time = datetime.strptime(date_time, "%d/%m/%Y %H:%M:%S")
         except:
-            print("problem with the website")
-            return
+            error = "Error getting data from Espirito Santo"
+            return None, error
 
-        wdir = self.get_data("data-wind-direction-deg")
-        wspd = self.get_data("data-wind-speed-knot")
-        atmp = self.get_data("data-air-temperature")
-        swvht = self.get_data("data-height-wave")
-        wvdir = self.get_data("data-wave-direction")
-        tp = self.get_data("data-peak-wave-period")
-        pres = self.get_data("data-atmosferic-pressure")
-        rh = self.get_data("data-relative-humidity")
+        wdir = self.get_data_html(soup, "data-wind-direction-deg")
+        wspd = self.get_data_html(soup, "data-wind-speed-knot")
+        atmp = self.get_data_html(soup, "data-air-temperature")
+        swvht = self.get_data_html(soup, "data-height-wave")
+        wvdir = self.get_data_html(soup, "data-wave-direction")
+        tp = self.get_data_html(soup, "data-peak-wave-period")
+        pres = self.get_data_html(soup, "data-atmosferic-pressure")
+        rh = self.get_data_html(soup, "data-relative-humidity")
+
+        if np.isnan(wdir) and np.isnan(wspd) and np.isnan(atmp) and np.isnan(swvht) and np.isnan(wvdir) and np.isnan(tp) and np.isnan(pres) and np.isnan(rh):
+            error = "Error getting data from Espirito Santo"
+            return None, error
 
         values = np.array([date_time, wdir, wspd, atmp, swvht, wvdir, tp, pres, rh])
         columns = [
@@ -55,23 +95,20 @@ class ESBuoy:
             "pres",
             "rh",
         ]
-        self.result = pd.DataFrame(values).T
-        self.result.columns = columns
+        data = pd.DataFrame(values).T
+        data.columns = columns
 
-        self.result.date_time = self.result.date_time + timedelta(hours=3)
+        data.date_time = data.date_time + timedelta(hours=3)
 
-        print(self.result)
-        self.result["station_id"] = str(self.stations["id"])
-        self.db.feed_bd(table="data_stations", df=self.result)
-        print("ok")
+        if add_columns:
+            if "id" in add_columns:
+                data["station_id"] = station["id"]
 
-    def get_data(self, attrs):
+        return data, None
+
+    def get_data_html(self, soup, attrs):
         try:
-            value = float(self.soup.find("h3", {attrs: True})[attrs])
+            value = float(soup.find("h3", {attrs: True})[attrs])
         except:
             value = np.nan
         return value
-
-
-if __name__ == "__main__":
-    ESBuoy().get()

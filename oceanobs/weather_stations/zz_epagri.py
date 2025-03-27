@@ -20,8 +20,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-from oceanoobsbrasil.db import GetData
-from oceanoobsbrasil.utils import *
+from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.utils import *
 
 
 class EpagriMeteo:
@@ -34,7 +34,7 @@ class EpagriMeteo:
         self.def_args_prefs()
         self.driver = webdriver.Chrome(options=self.options)
 
-        self.db = GetData()
+        self.db = DbHandler()
         self.equip = equip
         self.stations = self.db.get(
             table="stations", institution=["=", "epagri"], data_type=["=", self.equip]

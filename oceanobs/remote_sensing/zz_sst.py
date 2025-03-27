@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 import pandas as pd
 import requests
 
-from oceanoobsbrasil.db import GetData
-from oceanoobsbrasil.utils import *
+from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.utils import *
 
 
 class Mur:
@@ -17,7 +17,7 @@ class Mur:
             datetime.utcnow() + timedelta(days=1), format="%Y-%m-%dT%H:%M:%SZ"
         ),
     ):
-        self.db = GetData()
+        self.db = DbHandler()
         self.points = mur_points()
         self.mur_last_date = self.db.get(
             table="data_no_stations", start_date=start_date, institution=["=", "mur"]

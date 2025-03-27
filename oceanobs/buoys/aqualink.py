@@ -1,95 +1,182 @@
-import os
-import re
-import time
-from datetime import datetime, timedelta
-
-import chromedriver_binary
-import numpy as np
+"""Aqualink buoy module"""
 import pandas as pd
-import psutil
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
+import geopandas as gpd
+import requests
+from shapely.geometry import Point
 
-from oceanoobsbrasil.db import GetData
-from oceanoobsbrasil.utils import *
+from oceanobs.oceanobs import Oceanobs
 
-
-class AqualinkBuoy:
+class AqualinkBuoy(Oceanobs):
     """Get data from Aqualink buoy
+
+    This class is used to get data from Aqualink buoy.
+
+    Parameters
+    ----------
+    start_date : str, optional
+        Start date for the data collection, by default None
+    end_date : str, optional
+        End date for the data collection, by default None
+    n_workers : int, optional
+        Number of workers for the thread pool executor, by default 1
     """
+
     def __init__(
         self,
-        args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"],
-        preferences=[],
-        equip="buoy",
+        start_date: str = None,
+        end_date: str = None,
+        n_workers: int = 1,
+        **kwargs
     ):
-        self.options = Options()
-        self.args = args
-        self.preferences = preferences
-        self.options = def_args_prefs(self.options, self.args, self.preferences)
-        self.driver = webdriver.Chrome(options=self.options)
 
-        self.db = GetData()
-        self.equip = equip
-        self.stations = self.db.get(
-            table="stations", institution=["=", "aqualink"], data_type=["=", self.equip]
-        )
+        super().__init__(start_date=start_date,
+                         end_date=end_date,
+                         n_workers=n_workers)
+        self.start_date = self._validate_date(start_date, is_start_date=True)
+        self.end_date = self._validate_date(end_date, is_start_date=False)
+        self.base_url = "https://ocean-systems.uc.r.appspot.com/api"
 
-        self.url = "https://aqualink.org/sites/"
+    def _validate_date(self, date_str: str = None, is_start_date: bool = True) -> str:
+        """Validates the date format and returns a datetime object.
 
-    def get(self):
-        """Get data from Aqualink buoy
+        Parameters
+        ----------
+        date_str : str, optional
+            Date string to validate, by default None
+        is_start_date : bool, optional
+            If the date is the start date, by default True
+
+        Returns
+        -------
+        str
+            The validated date
         """
-        for index, station in self.stations.iterrows():
-            url = f"{self.url}{station.url}"
-            print(url)
-            self.driver.get(url)
-            time.sleep(10)
-            soup = BeautifulSoup(self.driver.page_source, "html.parser")
-            elements = soup.find_all(attrs={'class': 'MuiCard-root'})
-            element_with_data = None
-            for element in elements:
-                if 'WIND' in element.text:
-                    element_with_data = element
-            if element_with_data:
-                text = element_with_data.text
-                print(text)
-                text = text.replace("WINDSPEED", "")
-                text = text.replace("km/hDIRECTION", ",")
-                text = text.replace("°WAVESHEIGHT", ",")
-                text = text.replace("mPERIOD", ",")
-                text = text.replace("sDIRECTION", ",")
-                text = text.replace("°Last data received ", ",")
-                text = text.replace(" ", ",")
-                text = text.split(",")[0:7]
-                print(text)
-                if text[-1] == "min.":
-                    columns = ["wspd", "wdir", "swvht", "tp", "wvdir"]
-                    values = np.array(text[0:5])
-                    self.result = pd.DataFrame(values).T
-                    self.result.columns = columns
-                    self.result.wspd = pd.to_numeric(self.result.wspd) * 0.539957
-                    sst_element_with_data = None
-                    for element in elements:
-                        if 'BUOY OBSERVATION' in element.text:
-                            sst_element_with_data = element
-                    if sst_element_with_data:
-                        sst = sst_element_with_data.text.replace("BUOY OBSERVATIONTEMP AT 1m", "")
-                        sst = sst.split("°")[0]
-                        self.result["sst"] = sst
-                    self.result["date_time"] = datetime.utcnow().strftime(
-                        "%Y-%m-%d %H:00:00"
-                    )
-                    self.result["station_id"] = str(station["id"])
-                    print(self.result)
-                    self.db.feed_bd(table="data_stations", df=self.result)
-        quit_driver(self.driver)
+        date_str = super()._validate_date(date_str, is_start_date)
+        date_str = date_str + ".000Z"
+        return date_str
 
+    def get_stations(self) -> pd.DataFrame:
+        """Get stations from Aqualink buoy
 
-if __name__ == "__main__":
-    AqualinkBuoy().get()
+        Returns
+        -------
+        pd.DataFrame
+            The stations
+        """
+        url_address = self.base_url + "/sites"
+        response = requests.get(url_address)
+        if response.status_code != 200:
+            self.logger.error("Error getting stations from %s", url_address)
+            return
+        stations = response.json()
+        stations = pd.DataFrame(stations)
+        stations = stations[stations["sensorId"].str.contains("SPOT", na=False)]
+        stations = stations[stations["status"] == "deployed"]
+
+        stations = self._prepare_stations(stations)
+
+        return stations
+
+    def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
+        """ Prepare the stations metadata
+
+        Parameters
+        ----------
+        stations : pd.DataFrame
+            The stations metadata
+
+        Returns
+        -------
+        pd.DataFrame
+            The prepared stations metadata
+        """
+        df_stations = stations.copy()[["id", "name", "polygon"]]
+        df_stations["geometry"] = df_stations["polygon"].apply(lambda x: Point(x["coordinates"]))
+        df_stations = df_stations.drop(columns=["polygon"])
+        gdf_stations = self._convert_to_gdf(df_stations, has_geom="geometry")
+        gdf_stations.rename(columns={"id": "identifier"}, inplace=True)
+        gdf_stations["identifier"] = gdf_stations["identifier"].astype(str)
+
+        return gdf_stations
+
+    def get_data(self,
+                 station,
+                 start_date=None,
+                 end_date=None,
+                 add_columns: list = None
+                 ) -> tuple:
+        """ Get data from a station
+
+        Parameters
+        ----------
+        station : dict
+            Station information
+        start_date : str
+            Start date in the format "%Y-%m-%dT%H:%M:%S"
+        end_date : str
+            End date in the format "%Y-%m-%dT%H:%M:%S"
+        add_columns : list, optional
+            List of columns to add to the DataFrame, by default None
+
+        Returns
+        -------
+        tuple
+            The data and the error message
+        """
+        if start_date:
+            self.start_date = self._validate_date(start_date)
+        if end_date:
+            self.end_date = self._validate_date(end_date)
+        if self.start_date >= self.end_date:
+            return None, "Start date must be before end date"
+        if not add_columns:
+            add_columns = ["name"]
+        url_address = self.base_url + f"/time-series/sites/{station['identifier']}?start={self.start_date}&end={self.end_date}&metrics=bottom_temperature,top_temperature,wind_speed,significant_wave_height,barometric_pressure_top,barometric_pressure_bottom,surface_temperature&hourly=true"
+        self.logger.info("Getting data from %s", url_address)
+        response = requests.get(url_address)
+        if response.status_code != 200:
+            error = f"No data for {station['name']}"
+            return None, error
+        json_data = response.json()
+        data = None
+        for key in json_data.keys():
+            var_df = pd.DataFrame(json_data[key][0]["data"])
+            var_df.columns = [key, "date_time"]
+            if data is None:
+                data = var_df
+            else:
+                if var_df.empty:
+                    continue
+                data = pd.merge(data, var_df, on="date_time", how="outer")
+        if data is None:
+            error = f"No data for {station['name']}"
+            return None, error
+        data = self._rename_columns(data)
+        data["date_time"] = pd.to_datetime(data["date_time"])
+
+        if add_columns:
+            if "id" in add_columns:
+                data["station_id"] = station["id"]
+
+        return data, None
+
+    def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:
+        """Rename the columns of the DataFrame
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The DataFrame with the data
+
+        Returns
+        -------
+        pd.DataFrame
+            The DataFrame with the renamed columns
+        """
+
+        data.rename(columns={"top_temperature": "sst"}, inplace=True)
+        data.rename(columns={"significant_wave_height": "swvht"}, inplace=True)
+        data.rename(columns={"wind_speed": "wspd"}, inplace=True)
+        if "barometric_pressure_top" in data.columns:
+            data.rename(columns={"barometric_pressure_top": "pres"}, inplace=True)
+        return data

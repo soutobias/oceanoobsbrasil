@@ -12,7 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from netCDF4 import Dataset
 
-from oceanoobsbrasil.db import GetData
+from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class Altimeter:
@@ -30,7 +30,7 @@ class Altimeter:
         self.end_date = end_date
         self.url = url
 
-        self.db = GetData()
+        self.db = DbHandler()
         self.lat = lat
         self.lon = lon
 

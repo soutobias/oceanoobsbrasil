@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 import os
 import traceback
 
@@ -8,6 +9,16 @@ import requests
 from lxml.html import fromstring
 from numpy import arcsin, arctan, rad2deg
 
+
+LAT_LON_LIMITS = {
+    "min_lat": -89,
+    "max_lat": 15,
+    "min_lon": -90,
+    "max_lon": 20,
+}
+
+START_DATE = (datetime.now(timezone.utc) - timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%S")
+END_DATE = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S")
 
 def uv2intdir(u, v):
     if u > 0 and v > 0:
@@ -63,22 +74,22 @@ def quit_driver(driver):
     # driver.quit()
 
     if driver_process.is_running():
-        print("driver is running")
+        # print("driver is running")
 
         chrome_process = driver_process.children()
         if chrome_process:
             chrome_process = chrome_process[0]
 
             if chrome_process.is_running():
-                print("chrome is still running, we can quit")
+                # print("chrome is still running, we can quit")
                 driver.quit()
             else:
-                print("chrome is dead, can't quit. Let's kill the driver")
+                # print("chrome is dead, can't quit. Let's kill the driver")
                 chrome_process.kill()
-        else:
-            print("driver has died")
+        # else:
+        #     print("driver has died")
 
-    print("driver has died")
+    # print("driver has died")
 
 
 def mur_points():

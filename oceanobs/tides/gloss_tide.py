@@ -15,7 +15,7 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from oceanoobsbrasil.db import GetData
+from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class GlossTide:
@@ -33,7 +33,7 @@ class GlossTide:
 
         if datetime.utcnow() - timedelta(days=1) < datetime(2022, 6, 7, 9, 0, 0):
             start_date = datetime(2022, 6, 7, 9, 0, 0).strftime("%Y-%m-%d %H:00:00")
-        self.db = GetData()
+        self.db = DbHandler()
         self.equip = equip
         self.start_date = start_date
         self.end_date = end_date

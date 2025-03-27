@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-from oceanoobsbrasil.db import GetData
+from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class SimcostaTide:
@@ -24,7 +24,7 @@ class SimcostaTide:
     ):
         # Connect to the database
 
-        self.db = GetData()
+        self.db = DbHandler()
         self.equip = equip
         self.start_date = start_date
         self.end_date = end_date

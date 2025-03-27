@@ -1,0 +1,1490 @@
+[
+  {
+    "name": "Barra do Sai",
+    "latitude": -26.031,
+    "longitude": -48.6082,
+    "identifier": "barra-do-sai"
+  },
+  {
+    "name": "Brava",
+    "latitude": -25.8265,
+    "longitude": -48.518,
+    "identifier": "brava-3"
+  },
+  {
+    "name": "Boqueirao Sul",
+    "latitude": -25.0286,
+    "longitude": -47.882,
+    "identifier": "boqueirao-sul"
+  },
+  {
+    "name": "Adriana",
+    "latitude": -24.738,
+    "longitude": -47.526,
+    "identifier": "adriana"
+  },
+  {
+    "name": "Boqueirao Norte",
+    "latitude": -24.74,
+    "longitude": -47.533,
+    "identifier": "boqueirao-norte"
+  },
+  {
+    "name": "Arpoador",
+    "latitude": -24.0963,
+    "longitude": -46.5939,
+    "identifier": "arpoador"
+  },
+  {
+    "name": "Bombeiro",
+    "latitude": -24.326,
+    "longitude": -46.992,
+    "identifier": "bombeiro"
+  },
+  {
+    "name": "Aviacao",
+    "latitude": -24.0192,
+    "longitude": -46.4384,
+    "identifier": "aviacao"
+  },
+  {
+    "name": "Canto do Forte",
+    "latitude": -24.0184,
+    "longitude": -46.4061,
+    "identifier": "canto-do-forte"
+  },
+  {
+    "name": "Canal 1",
+    "latitude": -23.9718,
+    "longitude": -46.3459,
+    "identifier": "canal-1"
+  },
+  {
+    "name": "Asturias",
+    "latitude": -24.006,
+    "longitude": -46.267,
+    "identifier": "asturias"
+  },
+  {
+    "name": "Canal Pitangueiras",
+    "latitude": -24.0039,
+    "longitude": -46.2642,
+    "identifier": "canal-pitangueiras"
+  },
+  {
+    "name": "Boraceia Curva",
+    "latitude": -23.7602,
+    "longitude": -45.8094,
+    "identifier": "boraceia-curva"
+  },
+  {
+    "name": "Bora Bora",
+    "latitude": -23.7614,
+    "longitude": -45.8049,
+    "identifier": "bora-bora"
+  },
+  {
+    "name": "Barra do Una Meio",
+    "latitude": -23.7631,
+    "longitude": -45.7657,
+    "identifier": "barra-do-una-meio"
+  },
+  {
+    "name": "Barra do Sahy",
+    "latitude": -23.7735,
+    "longitude": -45.7001,
+    "identifier": "barra-do-sahy"
+  },
+  {
+    "name": "Baleia",
+    "latitude": -23.777,
+    "longitude": -45.674,
+    "identifier": "baleia"
+  },
+  {
+    "name": "Camburi",
+    "latitude": -23.781,
+    "longitude": -45.651,
+    "identifier": "camburi"
+  },
+  {
+    "name": "Brava",
+    "latitude": -23.5204,
+    "longitude": -45.1647,
+    "identifier": "brava-2"
+  },
+  {
+    "name": "Arpoador",
+    "latitude": -22.9899,
+    "longitude": -43.1925,
+    "identifier": "arpoador-2"
+  },
+  {
+    "name": "Amigao",
+    "latitude": -20.31,
+    "longitude": -40.28,
+    "identifier": "amigao"
+  },
+  {
+    "name": "Barravento",
+    "latitude": -13.011,
+    "longitude": -38.525,
+    "identifier": "barravento"
+  },
+  {
+    "name": "Canudo",
+    "latitude": -13.0067,
+    "longitude": -38.4553,
+    "identifier": "canudo"
+  },
+  {
+    "name": "Aleluia",
+    "latitude": -12.928,
+    "longitude": -38.316,
+    "identifier": "aleluia"
+  },
+  {
+    "name": "Camaroes",
+    "latitude": -8.50035,
+    "longitude": -35.004,
+    "identifier": "camaroes"
+  },
+  {
+    "name": "Cacimba do Padre",
+    "latitude": -3.84956,
+    "longitude": -32.44,
+    "identifier": "cacimba-do-padre"
+  },
+  {
+    "name": "Bessa",
+    "latitude": -7.063,
+    "longitude": -34.839,
+    "identifier": "bessa"
+  },
+  {
+    "name": "Artistas",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "artistas"
+  },
+  {
+    "name": "Astral",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "astral"
+  },
+  {
+    "name": "Atalaia",
+    "latitude": -2.78584,
+    "longitude": -41.5679,
+    "identifier": "atalaia"
+  },
+  {
+    "name": "Atalaia",
+    "latitude": -0.595103,
+    "longitude": -47.3015,
+    "identifier": "atalaia-2"
+  },
+  {
+    "name": "Calcadao",
+    "latitude": -30.149,
+    "longitude": -50.189,
+    "identifier": "calcadao"
+  },
+  {
+    "name": "Barrinha",
+    "latitude": -29.979,
+    "longitude": -50.1181,
+    "identifier": "barrinha"
+  },
+  {
+    "name": "Backdoor",
+    "latitude": -30.005,
+    "longitude": -50.129,
+    "identifier": "backdoor"
+  },
+  {
+    "name": "Cal",
+    "latitude": -29.351,
+    "longitude": -49.7263,
+    "identifier": "cal"
+  },
+  {
+    "name": "Atlandida Pier",
+    "latitude": -29.7858,
+    "longitude": -50.0225,
+    "identifier": "atlandida-pier"
+  },
+  {
+    "name": "Cardoso",
+    "latitude": -28.6138,
+    "longitude": -48.8289,
+    "identifier": "cardoso"
+  },
+  {
+    "name": "Barra de Ibiraquera",
+    "latitude": -28.105,
+    "longitude": -48.634,
+    "identifier": "barra-de-ibiraquera"
+  },
+  {
+    "name": "Pipa Lajao",
+    "latitude": -6.25,
+    "longitude": -35.2,
+    "identifier": "pipa-lajao"
+  },
+  {
+    "name": "Barrinha",
+    "latitude": -28.0852,
+    "longitude": -48.6293,
+    "identifier": "barrinha-2"
+  },
+  {
+    "name": "Luz",
+    "latitude": -28.1466,
+    "longitude": -48.6421,
+    "identifier": "luz"
+  },
+  {
+    "name": "Rosa Sul",
+    "latitude": -28.1343,
+    "longitude": -48.6407,
+    "identifier": "rosa-sul"
+  },
+  {
+    "name": "Rosa Norte",
+    "latitude": -28.1245,
+    "longitude": -48.6368,
+    "identifier": "rosa-norte"
+  },
+  {
+    "name": "Ferrugem Sul",
+    "latitude": -28.0803,
+    "longitude": -48.6271,
+    "identifier": "ferrugem-sul"
+  },
+  {
+    "name": "Campeche",
+    "latitude": -27.7003,
+    "longitude": -48.4921,
+    "identifier": "campeche"
+  },
+  {
+    "name": "Camping da Barra",
+    "latitude": -27.5672,
+    "longitude": -48.4273,
+    "identifier": "camping-da-barra"
+  },
+  {
+    "name": "Barra da Lagoa",
+    "latitude": -27.5728,
+    "longitude": -48.4235,
+    "identifier": "barra-da-lagoa"
+  },
+  {
+    "name": "Ferrugem Norte",
+    "latitude": -28.0765,
+    "longitude": -48.6245,
+    "identifier": "ferrugem-norte"
+  },
+  {
+    "name": "Silveira Sul",
+    "latitude": -28.0439,
+    "longitude": -48.6079,
+    "identifier": "silveira-sul"
+  },
+  {
+    "name": "Silveira Norte",
+    "latitude": -28.0359,
+    "longitude": -48.6035,
+    "identifier": "silveira-norte"
+  },
+  {
+    "name": "Centro",
+    "latitude": -28.0204,
+    "longitude": -48.6195,
+    "identifier": "centro-5"
+  },
+  {
+    "name": "Praia do Caldeirao",
+    "latitude": -27.7266,
+    "longitude": -48.506,
+    "identifier": "praia-do-caldeirao"
+  },
+  {
+    "name": "Morro das Pedras",
+    "latitude": -27.7109,
+    "longitude": -48.5002,
+    "identifier": "morro-das-pedras"
+  },
+  {
+    "name": "Novo Campeche",
+    "latitude": -27.6668,
+    "longitude": -48.4709,
+    "identifier": "novo-campeche"
+  },
+  {
+    "name": "Joaquina",
+    "latitude": -27.6329,
+    "longitude": -48.4467,
+    "identifier": "joaquina"
+  },
+  {
+    "name": "Mole Gravata",
+    "latitude": -27.6077,
+    "longitude": -48.4341,
+    "identifier": "mole-gravata"
+  },
+  {
+    "name": "Mole",
+    "latitude": -27.6089,
+    "longitude": -48.4226,
+    "identifier": "mole"
+  },
+  {
+    "name": "Mocambique",
+    "latitude": -27.4942,
+    "longitude": -48.3898,
+    "identifier": "mocambique"
+  },
+  {
+    "name": "Santinho",
+    "latitude": -27.4632,
+    "longitude": -48.3761,
+    "identifier": "santinho"
+  },
+  {
+    "name": "Ingleses",
+    "latitude": -27.4632,
+    "longitude": -48.3761,
+    "identifier": "ingleses"
+  },
+  {
+    "name": "Quatro Ilhas",
+    "latitude": -27.1571,
+    "longitude": -48.4842,
+    "identifier": "quatro-ilhas"
+  },
+  {
+    "name": "Mariscal - Canto Esquerdo",
+    "latitude": -27.1752,
+    "longitude": -48.4981,
+    "identifier": "mariscal-canto-esquerdo"
+  },
+  {
+    "name": "Mariscal Meio",
+    "latitude": -27.1752,
+    "longitude": -48.4981,
+    "identifier": "mariscal-meio"
+  },
+  {
+    "name": "Costao de Bombas",
+    "latitude": -27.1329,
+    "longitude": -48.5136,
+    "identifier": "costao-de-bombas"
+  },
+  {
+    "name": "Meia Praia",
+    "latitude": -27.12,
+    "longitude": -48.604,
+    "identifier": "meia-praia-3"
+  },
+  {
+    "name": "Central",
+    "latitude": -27.133,
+    "longitude": -48.5954,
+    "identifier": "central"
+  },
+  {
+    "name": "Plaza",
+    "latitude": -27.0774,
+    "longitude": -48.5919,
+    "identifier": "plaza"
+  },
+  {
+    "name": "Maxim",
+    "latitude": -26.9855,
+    "longitude": -48.6314,
+    "identifier": "maxim"
+  },
+  {
+    "name": "Marambaia",
+    "latitude": -26.9757,
+    "longitude": -48.6337,
+    "identifier": "marambaia"
+  },
+  {
+    "name": "Praia Brava",
+    "latitude": -26.9469,
+    "longitude": -48.627,
+    "identifier": "praia-brava-2"
+  },
+  {
+    "name": "Praia dos Amores",
+    "latitude": -26.9575,
+    "longitude": -48.6279,
+    "identifier": "praia-dos-amores"
+  },
+  {
+    "name": "Gravata",
+    "latitude": -26.834,
+    "longitude": -48.624,
+    "identifier": "gravata-3"
+  },
+  {
+    "name": "Praia Vermelha",
+    "latitude": -26.801,
+    "longitude": -48.5936,
+    "identifier": "praia-vermelha"
+  },
+  {
+    "name": "Quilombo Pico",
+    "latitude": -26.771,
+    "longitude": -48.638,
+    "identifier": "quilombo-pico"
+  },
+  {
+    "name": "Quilombo Meio",
+    "latitude": -26.784,
+    "longitude": -48.625,
+    "identifier": "quilombo-meio"
+  },
+  {
+    "name": "Costao",
+    "latitude": -26.6436,
+    "longitude": -48.6818,
+    "identifier": "costao"
+  },
+  {
+    "name": "Praia do Sol",
+    "latitude": -26.6757,
+    "longitude": -48.6874,
+    "identifier": "praia-do-sol"
+  },
+  {
+    "name": "Peninsula",
+    "latitude": -26.635,
+    "longitude": -48.671,
+    "identifier": "peninsula"
+  },
+  {
+    "name": "Ubatuba",
+    "latitude": -26.23,
+    "longitude": -48.63,
+    "identifier": "ubatuba"
+  },
+  {
+    "name": "Praia do Ervino",
+    "latitude": -26.3891,
+    "longitude": -48.5838,
+    "identifier": "praia-do-ervino"
+  },
+  {
+    "name": "Prainha",
+    "latitude": -26.2308,
+    "longitude": -48.4982,
+    "identifier": "prainha-6"
+  },
+  {
+    "name": "Praia Grande",
+    "latitude": -26.2381,
+    "longitude": -48.5027,
+    "identifier": "praia-grande-4"
+  },
+  {
+    "name": "Imperador",
+    "latitude": -26.1395,
+    "longitude": -48.597,
+    "identifier": "imperador"
+  },
+  {
+    "name": "Palmeiras",
+    "latitude": -26.1342,
+    "longitude": -48.6044,
+    "identifier": "palmeiras-2"
+  },
+  {
+    "name": "Cotia",
+    "latitude": -26.0235,
+    "longitude": -48.607,
+    "identifier": "cotia"
+  },
+  {
+    "name": "Direitas",
+    "latitude": -25.8908,
+    "longitude": -48.5598,
+    "identifier": "direitas"
+  },
+  {
+    "name": "Praia Central",
+    "latitude": -25.8803,
+    "longitude": -48.5674,
+    "identifier": "praia-central"
+  },
+  {
+    "name": "Pico de Guaratuba",
+    "latitude": -25.915,
+    "longitude": -48.573,
+    "identifier": "pico-de-guaratuba"
+  },
+  {
+    "name": "Paraguaios",
+    "latitude": -25.915,
+    "longitude": -48.573,
+    "identifier": "paraguaios"
+  },
+  {
+    "name": "Mapin",
+    "latitude": -25.843,
+    "longitude": -48.5363,
+    "identifier": "mapin"
+  },
+  {
+    "name": "Pico de Matinhos",
+    "latitude": -25.7815,
+    "longitude": -48.3968,
+    "identifier": "pico-de-matinhos"
+  },
+  {
+    "name": "Praia Grande",
+    "latitude": -25.55,
+    "longitude": -48.294,
+    "identifier": "praia-grande-2"
+  },
+  {
+    "name": "Vo Maria",
+    "latitude": -25.5578,
+    "longitude": -48.2898,
+    "identifier": "vo-maria"
+  },
+  {
+    "name": "Praia de Fora",
+    "latitude": -25.5425,
+    "longitude": -48.291,
+    "identifier": "praia-de-fora"
+  },
+  {
+    "name": "Praia de Leste",
+    "latitude": -25.6941,
+    "longitude": -48.4888,
+    "identifier": "praia-de-leste"
+  },
+  {
+    "name": "Siriu",
+    "latitude": -28.008,
+    "longitude": -48.629,
+    "identifier": "siriu"
+  },
+  {
+    "name": "Ouvidor",
+    "latitude": -28.105,
+    "longitude": -48.63399,
+    "identifier": "ouvidor"
+  },
+  {
+    "name": "Special Point",
+    "latitude": -23.793,
+    "longitude": -45.577,
+    "identifier": "special-point-6"
+  },
+  {
+    "name": "Queda Bruta",
+    "latitude": -24.3048,
+    "longitude": -46.9723,
+    "identifier": "queda-bruta"
+  },
+  {
+    "name": "Guarau",
+    "latitude": -24.3699,
+    "longitude": -47.0119,
+    "identifier": "guarau"
+  },
+  {
+    "name": "Centro",
+    "latitude": -24.326,
+    "longitude": -46.992,
+    "identifier": "centro-2"
+  },
+  {
+    "name": "Mirante",
+    "latitude": -24.326,
+    "longitude": -46.992,
+    "identifier": "mirante"
+  },
+  {
+    "name": "Nova Itanhaem",
+    "latitude": -24.1726,
+    "longitude": -46.7597,
+    "identifier": "nova-itanhaem"
+  },
+  {
+    "name": "Cibratel canto",
+    "latitude": -24.2004,
+    "longitude": -46.8131,
+    "identifier": "cibratel-canto"
+  },
+  {
+    "name": "Sonhos Meio",
+    "latitude": -24.196,
+    "longitude": -46.797,
+    "identifier": "sonhos-meio"
+  },
+  {
+    "name": "Pescadores",
+    "latitude": -24.192,
+    "longitude": -46.792,
+    "identifier": "pescadores"
+  },
+  {
+    "name": "Praiao",
+    "latitude": -24.1848,
+    "longitude": -46.7851,
+    "identifier": "praiao"
+  },
+  {
+    "name": "Suarao",
+    "latitude": -24.179,
+    "longitude": -46.7729,
+    "identifier": "suarao"
+  },
+  {
+    "name": "Praia do Centro",
+    "latitude": -24.1007,
+    "longitude": -46.6271,
+    "identifier": "praia-do-centro"
+  },
+  {
+    "name": "Lado direito do pier",
+    "latitude": -24.1374,
+    "longitude": -46.6928,
+    "identifier": "lado-direito-do-pier"
+  },
+  {
+    "name": "Lado esquerdo do pier",
+    "latitude": -24.1357,
+    "longitude": -46.6905,
+    "identifier": "lado-esquerdo-do-pier"
+  },
+  {
+    "name": "Vila Caicara",
+    "latitude": -24.0475,
+    "longitude": -46.5189,
+    "identifier": "vila-caicara"
+  },
+  {
+    "name": "Guilhermina",
+    "latitude": -24.017,
+    "longitude": -46.4267,
+    "identifier": "guilhermina"
+  },
+  {
+    "name": "Centro",
+    "latitude": -24.0195,
+    "longitude": -46.4193,
+    "identifier": "centro-4"
+  },
+  {
+    "name": "Porta do Sol",
+    "latitude": -23.9794,
+    "longitude": -46.3771,
+    "identifier": "porta-do-sol"
+  },
+  {
+    "name": "Escolinha",
+    "latitude": -23.9728,
+    "longitude": -46.358,
+    "identifier": "escolinha"
+  },
+  {
+    "name": "Teleferico",
+    "latitude": -23.9747,
+    "longitude": -46.3615,
+    "identifier": "teleferico"
+  },
+  {
+    "name": "Divisa",
+    "latitude": -23.9725,
+    "longitude": -46.3552,
+    "identifier": "divisa"
+  },
+  {
+    "name": "Quebra-Mar",
+    "latitude": -23.9731,
+    "longitude": -46.3486,
+    "identifier": "quebra-mar"
+  },
+  {
+    "name": "Posto 2",
+    "latitude": -23.9716,
+    "longitude": -46.3425,
+    "identifier": "posto-2"
+  },
+  {
+    "name": "Guaiuba",
+    "latitude": -24.0176,
+    "longitude": -46.2971,
+    "identifier": "guaiuba"
+  },
+  {
+    "name": "Tombo",
+    "latitude": -24.015,
+    "longitude": -46.273,
+    "identifier": "tombo"
+  },
+  {
+    "name": "Monduba",
+    "latitude": -24.0027,
+    "longitude": -46.262,
+    "identifier": "monduba"
+  },
+  {
+    "name": "Ilha Pitangueiras",
+    "latitude": -24.0017,
+    "longitude": -46.2575,
+    "identifier": "ilha-pitangueiras"
+  },
+  {
+    "name": "Boraceia Passarela",
+    "latitude": -23.7612,
+    "longitude": -45.8636,
+    "identifier": "boraceia-passarela"
+  },
+  {
+    "name": "Maluf Pitangueiras",
+    "latitude": -23.9986,
+    "longitude": -46.2518,
+    "identifier": "maluf-pitangueiras"
+  },
+  {
+    "name": "Enseada Meio",
+    "latitude": -23.9903,
+    "longitude": -46.2284,
+    "identifier": "enseada-meio"
+  },
+  {
+    "name": "Enseada Canto Direito",
+    "latitude": -23.9943,
+    "longitude": -46.2449,
+    "identifier": "enseada-canto-direito"
+  },
+  {
+    "name": "Pernambuco Canto Esquerdo",
+    "latitude": -23.9619,
+    "longitude": -46.1818,
+    "identifier": "pernambuco-canto-esquerdo"
+  },
+  {
+    "name": "Pernambuco Meio",
+    "latitude": -23.9651,
+    "longitude": -46.1843,
+    "identifier": "pernambuco-meio"
+  },
+  {
+    "name": "Tijucopava",
+    "latitude": -23.9131,
+    "longitude": -46.1676,
+    "identifier": "tijucopava"
+  },
+  {
+    "name": "Sao Pedro",
+    "latitude": -23.9086,
+    "longitude": -46.1614,
+    "identifier": "sao-pedro"
+  },
+  {
+    "name": "Taguaiba",
+    "latitude": -23.8967,
+    "longitude": -46.1495,
+    "identifier": "taguaiba"
+  },
+  {
+    "name": "Enseada Centro",
+    "latitude": -23.839,
+    "longitude": -46.116,
+    "identifier": "enseada-centro"
+  },
+  {
+    "name": "Sesc",
+    "latitude": -23.844,
+    "longitude": -46.1225,
+    "identifier": "sesc-2"
+  },
+  {
+    "name": "Indaia",
+    "latitude": -23.8206,
+    "longitude": -46.0507,
+    "identifier": "indaia-2"
+  },
+  {
+    "name": "Riviera Canto Direito",
+    "latitude": -23.8148,
+    "longitude": -46.0356,
+    "identifier": "riviera-canto-direito"
+  },
+  {
+    "name": "Riviera Meio",
+    "latitude": -23.8076,
+    "longitude": -46.0156,
+    "identifier": "riviera-meio"
+  },
+  {
+    "name": "Itaguare",
+    "latitude": -23.7982,
+    "longitude": -45.987,
+    "identifier": "itaguare"
+  },
+  {
+    "name": "Jureia",
+    "latitude": -23.7659,
+    "longitude": -45.788,
+    "identifier": "jureia"
+  },
+  {
+    "name": "Engenho",
+    "latitude": -23.765,
+    "longitude": -45.782,
+    "identifier": "engenho"
+  },
+  {
+    "name": "Juquei",
+    "latitude": -23.769,
+    "longitude": -45.751,
+    "identifier": "juquei"
+  },
+  {
+    "name": "Maresias Canto",
+    "latitude": -23.7931,
+    "longitude": -45.5836,
+    "identifier": "maresias-canto"
+  },
+  {
+    "name": "Maresias",
+    "latitude": -23.7979,
+    "longitude": -45.5791,
+    "identifier": "maresias"
+  },
+  {
+    "name": "Special Point",
+    "latitude": -23.793,
+    "longitude": -45.577,
+    "identifier": "special-point-9"
+  },
+  {
+    "name": "Praia do Tenorio",
+    "latitude": -23.4649,
+    "longitude": -45.0561,
+    "identifier": "praia-do-tenorio"
+  },
+  {
+    "name": "Lagoinha",
+    "latitude": -23.5234,
+    "longitude": -45.2051,
+    "identifier": "lagoinha"
+  },
+  {
+    "name": "Sununga",
+    "latitude": -23.5094,
+    "longitude": -45.1336,
+    "identifier": "sununga"
+  },
+  {
+    "name": "Toninhas",
+    "latitude": -23.485,
+    "longitude": -45.071,
+    "identifier": "toninhas"
+  },
+  {
+    "name": "Praia Grande",
+    "latitude": -23.469,
+    "longitude": -45.061,
+    "identifier": "praia-grande-3"
+  },
+  {
+    "name": "Vermelha do Centro",
+    "latitude": -23.466,
+    "longitude": -45.049,
+    "identifier": "vermelha-do-centro"
+  },
+  {
+    "name": "Vermelha do Norte",
+    "latitude": -23.419,
+    "longitude": -45.035,
+    "identifier": "vermelha-do-norte"
+  },
+  {
+    "name": "Itamambuca",
+    "latitude": -23.408,
+    "longitude": -45.006,
+    "identifier": "itamambuca"
+  },
+  {
+    "name": "Felix",
+    "latitude": -23.388,
+    "longitude": -44.968,
+    "identifier": "felix"
+  },
+  {
+    "name": "Sape",
+    "latitude": -23.5344,
+    "longitude": -45.2237,
+    "identifier": "sape"
+  },
+  {
+    "name": "Grumari",
+    "latitude": -23.053,
+    "longitude": -43.534,
+    "identifier": "grumari"
+  },
+  {
+    "name": "Prainha",
+    "latitude": -23.043,
+    "longitude": -43.505,
+    "identifier": "prainha-7"
+  },
+  {
+    "name": "Macumba",
+    "latitude": -23.034,
+    "longitude": -43.476,
+    "identifier": "macumba"
+  },
+  {
+    "name": "Reserva",
+    "latitude": -23.0168,
+    "longitude": -43.4048,
+    "identifier": "reserva"
+  },
+  {
+    "name": "Recreio",
+    "latitude": -23.031,
+    "longitude": -43.465,
+    "identifier": "recreio"
+  },
+  {
+    "name": "Postinho da Barra",
+    "latitude": -23.0124,
+    "longitude": -43.3277,
+    "identifier": "postinho-da-barra"
+  },
+  {
+    "name": "Leblon",
+    "latitude": -22.99,
+    "longitude": -43.226,
+    "identifier": "leblon"
+  },
+  {
+    "name": "Ipanema",
+    "latitude": -22.989,
+    "longitude": -43.208,
+    "identifier": "ipanema"
+  },
+  {
+    "name": "Diabo",
+    "latitude": -22.9886,
+    "longitude": -43.1889,
+    "identifier": "diabo"
+  },
+  {
+    "name": "Copacabana",
+    "latitude": -22.9744,
+    "longitude": -43.1835,
+    "identifier": "copacabana"
+  },
+  {
+    "name": "Itacoatiara Pampo",
+    "latitude": -22.9759,
+    "longitude": -43.0364,
+    "identifier": "itacoatiara-pampo"
+  },
+  {
+    "name": "Itacoatiara Meio",
+    "latitude": -22.9757,
+    "longitude": -43.0335,
+    "identifier": "itacoatiara-meio"
+  },
+  {
+    "name": "Itacoatiara Costao",
+    "latitude": -22.9769,
+    "longitude": -43.0312,
+    "identifier": "itacoatiara-costao"
+  },
+  {
+    "name": "Praia da Vila",
+    "latitude": -22.936,
+    "longitude": -42.496,
+    "identifier": "praia-da-vila"
+  },
+  {
+    "name": "Itauna",
+    "latitude": -22.9403,
+    "longitude": -42.4777,
+    "identifier": "itauna"
+  },
+  {
+    "name": "Praia do Forte",
+    "latitude": -22.886,
+    "longitude": -42.011,
+    "identifier": "praia-do-forte"
+  },
+  {
+    "name": "Pero",
+    "latitude": -22.86,
+    "longitude": -42.02,
+    "identifier": "pero"
+  },
+  {
+    "name": "Geriba Canto Direito",
+    "latitude": -22.781,
+    "longitude": -41.91,
+    "identifier": "geriba-canto-direito"
+  },
+  {
+    "name": "Geriba Meio",
+    "latitude": -22.788,
+    "longitude": -41.921,
+    "identifier": "geriba-meio"
+  },
+  {
+    "name": "Praia Grande",
+    "latitude": -22.972,
+    "longitude": -42.038,
+    "identifier": "praia-grande"
+  },
+  {
+    "name": "Barrote",
+    "latitude": -20.31,
+    "longitude": -40.28,
+    "identifier": "barrote"
+  },
+  {
+    "name": "Chamine",
+    "latitude": -22.95,
+    "longitude": -42.02,
+    "identifier": "chamine"
+  },
+  {
+    "name": "Estacionamento",
+    "latitude": -22.95,
+    "longitude": -42.02,
+    "identifier": "estacionamento"
+  },
+  {
+    "name": "Ule",
+    "latitude": -20.5396,
+    "longitude": -40.3776,
+    "identifier": "ule"
+  },
+  {
+    "name": "Solemar",
+    "latitude": -20.31,
+    "longitude": -40.28,
+    "identifier": "solemar-2"
+  },
+  {
+    "name": "Prainha",
+    "latitude": -14.289,
+    "longitude": -38.983,
+    "identifier": "prainha-4"
+  },
+  {
+    "name": "Tiririca",
+    "latitude": -14.289,
+    "longitude": -38.983,
+    "identifier": "tiririca"
+  },
+  {
+    "name": "Torrefacao",
+    "latitude": -13.0137,
+    "longitude": -38.4911,
+    "identifier": "torrefacao"
+  },
+  {
+    "name": "Espanhol",
+    "latitude": -13.006,
+    "longitude": -38.533,
+    "identifier": "espanhol"
+  },
+  {
+    "name": "Paciencia",
+    "latitude": -13.0111,
+    "longitude": -38.497,
+    "identifier": "paciencia"
+  },
+  {
+    "name": "Farol da Barra",
+    "latitude": -13.011,
+    "longitude": -38.525,
+    "identifier": "farol-da-barra"
+  },
+  {
+    "name": "Tonys",
+    "latitude": -13.012,
+    "longitude": -38.508,
+    "identifier": "tonys"
+  },
+  {
+    "name": "Praia da Onda",
+    "latitude": -13.011,
+    "longitude": -38.525,
+    "identifier": "praia-da-onda"
+  },
+  {
+    "name": "Pescador",
+    "latitude": -12.9867,
+    "longitude": -38.4329,
+    "identifier": "pescador"
+  },
+  {
+    "name": "Secret",
+    "latitude": -12.945,
+    "longitude": -38.333,
+    "identifier": "secret-2"
+  },
+  {
+    "name": "Stella",
+    "latitude": -12.936,
+    "longitude": -38.326,
+    "identifier": "stella"
+  },
+  {
+    "name": "Villas do Atlantico",
+    "latitude": -12.9008,
+    "longitude": -38.2937,
+    "identifier": "villas-do-atlantico"
+  },
+  {
+    "name": "Havaizinho",
+    "latitude": -10.967,
+    "longitude": -37.026,
+    "identifier": "havaizinho"
+  },
+  {
+    "name": "Coqueiral",
+    "latitude": -9.77749,
+    "longitude": -35.8467,
+    "identifier": "coqueiral"
+  },
+  {
+    "name": "Leprosario",
+    "latitude": -9.736,
+    "longitude": -35.814,
+    "identifier": "leprosario"
+  },
+  {
+    "name": "Fortunato",
+    "latitude": -9.736,
+    "longitude": -35.814,
+    "identifier": "fortunato"
+  },
+  {
+    "name": "Cupe",
+    "latitude": -8.46628,
+    "longitude": -34.9881,
+    "identifier": "cupe"
+  },
+  {
+    "name": "Merepe",
+    "latitude": -8.50035,
+    "longitude": -35.004,
+    "identifier": "merepe"
+  },
+  {
+    "name": "Porto de Galinhas",
+    "latitude": -8.50035,
+    "longitude": -35.004,
+    "identifier": "porto-de-galinhas"
+  },
+  {
+    "name": "Maracaipe",
+    "latitude": -8.52631,
+    "longitude": -35.0074,
+    "identifier": "maracaipe"
+  },
+  {
+    "name": "Praia do Meio",
+    "latitude": -3.83961,
+    "longitude": -32.4132,
+    "identifier": "praia-do-meio"
+  },
+  {
+    "name": "Praia da Conceicao",
+    "latitude": -3.84182,
+    "longitude": -32.4195,
+    "identifier": "praia-da-conceicao"
+  },
+  {
+    "name": "Praia do Boldro",
+    "latitude": -3.84438,
+    "longitude": -32.4276,
+    "identifier": "praia-do-boldro"
+  },
+  {
+    "name": "Praia da Baia dos Porcos",
+    "latitude": -3.85139,
+    "longitude": -32.4413,
+    "identifier": "praia-da-baia-dos-porcos"
+  },
+  {
+    "name": "Praia da Baia do Sancho",
+    "latitude": -3.85466,
+    "longitude": -32.4444,
+    "identifier": "praia-da-baia-do-sancho"
+  },
+  {
+    "name": "Praia do Bode",
+    "latitude": -3.84717,
+    "longitude": -32.4338,
+    "identifier": "praia-do-bode"
+  },
+  {
+    "name": "Mar dos Macacos",
+    "latitude": -7.089,
+    "longitude": -34.831,
+    "identifier": "mar-dos-macacos"
+  },
+  {
+    "name": "Pipa Amor",
+    "latitude": -6.25,
+    "longitude": -35.2,
+    "identifier": "pipa-amor"
+  },
+  {
+    "name": "Pipa Lajinha",
+    "latitude": -6.25,
+    "longitude": -35.2,
+    "identifier": "pipa-lajinha"
+  },
+  {
+    "name": "Pontal",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "pontal"
+  },
+  {
+    "name": "Porto",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "porto"
+  },
+  {
+    "name": "Mar Aberto",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "mar-aberto"
+  },
+  {
+    "name": "Manary",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "manary"
+  },
+  {
+    "name": "Sesc",
+    "latitude": -5.792,
+    "longitude": -35.185,
+    "identifier": "sesc"
+  },
+  {
+    "name": "Miami",
+    "latitude": -5.79218,
+    "longitude": -35.1853,
+    "identifier": "miami"
+  },
+  {
+    "name": "Posto B",
+    "latitude": -5.879,
+    "longitude": -35.167,
+    "identifier": "posto-b"
+  },
+  {
+    "name": "Tabatinga",
+    "latitude": -6.04616,
+    "longitude": -35.1087,
+    "identifier": "tabatinga-2"
+  },
+  {
+    "name": "Escadaria",
+    "latitude": -5.87646,
+    "longitude": -35.1754,
+    "identifier": "escadaria"
+  },
+  {
+    "name": "Praia do Futuro",
+    "latitude": -3.753,
+    "longitude": -38.441,
+    "identifier": "praia-do-futuro"
+  },
+  {
+    "name": "Titanzinho",
+    "latitude": -3.70696,
+    "longitude": -38.4675,
+    "identifier": "titanzinho"
+  },
+  {
+    "name": "Praia do Vizinho",
+    "latitude": -3.70864,
+    "longitude": -38.4618,
+    "identifier": "praia-do-vizinho"
+  },
+  {
+    "name": "Portao",
+    "latitude": -3.753,
+    "longitude": -38.441,
+    "identifier": "portao"
+  },
+  {
+    "name": "Leste Oeste",
+    "latitude": -3.71429,
+    "longitude": -38.5404,
+    "identifier": "leste-oeste"
+  },
+  {
+    "name": "Icarai",
+    "latitude": -3.68622,
+    "longitude": -38.6341,
+    "identifier": "icarai"
+  },
+  {
+    "name": "Taiba",
+    "latitude": -3.49889,
+    "longitude": -38.9147,
+    "identifier": "taiba"
+  },
+  {
+    "name": "Ponta DAreia",
+    "latitude": -2.498,
+    "longitude": -44.318,
+    "identifier": "ponta-dareia"
+  },
+  {
+    "name": "Sao Marcos",
+    "latitude": -2.487,
+    "longitude": -44.292,
+    "identifier": "sao-marcos"
+  },
+  {
+    "name": "Farol velho",
+    "latitude": -0.593357,
+    "longitude": -47.3249,
+    "identifier": "farol-velho"
+  },
+  {
+    "name": "Pier",
+    "latitude": -30.178,
+    "longitude": -50.1999,
+    "identifier": "pier"
+  },
+  {
+    "name": "Meio",
+    "latitude": -30.0018,
+    "longitude": -50.1264,
+    "identifier": "meio"
+  },
+  {
+    "name": "Pier",
+    "latitude": -30.0058,
+    "longitude": -50.127,
+    "identifier": "pier-2"
+  },
+  {
+    "name": "Imbe",
+    "latitude": -29.9645,
+    "longitude": -50.1109,
+    "identifier": "imbe"
+  },
+  {
+    "name": "Final do Calcadao",
+    "latitude": -29.743,
+    "longitude": -50,
+    "identifier": "final-do-calcadao"
+  },
+  {
+    "name": "Special Point",
+    "latitude": -29.7395,
+    "longitude": -49.9975,
+    "identifier": "special-point-8"
+  },
+  {
+    "name": "Praia da Guarita",
+    "latitude": -29.358,
+    "longitude": -49.7335,
+    "identifier": "praia-da-guarita"
+  },
+  {
+    "name": "Prainha",
+    "latitude": -29.3459,
+    "longitude": -49.7174,
+    "identifier": "prainha-8"
+  },
+  {
+    "name": "Molhes",
+    "latitude": -29.327,
+    "longitude": -49.711,
+    "identifier": "molhes-2"
+  },
+  {
+    "name": "Mampituba",
+    "latitude": -29.321,
+    "longitude": -49.709,
+    "identifier": "mampituba"
+  },
+  {
+    "name": "Xangri-la",
+    "latitude": -29.8135,
+    "longitude": -50.0371,
+    "identifier": "xangri-la"
+  },
+  {
+    "name": "Centro",
+    "latitude": -28.7163,
+    "longitude": -49.0457,
+    "identifier": "centro-3"
+  },
+  {
+    "name": "Plataforma Entremares",
+    "latitude": -28.9607,
+    "longitude": -49.3833,
+    "identifier": "plataforma-entremares"
+  },
+  {
+    "name": "Plataforma Norte",
+    "latitude": -28.8235,
+    "longitude": -49.2173,
+    "identifier": "plataforma-norte"
+  },
+  {
+    "name": "Teresa",
+    "latitude": -28.524,
+    "longitude": -48.7608,
+    "identifier": "teresa"
+  },
+  {
+    "name": "Cigana",
+    "latitude": -28.6132,
+    "longitude": -48.8405,
+    "identifier": "cigana"
+  },
+  {
+    "name": "Vila",
+    "latitude": -28.2435,
+    "longitude": -48.6536,
+    "identifier": "vila"
+  },
+  {
+    "name": "Porto",
+    "latitude": -28.2154,
+    "longitude": -48.6651,
+    "identifier": "porto-2"
+  },
+  {
+    "name": "Ribanceira",
+    "latitude": -28.1872,
+    "longitude": -48.6602,
+    "identifier": "ribanceira"
+  },
+  {
+    "name": "Ibiraquera",
+    "latitude": -28.154,
+    "longitude": -48.6462,
+    "identifier": "ibiraquera"
+  }
+]

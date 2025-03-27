@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Espirito Santo",
+    "latitude": -19,
+    "longitude": -34,
+    "identifier": "31005"
+  },
+  {
+    "name": "Salvador",
+    "latitude": -14,
+    "longitude": -32,
+    "identifier": "31004"
+  },
+  {
+    "name": "Paraiba",
+    "latitude": -8,
+    "longitude": -30,
+    "identifier": "31003"
+  },
+  {
+    "name": "Samba",
+    "latitude": 0,
+    "longitude": -35,
+    "identifier": "31001"
+  },
+  {
+    "name": "Frevo",
+    "latitude": 4,
+    "longitude": -38,
+    "identifier": "31002"
+  },
+  {
+    "name": "Lambada",
+    "latitude": 8,
+    "longitude": -38,
+    "identifier": "13009"
+  },
+  {
+    "name": "Forro",
+    "latitude": 12,
+    "longitude": -38,
+    "identifier": "41026"
+  },
+  {
+    "name": "Reggae",
+    "latitude": 15,
+    "longitude": -38,
+    "identifier": "41139"
+  },
+  {
+    "name": "20N",
+    "latitude": 20,
+    "longitude": -38,
+    "identifier": "13008"
+  },
+  {
+    "name": "Jazz",
+    "latitude": 0,
+    "longitude": -23,
+    "identifier": "31007"
+  },
+  {
+    "name": "NE Extension",
+    "latitude": 4,
+    "longitude": -23,
+    "identifier": "31006"
+  }
+]

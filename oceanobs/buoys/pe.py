@@ -1,133 +1,160 @@
+""" Class to get data from Pernambuco buoys """
+import json
 import os
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
-import chromedriver_binary
 import numpy as np
 import pandas as pd
-import psutil
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-from oceanoobsbrasil.db import GetData
-from oceanoobsbrasil.utils import *
+from oceanobs.oceanobs import Oceanobs
+from oceanobs.utils import quit_driver, uv2intdir
+load_dotenv()
 
-
-class PEBuoy:
-    load_dotenv()
+class PEBuoy(Oceanobs):
+    """Get data from Pernambuco buoys"""
 
     def __init__(
         self,
-        args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"],
-        preferences=[],
-        equip="buoy",
+        **kwargs,
     ):
-        self.options = Options()
-        self.args = args
-        self.preferences = preferences
-        self.options = def_args_prefs(self.options, self.args, self.preferences)
-        self.driver = webdriver.Chrome(options=self.options)
+        super().__init__()
+        self.base_url = os.getenv("PE_URL")
 
-        self.db = GetData()
-        self.equip = equip
-        self.stations = self.db.get(
-            table="stations",
-            institution=["=", "hidromares"],
-            name=["=", "suape"],
-            data_type=["=", self.equip],
-        ).iloc[0]
+    def get_stations(self) -> pd.DataFrame:
+        """Get stations from Pernambuco buoys
 
-        self.url = os.getenv("PE_URL")
+        The stations are read from a json file.
 
-    def get(self):
-        self.driver.get(self.url)
-        time.sleep(10)
-        # wait = WebDriverWait(self.driver, 15)
-        # wait.until(ec.visibility_of_element_located((By.XPATH, "//div[@id='Box01_1631']")))
+        Returns
+        -------
+        pd.DataFrame
+            The stations
+        """
 
-        mwd = int(self.driver.find_element("id", "Box01_1631").text)
-        hm0 = float(self.driver.find_element("id", "Box01_718").text)
-        seapeakdir = int(self.driver.find_element("id", "Box04_1633").text)
-        seahm0 = float(self.driver.find_element("id", "Box04_1627").text)
-        swellpeakdir = int(self.driver.find_element("id", "Box07_1634").text)
-        swellhm0 = float(self.driver.find_element("id", "Box07_1624").text)
+        file_path = os.path.join(os.path.dirname(__file__), "../data/buoy_pe.json")
 
-        date_time = self.driver.find_element(
-            "xpath", "//*[contains(text(), 'Latest data')]"
-        ).text
-        date_time = datetime.strptime(date_time[13:], "%Y-%m-%d %H:%M")
+        with open(file_path, "r") as file:
+            stations = json.load(file)
 
-        self.driver.find_element("xpath", "//a[contains(text(),'PÍER')]").click()
-        time.sleep(10)
+        stations = pd.DataFrame(stations)
+        stations = self._convert_to_gdf(stations)
+        return stations
 
-        # wait.until(ec.visibility_of_element_located((By.XPATH, "Box01_arrow")))
+    def get_data(self,
+                 station,
+                 add_columns: list = None) -> tuple:
+        """ Get data from a station
 
-        soup = BeautifulSoup(self.driver.page_source, "html.parser")
+        Parameters
+        ----------
+        station : dict
+            The station information
 
-        l = soup.find_all(attrs={"id": "Box01_arrow"})
-        x = l[0].path.attrs
-        x2 = x["transform"]
+        Returns
+        -------
+        tuple
+            The data and the error message
+        """
+        if not add_columns:
+            add_columns = ["name"]
+        driver = self.create_driver()
+        try:
+            driver.get(self.base_url)
+        except Exception as e:
+            quit_driver(driver)
+            return None, str(e)
 
-        x1 = re.findall("[+-]?\d+\.\d+", x2)
-        (intens, direc) = uv2intdir(float(x1[0]), float(x1[1]))
-        wdir = round(direc)
+        wait = WebDriverWait(driver, 15)
+        wait.until(ec.visibility_of_element_located((By.XPATH, "//div[@id='Box01_1631']")))
 
-        l = soup.find_all(attrs={"id": "Box01_689"})
-        wspd = float(l[0].text)
+        def get_element_text(element_id: str, data_type=float):
+            """ Helper function to extract text from an element and convert it to the specified data type. """
+            try:
+                element_text = driver.find_element("id", element_id).text
+                return data_type(element_text)
+            except Exception:
+                return None
 
-        # wspd =float(l[0].text)*0.514444
-        wspd = round(wspd, 2)
+        mwd = get_element_text("Box01_1631", int)
+        hm0 = get_element_text("Box01_718")
+        seapeakdir = get_element_text("Box04_1633", int)
+        seahm0 = get_element_text("Box04_1627")
+        swellpeakdir = get_element_text("Box07_1634", int)
+        swellhm0 = get_element_text("Box07_1624")
 
-        l = soup.find_all(attrs={"id": "Box01_690"})
-        gust = float(l[0].text)
+        try:
+            date_time = driver.find_element(By.XPATH,
+                                             "//*[contains(text(), 'Latest data')]")
+            date_time = date_time.text
+            date_time = datetime.strptime(date_time[13:], "%Y-%m-%d %H:%M")
+        except Exception as e:
+            quit_driver(driver)
+            return None, str(e)
 
-        # gust=float(l[0].text)*0.514444
-        gust = round(gust, 2)
+        try:
+            driver.find_element("xpath", "//a[contains(text(),'PÍER')]").click()
+            time.sleep(10)
 
-        values = np.array(
-            [
-                date_time,
-                mwd,
-                hm0,
-                seapeakdir,
-                seahm0,
-                swellpeakdir,
-                swellhm0,
-                wspd,
-                gust,
-                wdir,
-            ]
-        )
+            soup = BeautifulSoup(driver.page_source, "html.parser")
+
+            wdir_part = soup.find(attrs={"id": "Box01_arrow"})
+            uv_wind_velocity = re.findall(r"[+-]?\d+\.\d+", wdir_part.path.attrs["transform"])
+            _, direc = uv2intdir(float(uv_wind_velocity[0]), float(uv_wind_velocity[1]))
+            wdir = round(direc)
+
+            wspd = round(float(soup.find(attrs={"id": "Box01_689"}).text), 2)
+            gust = round(float(soup.find(attrs={"id": "Box01_690"}).text), 2)
+        except Exception as e:
+            wdir, wspd, gust = None, None, None
+
+        values = np.array([
+            date_time, mwd, hm0, seapeakdir, seahm0,
+            swellpeakdir, swellhm0, wspd, gust, wdir
+        ])
         columns = [
-            "date_time",
-            "wvdir",
-            "swvht",
-            "wvdir_sea",
-            "swvht_sea",
-            "wvdir_swell",
-            "swvht_swell",
-            "wspd",
-            "gust",
-            "wdir",
+            "date_time", "wvdir", "swvht", "wvdir_sea", "swvht_sea",
+            "wvdir_swell", "swvht_swell", "wspd", "gust", "wdir"
         ]
-        self.result = pd.DataFrame(values).T
-        self.result.columns = columns
+        data = pd.DataFrame(values).T
+        data.columns = columns
+        data = self._prepare_data(data, columns)
 
-        # self.result.date_time = self.result.date_time + timedelta(hours=3)
+        if add_columns:
+            if "id" in add_columns:
+                data["station_id"] = station["id"]
 
-        self.result["station_id"] = str(self.stations["id"])
-        print(self.result)
-        self.db.feed_bd(table="data_stations", df=self.result)
+        quit_driver(driver)
 
-        quit_driver(self.driver)
+        return data, None
 
+    def _prepare_data(self, data: pd.DataFrame, columns: list) -> pd.DataFrame:
+        """ Prepare the data
 
-if __name__ == "__main__":
-    PEBuoy().get()
+        Parameters
+        ----------
+        data : pd.DataFrame
+            The data to be prepared
+
+        Returns
+        -------
+        pd.DataFrame
+            The prepared data
+        """
+        data = data.infer_objects(copy=False)
+        data = data.replace(
+            to_replace=["None", None, "NULL", " ", ""], value=np.nan
+        )
+        for column in columns:
+            if column != "date_time":
+                if isinstance(data[column], (pd.Series, list, tuple, np.ndarray)):
+                    data[column] = pd.to_numeric(data[column], errors="coerce")
+                else:
+                    self.logger.warning(f"Column {column} is not a Series")
+        return data

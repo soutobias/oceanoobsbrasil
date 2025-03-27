@@ -8,7 +8,7 @@ import xarray as xr
 from dotenv import load_dotenv
 from harmony import BBox, Client, Collection, Environment, LinkType, Request
 
-from oceanoobsbrasil.db import GetData
+from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class Metop:
@@ -22,7 +22,7 @@ class Metop:
         start_date=datetime.utcnow() - timedelta(days=2),
         end_date=datetime.utcnow() + timedelta(days=1),
     ):
-        self.db = GetData()
+        self.db = DbHandler()
         self.b_box = BBox(b_box[0], b_box[1], b_box[2], b_box[3])
         self.step = step
         self.start_date = start_date

@@ -10,8 +10,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 
-from oceanoobsbrasil.db import GetData
-from oceanoobsbrasil.utils import *
+from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.utils import *
 
 
 class EbnTide:
@@ -23,7 +23,7 @@ class EbnTide:
 
         self.driver = webdriver.Chrome(options=self.options)
 
-        self.db = GetData()
+        self.db = DbHandler()
         self.equip = equip
         self.stations = self.db.get(
             table="stations",
