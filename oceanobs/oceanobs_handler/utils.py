@@ -10,6 +10,8 @@ from oceanobs.private.se import SEBuoy
 from oceanobs.buoys.simcosta import Simcosta
 from oceanobs.observational_data.rico_surf import RicoSurf
 from oceanobs.observational_data.wave_check import WaveCheck
+from oceanobs.remote_sensing.altimeter import Altimeter
+from oceanobs.remote_sensing.scatterometer import Scatterometer
 from oceanobs.water_quality.sc import WaterQualitySC
 from oceanobs.water_quality.sp import WaterQualitySP
 from oceanobs.weather_warnings.weather_warning_chm import WeatherWarningCHM
@@ -131,6 +133,22 @@ DATA_METHODS = {
             "class_name": ShipObservations,
             "data_type": "nostation",
             "station_type": "ship",
+        },
+    "remote_sensing_altimeter":
+        {
+            "institution": "Altimeter",
+            "class_name": Altimeter,
+            "data_type": "nostation",
+            "station_type": "Altimeter",
+            "coarse_data": {"mode": "interval", "value": "30S"},
+        },
+    "remote_sensing_scatterometer":
+        {
+            "institution": "Scatter",
+            "class_name": Scatterometer,
+            "data_type": "nostation",
+            "station_type": "Scatterometer",
+            "coarse_data": {"mode": "step", "value": 30},
         },
     "water_quality_sp":
         {

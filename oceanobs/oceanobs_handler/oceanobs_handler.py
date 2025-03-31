@@ -42,6 +42,7 @@ class OceanobsHandler:
         self.db_handler = DbHandler()
         self.data_method = DATA_METHODS[method]
         institution = self.data_method["institution"]
+        self.coarse_data = self.data_method.get("coarse_data", None)
         self.institution = self.db_handler.get(table="institutions",
                                                query_kwargs={"name": ["=", institution]}).iloc[0]["id"]
         self.data_type = self.data_method["data_type"]
@@ -99,7 +100,23 @@ class OceanobsHandler:
             output_data.drop(columns=["station_type"], inplace=True)
             table = "data_no_stations"
 
+        if self.coarse_data:
+            if self.coarse_data["mode"] == "interval":
+                output_data = self.class_instance._coarse_data(output_data, interval=self.coarse_data["value"])
+            elif self.coarse_data["mode"] == "step":
+                output_data = output_data.iloc[:: self.coarse_data["value"]]
+            else:
+                raise ValueError("Invalid mode. Must be 'interval' or 'step'")
+        if "station_type_id" in output_data.columns:
+            output_data["station_type_id"] = output_data["station_type_id"].astype(int)
+        if "institution_id" in output_data.columns:
+            output_data["institution_id"] = output_data["institution_id"].astype(int)
+        if "geometry" in output_data.columns:
+            if not output_data.crs:
+                output_data.set_crs(epsg=3857, inplace=True)
+
         self.save_db(output_data, table)
+
 
         return output_data
 

@@ -198,6 +198,28 @@ class Oceanobs:
         data.to_crs(epsg=3857, inplace=True)
         return data
 
+
+    def _coarse_data(self, data: pd.DataFrame, interval="15S") -> pd.DataFrame:
+        """Coarse the data to interval
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            DataFrame with the data
+        interval : str, optional
+            Interval to coarse the data, by default "15S"
+
+        Returns
+        -------
+        pd.DataFrame
+            DataFrame with the coarsed data
+        """
+        data = data.set_index("date_time")
+        data = data.resample(interval).first()
+        data = data.dropna()
+        data = data.reset_index()
+        return data
+
     def remove_dup_columns(self, data: pd.DataFrame) -> pd.DataFrame:
         """ Remove Duplicate Columns
 
