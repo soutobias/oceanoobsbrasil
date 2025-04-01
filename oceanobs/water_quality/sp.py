@@ -1,17 +1,9 @@
-""" Get data from the bathing water quality in São Paulo """
-import datetime
-import json
-import time
-import urllib.request
-from datetime import datetime, timedelta
+"""Get data from the bathing water quality in São Paulo"""
 
-import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class WaterQualitySP(Oceanobs):
@@ -36,22 +28,25 @@ class WaterQualitySP(Oceanobs):
         stations = self._prepare_stations(stations)
         return stations
 
-    def get(self,
-            stations: pd.DataFrame = None,
-            add_columns: list = None,
-            **kwargs) -> pd.DataFrame:
+    def get(self, stations: pd.DataFrame = None, add_columns: list = None, **kwargs) -> pd.DataFrame:
         """Get data from the bathing water quality in São Paulo"""
 
         data = self._request_data()
         data = data[["data_amostra_inicio", "name", "classificacao_texto"]]
-        data.rename(columns={"data_amostra_inicio": "date_time", "classificacao_texto": "cleaning"}, inplace=True)
+        data.rename(
+            columns={
+                "data_amostra_inicio": "date_time",
+                "classificacao_texto": "cleaning",
+            },
+            inplace=True,
+        )
         data["date_time"] = pd.to_datetime(data["date_time"], unit="ms")
         data["cleaning"] = data["cleaning"].apply(lambda x: True if x == "Própria" else False)
         data = self._add_columns(data, add_columns, stations)
         return data
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------

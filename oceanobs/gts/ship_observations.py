@@ -1,4 +1,5 @@
-import datetime
+"""Ship Observations data collection class"""
+
 import re
 from datetime import datetime, timedelta, timezone
 
@@ -9,8 +10,9 @@ from bs4 import BeautifulSoup
 
 from oceanobs.oceanobs import Oceanobs
 
+
 class ShipObservations(Oceanobs):
-    """ Ship Observations data collection class
+    """Ship Observations data collection class
 
     This class is used to collect data from the Ship Observations.
 
@@ -19,14 +21,12 @@ class ShipObservations(Oceanobs):
     lat_lon_limits : dict, optional
         Latitude and longitude limits, by default None
     """
-    def __init__(self,
-                 lat_lon_limits: dict = None,
-                 **kwargs):
-        super().__init__(lat_lon_limits=lat_lon_limits)
-        self.base_url = f"https://www.ndbc.noaa.gov/ship_obs.php?uom=M&time=12"
 
-    def get(self,
-            **kwargs) -> pd.DataFrame:
+    def __init__(self, lat_lon_limits: dict = None, **kwargs):
+        super().__init__(lat_lon_limits=lat_lon_limits)
+        self.base_url = "https://www.ndbc.noaa.gov/ship_obs.php?uom=M&time=12"
+
+    def get(self, **kwargs) -> pd.DataFrame:
         """Get the data from the Ship Observations
 
         Returns
@@ -89,7 +89,7 @@ class ShipObservations(Oceanobs):
         return data
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -102,16 +102,11 @@ class ShipObservations(Oceanobs):
             The prepared data
         """
         data = self.convert_to_numeric(data)
-        data.wspd[data.wspd.notnull()] = (
-            data.wspd[data.wspd.notnull()] * 1.94384
-        ).round(decimals=1)
+        data.wspd[data.wspd.notnull()] = (data.wspd[data.wspd.notnull()] * 1.94384).round(decimals=1)
         data.fillna(np.nan, inplace=True)
-        data = data.replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
 
         return data
-
 
     def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:
         """Rename the columns of the DataFrame

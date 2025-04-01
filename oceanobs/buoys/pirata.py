@@ -1,13 +1,16 @@
 """This module contains the class Pirata that is used to download data from the PIRATA buoys."""
+
 import json
 import os
 import urllib.request
-import geopandas as gpd
 
 import numpy as np
 import pandas as pd
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
+
 
 class Pirata(Oceanobs):
     """Get data from PIRATA buoys
@@ -22,18 +25,20 @@ class Pirata(Oceanobs):
         End date for the data collection, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
+
     def __init__(
         self,
         start_date: str = None,
         end_date: str = None,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         n_workers=n_workers)
-        self.base_url = "https://www.ndbc.noaa.gov/data/realtime2/"
+        super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
+        self.base_url = "https://www.ndbc.noaa.gov/data/realtime2/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from PIRATA buoys
@@ -56,12 +61,8 @@ class Pirata(Oceanobs):
 
         return stations
 
-    def get_data(self,
-                 station,
-                 start_date=None,
-                 end_date=None,
-                 add_columns: list = None) -> pd.DataFrame:
-        """ Get data from a station
+    def get_data(self, station, start_date=None, end_date=None, add_columns: list = None) -> pd.DataFrame:
+        """Get data from a station
 
         Parameters
         ----------
@@ -92,12 +93,12 @@ class Pirata(Oceanobs):
             with urllib.request.urlopen(url_address) as url:
                 data = pd.read_csv(url, sep="\s+")
                 data = data.iloc[1:]
-        except:
-            error = f"Error getting data from {station['name']}"
+        except Exception as e:
+            error = f"Error getting data from {station['name']}: {str(e)}"
             return None, error
 
         data = self._rename_columns(data)
-        #filter data by start and end date
+        # filter data by start and end date
         data = data[(data.date_time >= self.start_date) & (data.date_time <= self.end_date)]
         if data.empty:
             error = f"No data available for {station['name']} between {self.start_date} and {self.end_date}"
@@ -123,19 +124,13 @@ class Pirata(Oceanobs):
         pd.DataFrame
             The prepared data
         """
-        data = data.replace(
-            to_replace=["None", None, "NULL", "MM", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", "MM", ""], value=np.nan)
         columns = data.drop(columns="date_time").columns
         for column in columns:
             data[column] = pd.to_numeric(data[column], errors="coerce")
 
-        data.loc[data.wspd.notnull(), "wspd"] = (
-            data.wspd[data.wspd.notnull()] * 1.94384
-        ).round(decimals=1)
-        data.loc[data.gust.notnull(), "gust"] = (
-            data.gust[data.gust.notnull()] * 1.94384
-        ).round(decimals=1)
+        data.loc[data.wspd.notnull(), "wspd"] = (data.wspd[data.wspd.notnull()] * 1.94384).round(decimals=1)
+        data.loc[data.gust.notnull(), "gust"] = (data.gust[data.gust.notnull()] * 1.94384).round(decimals=1)
         return data
 
     def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:

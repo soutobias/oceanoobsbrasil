@@ -1,5 +1,5 @@
-
 """Class to get data from the Espirito Santo buoys"""
+
 import json
 import os
 from datetime import datetime, timedelta
@@ -9,14 +9,15 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-import geopandas as gpd
 
 from oceanobs.oceanobs import Oceanobs
 
 load_dotenv()
 
+
 class ESBuoy(Oceanobs):
     """Get data from Espirito Santo buoys"""
+
     def __init__(
         self,
         **kwargs,
@@ -43,10 +44,8 @@ class ESBuoy(Oceanobs):
         stations = self._convert_to_gdf(stations)
         return stations
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -66,8 +65,8 @@ class ESBuoy(Oceanobs):
         try:
             date_time = soup.find("h4", {"class": "titulo"}).text
             date_time = datetime.strptime(date_time, "%d/%m/%Y %H:%M:%S")
-        except:
-            error = "Error getting data from Espirito Santo"
+        except Exception as e:
+            error = "Error getting data from Espirito Santo:" + str(e)
             return None, error
 
         wdir = self.get_data_html(soup, "data-wind-direction-deg")
@@ -79,7 +78,16 @@ class ESBuoy(Oceanobs):
         pres = self.get_data_html(soup, "data-atmosferic-pressure")
         rh = self.get_data_html(soup, "data-relative-humidity")
 
-        if np.isnan(wdir) and np.isnan(wspd) and np.isnan(atmp) and np.isnan(swvht) and np.isnan(wvdir) and np.isnan(tp) and np.isnan(pres) and np.isnan(rh):
+        if (
+            np.isnan(wdir)
+            and np.isnan(wspd)
+            and np.isnan(atmp)
+            and np.isnan(swvht)
+            and np.isnan(wvdir)
+            and np.isnan(tp)
+            and np.isnan(pres)
+            and np.isnan(rh)
+        ):
             error = "Error getting data from Espirito Santo"
             return None, error
 
@@ -109,6 +117,6 @@ class ESBuoy(Oceanobs):
     def get_data_html(self, soup, attrs):
         try:
             value = float(soup.find("h3", {attrs: True})[attrs])
-        except:
+        except Exception:
             value = np.nan
         return value

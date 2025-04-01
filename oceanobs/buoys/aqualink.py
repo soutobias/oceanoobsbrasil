@@ -1,10 +1,11 @@
 """Aqualink buoy module"""
+
 import pandas as pd
-import geopandas as gpd
 import requests
 from shapely.geometry import Point
 
 from oceanobs.oceanobs import Oceanobs
+
 
 class AqualinkBuoy(Oceanobs):
     """Get data from Aqualink buoy
@@ -19,22 +20,15 @@ class AqualinkBuoy(Oceanobs):
         End date for the data collection, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
-    def __init__(
-        self,
-        start_date: str = None,
-        end_date: str = None,
-        n_workers: int = 1,
-        **kwargs
-    ):
-
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         n_workers=n_workers)
+    def __init__(self, start_date: str = None, end_date: str = None, n_workers: int = 1, base_url: str = None, **kwargs):
+        super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
-        self.base_url = "https://ocean-systems.uc.r.appspot.com/api"
+        self.base_url = "https://ocean-systems.uc.r.appspot.com/api" if not base_url else base_url
 
     def _validate_date(self, date_str: str = None, is_start_date: bool = True) -> str:
         """Validates the date format and returns a datetime object.
@@ -78,7 +72,7 @@ class AqualinkBuoy(Oceanobs):
         return stations
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------
@@ -99,13 +93,8 @@ class AqualinkBuoy(Oceanobs):
 
         return gdf_stations
 
-    def get_data(self,
-                 station,
-                 start_date=None,
-                 end_date=None,
-                 add_columns: list = None
-                 ) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, start_date=None, end_date=None, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -131,7 +120,10 @@ class AqualinkBuoy(Oceanobs):
             return None, "Start date must be before end date"
         if not add_columns:
             add_columns = ["name"]
-        url_address = self.base_url + f"/time-series/sites/{station['identifier']}?start={self.start_date}&end={self.end_date}&metrics=bottom_temperature,top_temperature,wind_speed,significant_wave_height,barometric_pressure_top,barometric_pressure_bottom,surface_temperature&hourly=true"
+        metrics = "bottom_temperature,top_temperature,wind_speed,significant_wave_height,barometric_pressure_top,barometric_pressure_bottom,surface_temperature"
+        url_address = (
+            self.base_url + f"/time-series/sites/{station['identifier']}?start={self.start_date}&end={self.end_date}&metrics={metrics}&hourly=true"
+        )
         self.logger.info("Getting data from %s", url_address)
         response = requests.get(url_address)
         if response.status_code != 200:

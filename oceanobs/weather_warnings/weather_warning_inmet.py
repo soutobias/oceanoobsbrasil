@@ -1,19 +1,23 @@
 """Weather Warning Inmet module"""
-import datetime
-import json
-from datetime import datetime, timezone
 
+import json
+from datetime import (
+    datetime,
+    timezone,
+)
+
+import geopandas as gpd
 import pandas as pd
 import requests
-import geopandas as gpd
-from shapely.geometry import shape
+from shapely.geometry import (
+    shape,
+)
+
 
 class WeatherWarningInmet:
     """WeatherWarningInmet class"""
-    def __init__(
-        self,
-        **kwargs
-    ):
+
+    def __init__(self, **kwargs):
         super().__init__()
         self.base_url = "https://apiprevmet3.inmet.gov.br/avisos/ativos"
 
@@ -35,7 +39,7 @@ class WeatherWarningInmet:
             params = []
             hour = (datetime.now(timezone.utc).hour // 6) * 6
             date_time = datetime.now(timezone.utc).replace(hour=hour)
-            date_time = date_time.strftime(format=f"%Y-%m-%d %H:01:00")
+            date_time = date_time.strftime(format="%Y-%m-%d %H:01:00")
             for today_future in today_futures:
                 for weather_warning in data[today_future]:
                     param = {}
@@ -56,7 +60,8 @@ class WeatherWarningInmet:
             data = gpd.GeoDataFrame(data, geometry="geometry")
             data.set_crs(epsg=4326, inplace=True)
             data.to_crs(epsg=3857, inplace=True)
-        except:
+        except Exception as e:
             self.logger.error("Error parsing the weather warnings from %s", self.base_url)
+            self.logger.error(e)
             return
         return data

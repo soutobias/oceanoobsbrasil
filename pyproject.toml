@@ -1,56 +1,113 @@
-[project]
+[tool.poetry]
 name = "oceanobs"
 version = "0.1.0"
-description = "Handle data weather and ocean data collected in real-time"
-authors = [
-    {name = "tobias ferreira",email = "soutobias@yahoo.com.br"}
-]
+description = "Handle weather and ocean data collected in real-time"
+authors = ["Tobias Ferreira"]
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "tqdm (>=4.67.1,<5.0.0)"
-]
-
 
 [tool.poetry.dependencies]
-python = "^3.10"
-numpy = "*"
-pandas = "*"
-bs4 = "*"
-selenium = "*"
-python-dotenv = "*"
-psutil = "*"
-sqlalchemy = "<2.0.0"
-psycopg2-binary = "*"
-chromedriver-binary = "==115.0.5790.102"
-erddapy = "*"
-podaacpy = "*"
-certifi = "*"
-html5lib = "*"
-netcdf4 = "*"
-h5py = "*"
-xarray = "*"
-lxml = "*"
-pysofar = "*"
-dask = "*"
-harmony-py = "*"
-pillow = "*"
-cloudinary = "*"
-boto3 = "*"
+python = ">=3.10,<3.13"
+tqdm = ">=4.67.1,<5.0.0"
+numpy = "==1.26"
+pandas = ">=2.2.3,<3.0.0"
+bs4 = ">=0.0.2,<0.0.3"
+selenium = ">=4.30.0,<5.0.0"
+python-dotenv = "==0.20"
+chromedriver-binary = "==131.0.6778.85"
+netcdf4 = ">=1.7.2,<2.0.0"
+lxml = ">=5.3.1,<6.0.0"
+dask = ">=2025.3.0,<2026.0.0"
+harmony-py = ">=1.1.0,<2.0.0"
+xarray = ">=2025.3.1,<2026.0.0"
+lab = ">=8.4,<9.0"
+geopandas = ">=1.0.1,<2.0.0"
+metar = ">=1.11.0,<2.0.0"
 
 [tool.poetry.group.dev.dependencies]
-pip = "*"
-wheel = "*"
-twine = "*"
-pytest = "*"
-sphinx = "*"
-black = "*"
-pylint = "*"
-isort = "*"
+ruff = "^0.11.2"
+jupyter = ">=1.1.1,<2.0.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.scripts]
-oceanoobsbrasil-run = "oceanoobsbrasil.__main__:main"
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+# Same as Black.
+line-length = 10
+indent-width = 4
+
+# Assume Python 3.9
+target-version = "py39"
+
+[tool.ruff.lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = ["E4", "E7", "E9", "F"]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
+docstring-code-format = false
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"

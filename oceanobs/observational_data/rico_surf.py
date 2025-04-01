@@ -1,6 +1,6 @@
 """Rico Surf data handler."""
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import datetime
 from functools import partial
 from datetime import datetime
 import re
@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
+
 
 class RicoSurf(Oceanobs):
     """Get data from Rico Surf
@@ -24,6 +24,7 @@ class RicoSurf(Oceanobs):
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
     """
+
     def __init__(
         self,
         n_workers: int = 1,
@@ -56,10 +57,7 @@ class RicoSurf(Oceanobs):
                     names.append(a_tag.text.strip())
                     hrefs.append(a_tag.attrs["href"])
         with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-            futures = [
-                executor.submit(partial(self.get_station, href=href, name=name))
-                for name, href in zip(names, hrefs)
-            ]
+            futures = [executor.submit(partial(self.get_station, href=href, name=name)) for name, href in zip(names, hrefs)]
             for future in tqdm(as_completed(futures), desc="Get Stations", total=len(futures)):
                 station, error = future.result()
                 if station is not None:
@@ -106,10 +104,8 @@ class RicoSurf(Oceanobs):
         error = f"Error getting station {name}"
         return None, error
 
-    def get_data(self,
-                 station: dict,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station: dict, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -129,25 +125,15 @@ class RicoSurf(Oceanobs):
             response = requests.get(str(url))
             try:
                 soup = BeautifulSoup(response.text, "html.parser")
-                swvht_soup = (
-                    soup.find("div", {"class": "h5 text-primary margin-xxs-bottom"})
-                    .get_text(strip=True)
-                    .replace(",", ".")
-                )
+                swvht_soup = soup.find("div", {"class": "h5 text-primary margin-xxs-bottom"}).get_text(strip=True).replace(",", ".")
                 swvht = float(swvht_soup[0:-1])
 
-                tp_sst_soup = soup.find_all(
-                    "div", attrs={"class": "h5 no-margin text-primary"}
-                )
+                tp_sst_soup = soup.find_all("div", attrs={"class": "h5 no-margin text-primary"})
                 tp = tp_sst_soup[0].get_text(strip=True).replace(",", ".")
                 tp = float(tp[0:-1])
                 sst = tp_sst_soup[1].get_text(strip=True)
                 sst = float(sst[0:-2])
-                wvdir = (
-                    soup.find("div", {"class": "small line-height-xs"})
-                    .get_text(strip=True)
-                    .lower()
-                )
+                wvdir = soup.find("div", {"class": "small line-height-xs"}).get_text(strip=True).lower()
                 wvdir = self._convert_wvdir(wvdir)
 
                 date_time = datetime.now()
@@ -162,7 +148,7 @@ class RicoSurf(Oceanobs):
                 if add_columns:
                     if "id" in add_columns:
                         data["station_id"] = station["id"]
-            except Exception as e:
+            except Exception:
                 error = f"Error getting data from {station['name']}"
                 return None, error
         else:
@@ -183,11 +169,8 @@ class RicoSurf(Oceanobs):
         pd.DataFrame
             The prepared data
         """
-        data = data.replace(
-            to_replace=["None", None, "NULL", "MM", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", "MM", ""], value=np.nan)
         return data
-
 
     def _extract_google_maps_link(self, soup: BeautifulSoup) -> str:
         """Extract the Google Maps link from the soup
@@ -220,7 +203,7 @@ class RicoSurf(Oceanobs):
         tuple
             The latitude and longitude
         """
-        match = re.search(r'!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)', embed_url)
+        match = re.search(r"!2d(-?\d+\.\d+)!3d(-?\d+\.\d+)", embed_url)
         if match:
             lon, lat = match.groups()
             return float(lat), float(lon)
@@ -241,22 +224,43 @@ class RicoSurf(Oceanobs):
         """
         direction_map = {
             "norte": 0,
-            "norte-nordeste": 22, "norte nordeste": 22,
+            "norte-nordeste": 22,
+            "norte nordeste": 22,
             "nordeste": 45,
-            "nordeste-leste": 67, "nordeste leste": 67, "leste nordeste": 67, "leste-nordeste": 67,
+            "nordeste-leste": 67,
+            "nordeste leste": 67,
+            "leste nordeste": 67,
+            "leste-nordeste": 67,
             "leste": 90,
-            "sudeste-leste": 112, "sudeste leste": 112, "leste sudeste": 112,
+            "sudeste-leste": 112,
+            "sudeste leste": 112,
+            "leste sudeste": 112,
             "sudeste": 135,
-            "sul-sudeste": 157, "sul sudeste": 157, "sudeste sul": 157, "sudeste-sul": 157,
+            "sul-sudeste": 157,
+            "sul sudeste": 157,
+            "sudeste sul": 157,
+            "sudeste-sul": 157,
             "sul": 180,
-            "sul-sudoeste": 202, "sul sudoeste": 202, "sudoeste-sul": 202, "sudoeste sul": 202,
+            "sul-sudoeste": 202,
+            "sul sudoeste": 202,
+            "sudoeste-sul": 202,
+            "sudoeste sul": 202,
             "sudoeste": 225,
-            "sudoeste-oeste": 247, "sudoeste oeste": 247, "oeste-sudoeste": 247, "oeste sudoeste": 247,
+            "sudoeste-oeste": 247,
+            "sudoeste oeste": 247,
+            "oeste-sudoeste": 247,
+            "oeste sudoeste": 247,
             "oeste": 270,
-            "noroeste-oeste": 292, "noroeste oeste": 292, "oeste-noroeste": 292, "oeste noroeste": 292,
+            "noroeste-oeste": 292,
+            "noroeste oeste": 292,
+            "oeste-noroeste": 292,
+            "oeste noroeste": 292,
             "noroeste": 315,
-            "noroeste-norte": 337, "noroeste norte": 337, "norte-noroeste": 337, "norte noroeste": 337,
-            "não informado": np.nan
+            "noroeste-norte": 337,
+            "noroeste norte": 337,
+            "norte-noroeste": 337,
+            "norte noroeste": 337,
+            "não informado": np.nan,
         }
 
         return direction_map.get(wvdir, wvdir)

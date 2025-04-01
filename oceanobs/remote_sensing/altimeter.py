@@ -1,23 +1,19 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from functools import partial
-import glob
 from io import BytesIO
-import os
 import re
 from datetime import datetime
 from tqdm import tqdm
 import xarray as xr
-import numpy as np
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from netCDF4 import Dataset
 
 from oceanobs.oceanobs import Oceanobs
 
 
 class Altimeter(Oceanobs):
-    """ OSMC data collection class
+    """OSMC data collection class
 
 
     Parameters
@@ -30,16 +26,21 @@ class Altimeter(Oceanobs):
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
     """
-    def __init__(self,
-                 start_date: str = None,
-                 end_date: str = None,
-                 lat_lon_limits: dict = None,
-                 n_workers: int = 1,
-                 **kwargs):
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         lat_lon_limits=lat_lon_limits,
-                         n_workers=n_workers)
+
+    def __init__(
+        self,
+        start_date: str = None,
+        end_date: str = None,
+        lat_lon_limits: dict = None,
+        n_workers: int = 1,
+        **kwargs,
+    ):
+        super().__init__(
+            start_date=start_date,
+            end_date=end_date,
+            lat_lon_limits=lat_lon_limits,
+            n_workers=n_workers,
+        )
 
         self.lat_lon_limits["min_lon"] += 180
         self.lat_lon_limits["max_lon"] += 180
@@ -57,10 +58,7 @@ class Altimeter(Oceanobs):
         """
         files = self.get_nc_files()
         with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-            futures = [
-                executor.submit(partial(self.get_data, file=file))
-                for file in files
-            ]
+            futures = [executor.submit(partial(self.get_data, file=file)) for file in files]
             results = []
             for future in tqdm(as_completed(futures), desc="Downloading data", total=len(futures)):
                 result = future.result()
@@ -94,19 +92,16 @@ class Altimeter(Oceanobs):
         if len(ds.time.values) == 0:
             return
         data = {
-            "date_time":ds["time"].values,
+            "date_time": ds["time"].values,
             "latitude": ds["latitude"].values,
             "longitude": ds["longitude"].values - 180,
             "wspd": ds["wind_speed_alt"].values,
             "swvht": ds["swh_ocean"].values,
-            "flag": ds["swh_ocean_compression_qual"].values
+            "flag": ds["swh_ocean_compression_qual"].values,
         }
         data = pd.DataFrame(data)
         data["date_time"] = pd.to_datetime(data["date_time"])
-        data = data[
-            (data["wspd"] < 9999) & (data["swvht"] < 9999) &
-            (data["wspd"] > 0) & (data["swvht"] > 0)
-        ]
+        data = data[(data["wspd"] < 9999) & (data["swvht"] < 9999) & (data["wspd"] > 0) & (data["swvht"] > 0)]
         data.wspd *= 1.94384
         data = data.drop(columns=["flag"])
         return data
@@ -125,9 +120,11 @@ class Altimeter(Oceanobs):
             DataFrame with the filtered data
         """
         ds_subset = ds.where(
-            (ds.latitude >= self.lat_lon_limits["min_lat"]) & (ds.latitude <= self.lat_lon_limits["max_lat"]) &
-            (ds.longitude >= self.lat_lon_limits["min_lon"]) & (ds.longitude <= self.lat_lon_limits["max_lon"]),
-            drop=True
+            (ds.latitude >= self.lat_lon_limits["min_lat"])
+            & (ds.latitude <= self.lat_lon_limits["max_lat"])
+            & (ds.longitude >= self.lat_lon_limits["min_lon"])
+            & (ds.longitude <= self.lat_lon_limits["max_lon"]),
+            drop=True,
         )
         return ds_subset
 
@@ -153,11 +150,7 @@ class Altimeter(Oceanobs):
     def get_nc_files(self):
         response = requests.get(self.base_url)
         soup = BeautifulSoup(response.text, "html.parser")
-        cycles = [
-            td.find("a").get("href")
-            for td in soup.find_all("td")
-            if td.find("a") and td.find("a").get("href").startswith("cycle")
-        ]
+        cycles = [td.find("a").get("href") for td in soup.find_all("td") if td.find("a") and td.find("a").get("href").startswith("cycle")]
         cycles.sort(reverse=True)
         pattern = re.compile("JA3_(.*)_(.*)_(.*)_(.*)_(.*)_(.*).nc")
         files = []
@@ -166,11 +159,7 @@ class Altimeter(Oceanobs):
             cycle_url = self.base_url + cycle
             response = requests.get(cycle_url)
             soup = BeautifulSoup(response.text, "html.parser")
-            cycle_files = [
-                td.find("a").get("href")
-                for td in soup.find_all("td")
-                if td.find("a") and td.find("a").get("href").startswith("JA3_")
-            ]
+            cycle_files = [td.find("a").get("href") for td in soup.find_all("td") if td.find("a") and td.find("a").get("href").startswith("JA3_")]
             for file in cycle_files:
                 match = pattern.match(file)
                 if match:

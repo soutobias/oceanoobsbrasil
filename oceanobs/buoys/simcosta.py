@@ -1,8 +1,7 @@
-""" SIMCOSTA class"""
-import datetime
+"""SIMCOSTA class"""
+
 import time
 from datetime import datetime
-import geopandas as gpd
 
 import numpy as np
 import pandas as pd
@@ -10,9 +9,10 @@ import requests
 
 from oceanobs.oceanobs import Oceanobs
 
+
 # pd.set_option('future.no_silent_downcasting', True)
 class Simcosta(Oceanobs):
-    """ Simcosta class
+    """Simcosta class
 
     This class is used to download data from SIMCOSTA buoys.
 
@@ -27,23 +27,21 @@ class Simcosta(Oceanobs):
     station_type : str, optional
         The type of station to be downloaded, by default None. It can be "Buoy" or "Tide Gauge"
     """
+
     def __init__(
         self,
         start_date: str = None,
         end_date: str = None,
         n_workers: int = 1,
-        station_type: str = None,
     ):
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         n_workers=n_workers)
+        super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
-        self.station_type = station_type
+        self.station_type = "Buoy"
         self.base_url = "https://simcosta.furg.br/api"
 
     def get_stations(self) -> pd.DataFrame:
-        """ Get the stations metadata
+        """Get the stations metadata
 
         Returns
         -------
@@ -81,7 +79,7 @@ class Simcosta(Oceanobs):
         return date_str
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------
@@ -109,12 +107,8 @@ class Simcosta(Oceanobs):
         gdf_stations.drop(columns=["type"], inplace=True)
         return gdf_stations
 
-    def get_data(self,
-                 station,
-                 start_date=None,
-                 end_date=None,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, start_date=None, end_date=None, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -139,15 +133,7 @@ class Simcosta(Oceanobs):
         if self.start_date >= self.end_date:
             return None, "Start date must be before end date"
         station.loc["identifier"] = int(station["identifier"])
-        if station["identifier"] > 100:
-            urls =  [
-                self.base_url + "/intrans_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=H10,HAvg,Hsig,HM0,Avg_Wv_Dir,Hmax,ZCN,Tp5,Tz,TAvg,T10,Tsig,Avg_Wv_Spread,Tp,Avg_Sal,Avg_W_Tmp1,Avg_W_Tmp2,Avg_Chl,Avg_Turb,Avg_Wnd_Dir_N,Gust_Sp,Avg_Dew,Avg_Air_Press,Avg_Sol_Rad,Avg_Air_Tmp,Avg_Hmt,Avg_Hmt,Avg_Wnd_Sp"
-                ]
-        else:
-            urls = [
-                self.base_url + "/metereo_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=Average_wind_direction_N,Last_sampling_interval_gust_speed,Average_Dew_Point,Average_Pressure,Solar_Radiation_Average_Reading,Average_Air_Temperature,Instantaneous_Humidity,Average_Humidity,Average_wind_speed",
-                self.base_url + "/oceanic_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=H10,HAvg,Hsig_Significant_Wave_Height_m,HM0,Mean_Wave_Direction_deg,Hmax_Maximum_Wave_Height_m,ZCN,Tp5,TAvg,T10,Tsig,Mean_Spread_deg,TP_Peak_Period_seconds,Average_Salinity,Average_Temperature_deg_C,Average_Temperature_C,Average_CDOM_QSDE,Average_Chlorophyll_Fluorescence,Average_Dissolved_Oxygen,Average_Nephelometric_Turbidity_Unit_NTU,Cell_Average_Direction_N,Cell_Average_Magnitude_mm_s",
-            ]
+        urls = self._get_api_urls(station)
         data = pd.DataFrame()
         for url in urls:
             url_address = url.replace("{{station_id}}", str(station["identifier"]))
@@ -174,8 +160,122 @@ class Simcosta(Oceanobs):
 
         return data, None
 
+    def _get_api_urls(self, station: pd.Series) -> list:
+        """Get the API urls
+
+        Parameters
+        ----------
+        station : pd.Series
+            The station information
+
+        Returns
+        -------
+        list
+            The API urls
+        """
+        if self.station_type == "Tide Gauge":
+            params = [
+                "avg_rain_acc",
+                "wind_speed",
+                "Avg_Wnd_Sp",
+                "wind_direction_n",
+                "Avg_Wnd_Dir_N",
+                "air_temp",
+                "Avg_Air_Tmp",
+                "relative_humidity",
+                "Avg_Hmt",
+                "dew_point",
+                "Avg_Dew",
+                "atm_pressure",
+                "Avg_Air_Press",
+                "water_l1",
+                "avg_water_l1",
+                "water_l1_ibge",
+                "avg_water_l1_ibge",
+                "water_l1_dhn",
+                "avg_water_l1_dhn",
+            ]
+            urls = [
+                self.base_url + "/intrans_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=" + ",".join(params),
+            ]
+        elif station["identifier"] > 100:
+            params = [
+                "H10",
+                "HAvg",
+                "Hsig",
+                "HM0",
+                "Avg_Wv_Dir",
+                "Hmax",
+                "ZCN",
+                "Tp5",
+                "Tz",
+                "TAvg",
+                "T10",
+                "Tsig",
+                "Avg_Wv_Spread",
+                "Tp",
+                "Avg_Sal",
+                "Avg_W_Tmp1",
+                "Avg_W_Tmp2",
+                "Avg_Chl",
+                "Avg_Turb",
+                "Avg_Wnd_Dir_N",
+                "Gust_Sp",
+                "Avg_Dew",
+                "Avg_Air_Press",
+                "Avg_Sol_Rad",
+                "Avg_Air_Tmp",
+                "Avg_Hmt",
+                "Avg_Hmt",
+                "Avg_Wnd_Sp",
+            ]
+            urls = [
+                self.base_url + "/intrans_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=" + ",".join(params),
+            ]
+        else:
+            params = [
+                "Average_wind_direction_N",
+                "Last_sampling_interval_gust_speed",
+                "Average_Dew_Point",
+                "Average_Pressure",
+                "Solar_Radiation_Average_Reading",
+                "Average_Air_Temperature",
+                "Instantaneous_Humidity",
+                "Average_Humidity",
+                "Average_wind_speed",
+            ]
+            params2 = [
+                "H10",
+                "HAvg",
+                "Hsig_Significant_Wave_Height_m",
+                "HM0",
+                "Mean_Wave_Direction_deg",
+                "Hmax_Maximum_Wave_Height_m",
+                "ZCN",
+                "Tp5",
+                "TAvg",
+                "T10",
+                "Tsig",
+                "Mean_Spread_deg",
+                "TP_Peak_Period_seconds",
+                "Average_Salinity",
+                "Average_Temperature_deg_C",
+                "Average_Temperature_C",
+                "Average_CDOM_QSDE",
+                "Average_Chlorophyll_Fluorescence",
+                "Average_Dissolved_Oxygen",
+                "Average_Nephelometric_Turbidity_Unit_NTU",
+                "Cell_Average_Direction_N",
+                "Cell_Average_Magnitude_mm_s",
+            ]
+            urls = [
+                self.base_url + "/metereo_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=" + ",".join(params),
+                self.base_url + "/oceanic_data?boiaID={{station_id}}&type=json&time1={{start_date}}&time2={{end_date}}&params=" + ",".join(params2),
+            ]
+        return urls
+
     def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Rename columns
+        """Rename columns
 
         Parameters
         ----------
@@ -187,7 +287,7 @@ class Simcosta(Oceanobs):
         pd.DataFrame
             The data with renamed columns
         """
-        data = data.rename(columns={
+        columns_to_rename = {
             "timestamp": "date_time",
             "Avg_Turb": "turb",
             "Avg_Chl": "chl",
@@ -223,15 +323,28 @@ class Simcosta(Oceanobs):
             "C_Avg_Dir": "cdir_mag",
             "Avg_Wv_Spread_N": "wvspread",
             "Avg_Wv_Dir_N": "wvdir",
-        })
+            "wind_speed": "",
+            "air_temp": "",
+            "relative_humidity": "",
+            "water_l1": "water_level",
+        }
+        for key, value in columns_to_rename.items():
+            if key in data.columns:
+                data.rename(columns={key: value}, inplace=True)
         if "date_time" not in data.columns:
             data["date_time"] = (
-                data["YEAR"].astype(str) + "-" +
-                data["MONTH"].astype(str).str.zfill(2) + "-" +
-                data["DAY"].astype(str).str.zfill(2) + " " +
-                data["HOUR"].astype(str).str.zfill(2) + ":" +
-                data["MINUTE"].astype(str).str.zfill(2) + ":" +
-                data["SECOND"].astype(str).str.zfill(2) + "+00:00"
+                data["YEAR"].astype(str)
+                + "-"
+                + data["MONTH"].astype(str).str.zfill(2)
+                + "-"
+                + data["DAY"].astype(str).str.zfill(2)
+                + " "
+                + data["HOUR"].astype(str).str.zfill(2)
+                + ":"
+                + data["MINUTE"].astype(str).str.zfill(2)
+                + ":"
+                + data["SECOND"].astype(str).str.zfill(2)
+                + "+00:00"
             )
         data["date_time"] = pd.to_datetime(data["date_time"])
         data.drop(columns=["YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND"], inplace=True)
@@ -239,7 +352,7 @@ class Simcosta(Oceanobs):
         return data
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -252,10 +365,40 @@ class Simcosta(Oceanobs):
             The prepared data
         """
         data = data.infer_objects(copy=False)
-        data = data.replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
-        float_columns = ["turb", "chl", "dewpt", "rh", "atmp", "pres", "gust", "wspd", "wdir", "srad", "swvht", "tp", "mxwvht", "whgt", "sst", "h10", "t10", "wvdir", "wvspread", "tsig", "tp5", "hm0", "zcn", "sal", "wtmp", "wtmp2", "hmt", "cdir", "cspd", "wvspread", "wvdir"]
+        data = data.replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
+        float_columns = [
+            "turb",
+            "chl",
+            "dewpt",
+            "rh",
+            "atmp",
+            "pres",
+            "gust",
+            "wspd",
+            "wdir",
+            "srad",
+            "swvht",
+            "tp",
+            "mxwvht",
+            "whgt",
+            "sst",
+            "h10",
+            "t10",
+            "wvdir",
+            "wvspread",
+            "tsig",
+            "tp5",
+            "hm0",
+            "zcn",
+            "sal",
+            "wtmp",
+            "wtmp2",
+            "hmt",
+            "cdir",
+            "cspd",
+            "wvspread",
+            "wvdir",
+        ]
         for column in float_columns:
             if column in data.columns:
                 if isinstance(data[column], (pd.Series, list, tuple, np.ndarray)):

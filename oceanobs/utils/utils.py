@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta, timezone
-import os
-import traceback
 
 import numpy as np
 import pandas as pd
 import psutil
 import requests
 from lxml.html import fromstring
-from numpy import arcsin, arctan, rad2deg
+from numpy import arctan, rad2deg
 
 
 LAT_LON_LIMITS = {
@@ -19,6 +17,7 @@ LAT_LON_LIMITS = {
 
 START_DATE = (datetime.now(timezone.utc) - timedelta(days=3)).strftime("%Y-%m-%dT%H:%M:%S")
 END_DATE = (datetime.now(timezone.utc) + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:%S")
+
 
 def uv2intdir(u, v):
     if u > 0 and v > 0:
@@ -58,7 +57,7 @@ def deEmojify(inputString):
 
 def def_args_prefs(options, args, preferences):
     for arg in args:
-        if type(arg) == list:
+        if isinstance(arg, list):
             options.add_argument(arg[0], arg[1])
         else:
             options.add_argument(arg)
@@ -302,9 +301,7 @@ def to_get_proxies():
         # to check if the corresponding IP is of type HTTPS
         if i.xpath('.//td[7][contains(text(),"yes")]'):
             # Grabbing IP and corresponding PORT
-            proxy = ":".join(
-                [i.xpath(".//td[1]/text()")[0], i.xpath(".//td[2]/text()")[0]]
-            )
+            proxy = ":".join([i.xpath(".//td[1]/text()")[0], i.xpath(".//td[2]/text()")[0]])
 
             proxies.add(proxy)
         return proxies

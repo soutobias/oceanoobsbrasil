@@ -1,17 +1,12 @@
-import datetime
-import time
-from datetime import datetime, timedelta
-
 import numpy as np
 import pandas as pd
 import requests
 
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class OSMC(Oceanobs):
-    """ OSMC data collection class
+    """OSMC data collection class
 
     This class is used to collect data from the OSMC stations.
 
@@ -26,13 +21,15 @@ class OSMC(Oceanobs):
     station_type : str, optional
         The type of station to be downloaded, by default None. It can be "drifter" or "float"
     """
-    def __init__(self,
-                 start_date: str = None,
-                 lat_lon_limits: dict = None,
-                 station_type: str = "drifter",
-                 **kwargs):
-        super().__init__(start_date=start_date,
-                         lat_lon_limits=lat_lon_limits)
+
+    def __init__(
+        self,
+        start_date: str = None,
+        lat_lon_limits: dict = None,
+        station_type: str = "drifter",
+        **kwargs,
+    ):
+        super().__init__(start_date=start_date, lat_lon_limits=lat_lon_limits)
         self.base_url = "http://osmc.noaa.gov/erddap/tabledap/OSMC_30day.htmlTable?platform_code,platform_type,time,latitude,longitude,observation_depth,sst,atmp,ztmp,slp,wvht"
         self.station_type = station_type
         if self.station_type not in ["drifter", "float"]:
@@ -40,8 +37,7 @@ class OSMC(Oceanobs):
             raise ValueError("Station type must be 'drifter' or 'float'")
         self.data_type = "DRIFTING BUOYS" if self.station_type == "drifter" else "PROFILING FLOATS AND GLIDERS"
 
-    def get(self,
-            **kwargs) -> pd.DataFrame:
+    def get(self, **kwargs) -> pd.DataFrame:
         """Get the data from the OSMC stations
 
         Parameters
@@ -110,5 +106,14 @@ class OSMC(Oceanobs):
                 "wvht",
             ]
         ]
-        data.columns = ["identifier", "date_time", "latitude", "longitude", "sst", "atmp", "pres", "swvht"]
+        data.columns = [
+            "identifier",
+            "date_time",
+            "latitude",
+            "longitude",
+            "sst",
+            "atmp",
+            "pres",
+            "swvht",
+        ]
         return data

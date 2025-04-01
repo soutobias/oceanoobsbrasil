@@ -1,6 +1,4 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import partial
-import io
 import re
 
 import numpy as np
@@ -9,10 +7,10 @@ import requests
 from metar import Metar
 from tqdm import tqdm
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
+
 
 class MetarStations(Oceanobs):
-    """ Simcosta class
+    """Simcosta class
 
     This class is used to download data from SIMCOSTA buoys.
 
@@ -24,26 +22,30 @@ class MetarStations(Oceanobs):
         Latitude and longitude limits, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
+    stations_url : str, optional
+        URL for the stations, by default None
     """
+
     def __init__(
         self,
         hours: list = None,
         lat_lon_limits: dict = None,
         n_workers: int = 1,
+        base_url: str = None,
+        stations_url: str = None,
         **kwargs,
     ):
-        super().__init__(
-                        lat_lon_limits=lat_lon_limits,
-                         n_workers=n_workers)
-        self.base_url = "https://tgftp.nws.noaa.gov/data/observations/metar"
-        self.stations_url = "https://weather.ral.ucar.edu/surface/stations.txt"
+        super().__init__(lat_lon_limits=lat_lon_limits, n_workers=n_workers)
+        self.base_url = "https://tgftp.nws.noaa.gov/data/observations/metar" if not base_url else base_url
+        self.stations_url = "https://weather.ral.ucar.edu/surface/stations.txt" if not stations_url else stations_url
         if isinstance(hours, int):
             hours = [hours]
         self.hours = hours if hours else list(range(24))
-        # self.base_url = f"https://mesonet.agron.iastate.edu/cgi-bin/request/asos.py?{stations_brazil}&{stations_argentina}&{stations_chile}&{stations_uruguai}&{stations_antartica}&{stations_malvinas}&{datas}&year1={self.start_date.year}&month1={self.start_date.month}&day1={self.start_date.day}&year2={self.end_date.year}&month2={self.end_date.month}&day2={self.end_date.day}&tz=Etc%2FUTC&format=onlycomma&latlon=no&elev=no&missing=empty&trace=empty&direct=no&report_type=1&report_type=2"
 
     def get_stations(self) -> pd.DataFrame:
-        """ Get the stations metadata
+        """Get the stations metadata
 
         Returns
         -------
@@ -54,12 +56,8 @@ class MetarStations(Oceanobs):
         if response.status_code != 200:
             self.logger.error("Error getting stations from %s", self.stations_url)
             return
-        pattern = re.compile(
-            r"(?P<station>.*?)\s+(?P<icao>\b[A-Z]{4}\b)\s+.*?(?P<lat>\d{2} \d{2}[NS])\s+(?P<lon>\d{3} \d{2}[EW])"
-        )
-        pattern = re.compile(
-            r"(?P<station>.{19})\s+(?P<icao>\b[A-Z]{4}\b)\s+.*?(?P<lat>\d{2} \d{2}[NS])\s+(?P<lon>\d{3} \d{2}[EW])"
-        )
+        pattern = re.compile(r"(?P<station>.*?)\s+(?P<icao>\b[A-Z]{4}\b)\s+.*?(?P<lat>\d{2} \d{2}[NS])\s+(?P<lon>\d{3} \d{2}[EW])")
+        pattern = re.compile(r"(?P<station>.{19})\s+(?P<icao>\b[A-Z]{4}\b)\s+.*?(?P<lat>\d{2} \d{2}[NS])\s+(?P<lon>\d{3} \d{2}[EW])")
         matches = pattern.findall(response.text)
         stations = pd.DataFrame(
             {
@@ -75,7 +73,7 @@ class MetarStations(Oceanobs):
         return self._convert_to_gdf(stations)
 
     def _filter_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Filter the stations
+        """Filter the stations
 
         Parameters
         ----------
@@ -95,11 +93,8 @@ class MetarStations(Oceanobs):
         ]
         return stations
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> tuple:
-
-        """ Get the last available data from a station
+    def get_data(self, station, add_columns: list = None) -> tuple:
+        """Get the last available data from a station
 
         Parameters
         ----------
@@ -133,9 +128,8 @@ class MetarStations(Oceanobs):
 
         return data, None
 
-
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -147,13 +141,11 @@ class MetarStations(Oceanobs):
         pd.DataFrame
             The prepared data
         """
-        data = data.copy().replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
+        data = data.copy().replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
         return data
 
     def _parse_metar(self, response_text: str) -> dict:
-        """ Parse the METAR data
+        """Parse the METAR data
 
         Parameters
         ----------
@@ -182,14 +174,12 @@ class MetarStations(Oceanobs):
         }
 
         if not data["date_time"]:
-            error = f"Missing essential data"
+            error = "Missing essential data"
             raise Exception(error)
 
         return data
 
-    def get(self,
-            stations: pd.DataFrame = None,
-            add_columns: list = None) -> pd.DataFrame:
+    def get(self, stations: pd.DataFrame = None, add_columns: list = None) -> pd.DataFrame:
         """Get data from the stations
 
         Parameters
@@ -214,10 +204,7 @@ class MetarStations(Oceanobs):
         results = []
         with requests.Session() as session:
             with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-                futures = [
-                    executor.submit(self.get_single_hour, hour, session)
-                    for hour in self.hours
-                ]
+                futures = [executor.submit(self.get_single_hour, hour, session) for hour in self.hours]
                 for future in tqdm(as_completed(futures), desc="Downloading data", total=len(futures)):
                     result, error = future.result()
                     if result is not None and not result.empty:
@@ -245,7 +232,7 @@ class MetarStations(Oceanobs):
         return results
 
     def get_single_hour(self, hour: int, session: requests.Session) -> pd.DataFrame:
-        """ Get the data for a single hour
+        """Get the data for a single hour
 
         Parameters
         ----------
@@ -274,7 +261,7 @@ class MetarStations(Oceanobs):
             if not line[0].isdigit():
                 try:
                     data = self._parse_metar(line)
-                except Exception as e:
+                except Exception:
                     continue
                 if data is not None:
                     all_data.append(data)
@@ -297,7 +284,6 @@ class MetarStations(Oceanobs):
         degrees, minutes = map(str.strip, value[:-1].split(" "))
         decimal = int(degrees) + int(minutes) / 60
         return -decimal if value[-1] in {"S", "W"} else decimal
-
 
 
 if __name__ == "__main__":

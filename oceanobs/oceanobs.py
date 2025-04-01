@@ -1,22 +1,46 @@
 """OceanObs class"""
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
-from functools import partial
-from typing import Union
-
-from geopandas import gpd
-from datetime import datetime, timedelta, timezone
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed,
+)
+from datetime import (
+    datetime,
+)
+from functools import (
+    partial,
+)
+from typing import (
+    Union,
+)
 
 import pandas as pd
-from dotenv import load_dotenv
-from tqdm import tqdm
+from dotenv import (
+    load_dotenv,
+)
+from geopandas import (
+    gpd,
+)
+from selenium import (
+    webdriver,
+)
+from selenium.webdriver.chrome.options import (
+    Options,
+)
+from tqdm import (
+    tqdm,
+)
 
-from oceanobs.utils import END_DATE, LAT_LON_LIMITS, START_DATE, def_args_prefs
+from oceanobs.utils.utils import (
+    END_DATE,
+    LAT_LON_LIMITS,
+    START_DATE,
+    def_args_prefs,
+)
 
 load_dotenv()
+
 
 class Oceanobs:
     """OceanObs class
@@ -33,12 +57,13 @@ class Oceanobs:
         Number of workers for the thread pool executor, by default 1
     """
 
-    def __init__(self,
-                 start_date: str = None,
-                 end_date: str = None,
-                 lat_lon_limits: list = None,
-                 n_workers: int = 1,
-                 ):
+    def __init__(
+        self,
+        start_date: str = None,
+        end_date: str = None,
+        lat_lon_limits: list = None,
+        n_workers: int = 1,
+    ):
         self.logger = logging.getLogger(__name__)
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
@@ -97,9 +122,7 @@ class Oceanobs:
             raise ValueError(f"Invalid date format: {date_str}. Expected format: {date_format}")
         return date_str
 
-    def get(self,
-            stations: pd.DataFrame = None,
-            add_columns: list = None) -> pd.DataFrame:
+    def get(self, stations: pd.DataFrame = None, add_columns: list = None) -> pd.DataFrame:
         """Get data from the stations
 
         Parameters
@@ -121,10 +144,7 @@ class Oceanobs:
             self.stations = stations
 
         with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-            futures = [
-                executor.submit(partial(self.get_data, station=station[1], add_columns=add_columns))
-                for station in self.stations.iterrows()
-            ]
+            futures = [executor.submit(partial(self.get_data, station=station[1], add_columns=add_columns)) for station in self.stations.iterrows()]
 
             results = []
             for future in tqdm(as_completed(futures), desc="Downloading data", total=len(futures)):
@@ -142,7 +162,12 @@ class Oceanobs:
         else:
             return pd.DataFrame()
 
-    def _add_columns(self, data: pd.DataFrame, add_columns: list, station: Union[dict, pd.DataFrame] = None) -> pd.DataFrame:
+    def _add_columns(
+        self,
+        data: pd.DataFrame,
+        add_columns: list,
+        station: Union[dict, pd.DataFrame] = None,
+    ) -> pd.DataFrame:
         """Add columns to the DataFrame
 
         Parameters
@@ -198,7 +223,6 @@ class Oceanobs:
         data.to_crs(epsg=3857, inplace=True)
         return data
 
-
     def _coarse_data(self, data: pd.DataFrame, interval="15S") -> pd.DataFrame:
         """Coarse the data to interval
 
@@ -221,7 +245,7 @@ class Oceanobs:
         return data
 
     def remove_dup_columns(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Remove Duplicate Columns
+        """Remove Duplicate Columns
 
         Remove duplicated columns from a pandas DataFrame.
 
@@ -274,9 +298,9 @@ class Oceanobs:
             Chrome webdriver
         """
         options = Options()
-        args=["-headless", "--no-sandbox", "--disable-dev-shm-usage"]
+        args = ["-headless", "--no-sandbox", "--disable-dev-shm-usage"]
         # args = []
-        preferences=[]
+        preferences = []
         options = def_args_prefs(options, args, preferences)
         driver = webdriver.Chrome(options=options)
         return driver

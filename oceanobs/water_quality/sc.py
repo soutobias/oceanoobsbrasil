@@ -1,17 +1,9 @@
 """Get data from the bathing water quality in Santa Catarina"""
-import datetime
-import json
-import time
-import urllib.request
-from datetime import datetime, timedelta
 
-import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 
 class WaterQualitySC(Oceanobs):
@@ -37,10 +29,7 @@ class WaterQualitySC(Oceanobs):
         stations = self._prepare_stations(stations)
         return stations
 
-    def get(self,
-            stations: pd.DataFrame = None,
-            add_columns: list = None,
-            **kwargs) -> pd.DataFrame:
+    def get(self, stations: pd.DataFrame = None, add_columns: list = None, **kwargs) -> pd.DataFrame:
         """Get data from the bathing water quality in São Paulo"""
 
         data = self._request_data()
@@ -50,7 +39,7 @@ class WaterQualitySC(Oceanobs):
         return data
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------
