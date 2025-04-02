@@ -29,6 +29,8 @@ class Pnboia(Oceanobs):
         End date for the data collection, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
     def __init__(
@@ -36,11 +38,15 @@ class Pnboia(Oceanobs):
         start_date: str = None,
         end_date: str = None,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
-        self.base_url = "http://52.67.222.63/v1/"
-        self._token = os.getenv("REMOBS_TOKEN")
+        self.base_url = "http://52.67.222.63/v1/" if not base_url else base_url
+        self._token = os.getenv("PNBOIA_TOKEN")
+        if not self._token:
+            self.logger.error("Token not found")
+            self.logger.error("Please set the environment variable PNBOIA_TOKEN")
 
     def get_stations(self) -> pd.DataFrame:
         """Get the stations metadata

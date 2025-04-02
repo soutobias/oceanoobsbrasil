@@ -18,14 +18,23 @@ from oceanobs.oceanobs import (
 
 
 class WeatherWarningCHM(Oceanobs):
-    """WeatherWarningCHM class"""
+    """WeatherWarningCHM class
+
+    This class is used to get weather warnings from CHM website.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
 
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://www.marinha.mil.br/chm/dados-do-smm-avisos-de-mau-tempo/avisos-de-mau-tempo"
+        self.base_url = "https://www.marinha.mil.br/chm/dados-do-smm-avisos-de-mau-tempo/avisos-de-mau-tempo" if not base_url else base_url
         self.regions = [
             "ALFA",
             "BRAVO",

@@ -1,13 +1,17 @@
 """SIMCOSTA class"""
 
 import time
-from datetime import datetime
+from datetime import (
+    datetime,
+)
 
 import numpy as np
 import pandas as pd
 import requests
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 # pd.set_option('future.no_silent_downcasting', True)
@@ -24,8 +28,8 @@ class Simcosta(Oceanobs):
         End date for the data collection, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
-    station_type : str, optional
-        The type of station to be downloaded, by default None. It can be "Buoy" or "Tide Gauge"
+    base_url : str, optional
+        Base URL for the data, by default
     """
 
     def __init__(
@@ -33,12 +37,13 @@ class Simcosta(Oceanobs):
         start_date: str = None,
         end_date: str = None,
         n_workers: int = 1,
+        base_url: str = None,
     ):
         super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
         self.station_type = "Buoy"
-        self.base_url = "https://simcosta.furg.br/api"
+        self.base_url = "https://simcosta.furg.br/api" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get the stations metadata

@@ -2,28 +2,46 @@
 
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import (
+    datetime,
+    timedelta,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
+from bs4 import (
+    BeautifulSoup,
+)
+from dotenv import (
+    load_dotenv,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 load_dotenv()
 
 
 class ESBuoy(Oceanobs):
-    """Get data from Espirito Santo buoys"""
+    """Get data from Espirito Santo buoys
+
+    This class is used to get data from Espirito Santo buoys.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
 
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = os.getenv("ES_URL")
+        self.base_url = "https://service.vports.com.br/online/sgp/RetornaDadosBoiaAtoN/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Espirito Santo buoys
@@ -51,6 +69,8 @@ class ESBuoy(Oceanobs):
         ----------
         station : dict
             The station information
+        add_columns : list, optional
+            List of columns to add to the DataFrame, by default None
 
         Returns
         -------

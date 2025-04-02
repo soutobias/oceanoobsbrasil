@@ -1,14 +1,22 @@
 """Ship Observations data collection class"""
 
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+from bs4 import (
+    BeautifulSoup,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class ShipObservations(Oceanobs):
@@ -20,11 +28,13 @@ class ShipObservations(Oceanobs):
     ----------
     lat_lon_limits : dict, optional
         Latitude and longitude limits, by default None
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
-    def __init__(self, lat_lon_limits: dict = None, **kwargs):
+    def __init__(self, lat_lon_limits: dict = None, base_url: str = None, **kwargs):
         super().__init__(lat_lon_limits=lat_lon_limits)
-        self.base_url = "https://www.ndbc.noaa.gov/ship_obs.php?uom=M&time=12"
+        self.base_url = "https://www.ndbc.noaa.gov/ship_obs.php?uom=M&time=12" if not base_url else base_url
 
     def get(self, **kwargs) -> pd.DataFrame:
         """Get the data from the Ship Observations

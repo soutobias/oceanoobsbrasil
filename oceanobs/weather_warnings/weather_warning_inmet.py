@@ -15,11 +15,19 @@ from shapely.geometry import (
 
 
 class WeatherWarningInmet:
-    """WeatherWarningInmet class"""
+    """WeatherWarningInmet class
 
-    def __init__(self, **kwargs):
+    This class is used to get weather warnings from INMET website.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
+
+    def __init__(self, base_url: str = None, **kwargs):
         super().__init__()
-        self.base_url = "https://apiprevmet3.inmet.gov.br/avisos/ativos"
+        self.base_url = "https://apiprevmet3.inmet.gov.br/avisos/ativos" if not base_url else base_url
 
     def get(self, **kwargs) -> pd.DataFrame:
         """Get the weather warnings from INMET website

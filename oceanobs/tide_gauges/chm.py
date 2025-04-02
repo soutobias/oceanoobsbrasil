@@ -14,17 +14,23 @@ from oceanobs.oceanobs import (
 class CHMTideTables(Oceanobs):
     """CHMTideTables  class
 
-    This class is used to get the links for the tide tables from CHM.
-
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    tide_table_url : str, optional
+        URL for the tide table, by default None
     """
 
     def __init__(
         self,
+        base_url: str = None,
+        tide_table_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://www.marinha.mil.br/chm/tabuas-de-mare?page={page}"
-        self.tide_table_url = "https://www.marinha.mil.br"
+        self.base_url = "https://www.marinha.mil.br/chm/tabuas-de-mare?page={page}" if not base_url else base_url
+        self.tide_table_url = "https://www.marinha.mil.br" if not tide_table_url else tide_table_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Pernambuco buoys
@@ -68,7 +74,6 @@ class CHMTideTables(Oceanobs):
         longitudes = []
         for page in range(0, 3):
             base_url = self.base_url.format(page=page)
-            print(base_url)
             response = requests.get(base_url, verify=False)
             soup = BeautifulSoup(response.text, "html.parser")
             tables = soup.find_all("table")

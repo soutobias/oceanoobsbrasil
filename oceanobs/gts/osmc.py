@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import requests
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class OSMC(Oceanobs):
@@ -20,6 +22,8 @@ class OSMC(Oceanobs):
         Number of workers for the thread pool executor, by default 1
     station_type : str, optional
         The type of station to be downloaded, by default None. It can be "drifter" or "float"
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
     def __init__(
@@ -27,10 +31,14 @@ class OSMC(Oceanobs):
         start_date: str = None,
         lat_lon_limits: dict = None,
         station_type: str = "drifter",
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__(start_date=start_date, lat_lon_limits=lat_lon_limits)
-        self.base_url = "http://osmc.noaa.gov/erddap/tabledap/OSMC_30day.htmlTable?platform_code,platform_type,time,latitude,longitude,observation_depth,sst,atmp,ztmp,slp,wvht"
+        if base_url:
+            self.base_url = base_url
+        else:
+            self.base_url = "http://osmc.noaa.gov/erddap/tabledap/OSMC_30day.htmlTable?platform_code,platform_type,time,latitude,longitude,observation_depth,sst,atmp,ztmp,slp,wvht"
         self.station_type = station_type
         if self.station_type not in ["drifter", "float"]:
             self.logger.error("Station type must be 'drifter' or 'float'")

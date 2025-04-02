@@ -1,17 +1,32 @@
 """WaveCheck data module"""
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import partial
-from datetime import datetime
-from itertools import chain
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed,
+)
+from datetime import (
+    datetime,
+)
+from functools import (
+    partial,
+)
+from itertools import (
+    chain,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from tqdm import tqdm
+from bs4 import (
+    BeautifulSoup,
+)
+from tqdm import (
+    tqdm,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class WaveCheck(Oceanobs):
@@ -23,15 +38,18 @@ class WaveCheck(Oceanobs):
     ----------
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
     def __init__(
         self,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__(n_workers=n_workers)
-        self.base_url = "https://www.waves.com.br/"
+        self.base_url = "https://www.waves.com.br/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Wave Check

@@ -1,15 +1,31 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import partial
-from io import BytesIO
 import re
-from datetime import datetime
-from tqdm import tqdm
-import xarray as xr
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed,
+)
+from datetime import (
+    datetime,
+)
+from functools import (
+    partial,
+)
+from io import (
+    BytesIO,
+)
+
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+import xarray as xr
+from bs4 import (
+    BeautifulSoup,
+)
+from tqdm import (
+    tqdm,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class Altimeter(Oceanobs):
@@ -25,6 +41,8 @@ class Altimeter(Oceanobs):
         Latitude and longitude limits, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
 
     def __init__(
@@ -33,6 +51,7 @@ class Altimeter(Oceanobs):
         end_date: str = None,
         lat_lon_limits: dict = None,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__(
@@ -46,7 +65,7 @@ class Altimeter(Oceanobs):
         self.lat_lon_limits["max_lon"] += 180
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
-        self.base_url = "https://www.ncei.noaa.gov/data/oceans/jason3/ogdr/ogdr/"
+        self.base_url = "https://www.ncei.noaa.gov/data/oceans/jason3/ogdr/ogdr/" if not base_url else base_url
 
     def get(self) -> pd.DataFrame:
         """Get the data from the OSMC stations

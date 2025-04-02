@@ -1,17 +1,30 @@
 """Rico Surf data handler."""
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import partial
-from datetime import datetime
 import re
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed,
+)
+from datetime import (
+    datetime,
+)
+from functools import (
+    partial,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from tqdm import tqdm
+from bs4 import (
+    BeautifulSoup,
+)
+from tqdm import (
+    tqdm,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class RicoSurf(Oceanobs):
@@ -23,16 +36,22 @@ class RicoSurf(Oceanobs):
     ----------
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
+    urls : list, optional
+        URLs for the data, by default
     """
 
     def __init__(
         self,
         n_workers: int = 1,
+        base_url: str = None,
+        urls: list = None,
         **kwargs,
     ):
         super().__init__(n_workers=n_workers)
-        self.base_url = "https://ricosurf.com.br/"
-        self.urls = ["condicoes-do-mar-rio-de-janeiro", "condicoes-do-mar-sao-paulo"]
+        self.base_url = "https://ricosurf.com.br/" if not base_url else base_url
+        self.urls = ["condicoes-do-mar-rio-de-janeiro", "condicoes-do-mar-sao-paulo"] if not urls else urls
         self.beaches = self.beaches_with_data()
 
     def get_stations(self) -> pd.DataFrame:

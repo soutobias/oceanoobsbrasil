@@ -1,14 +1,25 @@
 """EpagriTide class"""
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import (
+    datetime,
+    timedelta,
+    timezone,
+)
 
 import numpy as np
 import pandas as pd
-from bs4 import BeautifulSoup
 import requests
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.utils.utils import quit_driver
+from bs4 import (
+    BeautifulSoup,
+)
+
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
+from oceanobs.utils.utils import (
+    quit_driver,
+)
 
 
 class EpagriTide(Oceanobs):
@@ -18,15 +29,21 @@ class EpagriTide(Oceanobs):
 
     Parameters
     ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    stations_url : str, optional
+        URL for the stations, by default None
     """
 
     def __init__(
         self,
+        base_url: str = None,
+        stations_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://ciram.epagri.sc.gov.br/index.php/maregrafos/"
-        self.stations_url = "https://ciram.epagri.sc.gov.br/api/litoral-online-server/webresources/monitoramentolitoral/estacoesMapa"
+        self.base_url = "https://ciram.epagri.sc.gov.br/index.php/maregrafos/" if not base_url else base_url
+        self.stations_url = "https://ciram.epagri.sc.gov.br/api/litoral-online-server/webresources/monitoramentolitoral/estacoesMapa" if not stations_url else stations_url
         self.soup = None
 
     def get_stations(self) -> pd.DataFrame:

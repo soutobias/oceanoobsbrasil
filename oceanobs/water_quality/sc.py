@@ -3,18 +3,27 @@
 import pandas as pd
 import requests
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class WaterQualitySC(Oceanobs):
-    """Get data from the bathing water quality in Santa Catarina"""
+    """Get data from the bathing water quality in Santa Catarina
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
 
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://balneabilidade.ima.sc.gov.br/relatorio/mapa"
+        self.base_url = "https://balneabilidade.ima.sc.gov.br/relatorio/mapa" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from the bathing water quality in São Paulo
