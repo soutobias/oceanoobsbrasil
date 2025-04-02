@@ -1,28 +1,47 @@
-
 """Class to get data from the Espirito Santo buoys"""
+
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import (
+    datetime,
+    timedelta,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
-import geopandas as gpd
+from bs4 import (
+    BeautifulSoup,
+)
+from dotenv import (
+    load_dotenv,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 load_dotenv()
 
+
 class ESBuoy(Oceanobs):
-    """Get data from Espirito Santo buoys"""
+    """Get data from Espirito Santo buoys
+
+    This class is used to get data from Espirito Santo buoys.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
+
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = os.getenv("ES_URL")
+        self.base_url = "https://service.vports.com.br/online/sgp/RetornaDadosBoiaAtoN/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Espirito Santo buoys
@@ -43,15 +62,15 @@ class ESBuoy(Oceanobs):
         stations = self._convert_to_gdf(stations)
         return stations
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
         station : dict
             The station information
+        add_columns : list, optional
+            List of columns to add to the DataFrame, by default None
 
         Returns
         -------
@@ -66,8 +85,8 @@ class ESBuoy(Oceanobs):
         try:
             date_time = soup.find("h4", {"class": "titulo"}).text
             date_time = datetime.strptime(date_time, "%d/%m/%Y %H:%M:%S")
-        except:
-            error = "Error getting data from Espirito Santo"
+        except Exception as e:
+            error = "Error getting data from Espirito Santo:" + str(e)
             return None, error
 
         wdir = self.get_data_html(soup, "data-wind-direction-deg")
@@ -79,7 +98,16 @@ class ESBuoy(Oceanobs):
         pres = self.get_data_html(soup, "data-atmosferic-pressure")
         rh = self.get_data_html(soup, "data-relative-humidity")
 
-        if np.isnan(wdir) and np.isnan(wspd) and np.isnan(atmp) and np.isnan(swvht) and np.isnan(wvdir) and np.isnan(tp) and np.isnan(pres) and np.isnan(rh):
+        if (
+            np.isnan(wdir)
+            and np.isnan(wspd)
+            and np.isnan(atmp)
+            and np.isnan(swvht)
+            and np.isnan(wvdir)
+            and np.isnan(tp)
+            and np.isnan(pres)
+            and np.isnan(rh)
+        ):
             error = "Error getting data from Espirito Santo"
             return None, error
 
@@ -109,6 +137,6 @@ class ESBuoy(Oceanobs):
     def get_data_html(self, soup, attrs):
         try:
             value = float(soup.find("h3", {attrs: True})[attrs])
-        except:
+        except Exception:
             value = np.nan
         return value

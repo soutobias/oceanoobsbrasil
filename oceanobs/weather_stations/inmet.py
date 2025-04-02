@@ -1,31 +1,55 @@
-import time
 import warnings
-import geopandas as gpd
+
 import numpy as np
 import pandas as pd
 import requests
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import (
+    By,
+)
+from selenium.webdriver.support import (
+    expected_conditions as ec,
+)
+from selenium.webdriver.support.ui import (
+    WebDriverWait,
+)
 
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.utils import quit_driver
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
+from oceanobs.utils.utils import (
+    quit_driver,
+)
 
 warnings.filterwarnings("ignore")
 
 
 class Inmet(Oceanobs):
+    """Get data from INMET stations
+
+    This class is used to get data from INMET stations.
+
+    Parameters
+    ----------
+    n_workers : int, optional
+        Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
+    stations_url : str, optional
+        URL for the stations, by default None
+    """
+
     def __init__(
         self,
         n_workers: int = 1,
+        base_url: str = None,
+        stations_url: str = None,
         **kwargs,
     ):
-
         super().__init__(n_workers=n_workers)
-        self.base_url = "https://tempo.inmet.gov.br/TabelaEstacoes"
-        self.stations_url = "https://apimapas.inmet.gov.br"
+        self.base_url = "https://tempo.inmet.gov.br/TabelaEstacoes" if not base_url else base_url
+        self.stations_url = "https://apimapas.inmet.gov.br" if not stations_url else stations_url
 
-    def get_stations(self, station_type:str="automatic") -> pd.DataFrame:
+    def get_stations(self, station_type: str = "automatic") -> pd.DataFrame:
         """Get stations from Aqualink buoy
 
         Returns
@@ -54,7 +78,7 @@ class Inmet(Oceanobs):
         return stations_df
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------
@@ -71,10 +95,8 @@ class Inmet(Oceanobs):
         gdf_stations.rename(columns={"codigo": "identifier", "nome": "name"}, inplace=True)
         return gdf_stations
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -112,10 +134,8 @@ class Inmet(Oceanobs):
         quit_driver(driver)
         return data, None
 
-
-
     def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Rename columns
+        """Rename columns
 
         Parameters
         ----------
@@ -138,17 +158,13 @@ class Inmet(Oceanobs):
             "gust",
         ]
         data.columns = columns
-        data["hour"] = (
-            (data["hour"] / 100).astype(int).astype("str").str.zfill(2)
-        )
-        data["date_time"] = pd.to_datetime(
-            data["date"] + data["hour"], format="%d/%m/%Y%H"
-        )
+        data["hour"] = (data["hour"] / 100).astype(int).astype("str").str.zfill(2)
+        data["date_time"] = pd.to_datetime(data["date"] + data["hour"], format="%d/%m/%Y%H")
         data.drop(columns=["date", "hour"], inplace=True)
         return data
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -160,9 +176,7 @@ class Inmet(Oceanobs):
         pd.DataFrame
             The prepared data
         """
-        data = data.replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
         columns = [
             "atmp",
             "pres",

@@ -1,28 +1,29 @@
 """Get data from the bathing water quality in Santa Catarina"""
-import datetime
-import json
-import time
-import urllib.request
-from datetime import datetime, timedelta
 
-import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
 
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class WaterQualitySC(Oceanobs):
-    """Get data from the bathing water quality in Santa Catarina"""
+    """Get data from the bathing water quality in Santa Catarina
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
 
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://balneabilidade.ima.sc.gov.br/relatorio/mapa"
+        self.base_url = "https://balneabilidade.ima.sc.gov.br/relatorio/mapa" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from the bathing water quality in São Paulo
@@ -37,10 +38,7 @@ class WaterQualitySC(Oceanobs):
         stations = self._prepare_stations(stations)
         return stations
 
-    def get(self,
-            stations: pd.DataFrame = None,
-            add_columns: list = None,
-            **kwargs) -> pd.DataFrame:
+    def get(self, stations: pd.DataFrame = None, add_columns: list = None, **kwargs) -> pd.DataFrame:
         """Get data from the bathing water quality in São Paulo"""
 
         data = self._request_data()
@@ -50,7 +48,7 @@ class WaterQualitySC(Oceanobs):
         return data
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------

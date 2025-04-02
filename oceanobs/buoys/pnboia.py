@@ -1,19 +1,23 @@
 """PNBOIA class module"""
+
 import os
-import geopandas as gpd
 
 import numpy as np
 import pandas as pd
 import requests
-from dotenv import load_dotenv
+from dotenv import (
+    load_dotenv,
+)
 
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 load_dotenv()
 
+
 class Pnboia(Oceanobs):
-    """ PNBOIA class
+    """PNBOIA class
 
     This class is used to download data from PNBOIA buoys.
 
@@ -25,22 +29,27 @@ class Pnboia(Oceanobs):
         End date for the data collection, by default None
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
+
     def __init__(
         self,
         start_date: str = None,
         end_date: str = None,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         n_workers=n_workers)
-        self.base_url = "http://52.67.222.63/v1/"
-        self._token = os.getenv("REMOBS_TOKEN")
+        super().__init__(start_date=start_date, end_date=end_date, n_workers=n_workers)
+        self.base_url = "http://52.67.222.63/v1/" if not base_url else base_url
+        self._token = os.getenv("PNBOIA_TOKEN")
+        if not self._token:
+            self.logger.error("Token not found")
+            self.logger.error("Please set the environment variable PNBOIA_TOKEN")
 
     def get_stations(self) -> pd.DataFrame:
-        """ Get the stations metadata
+        """Get the stations metadata
 
         Returns
         -------
@@ -59,7 +68,7 @@ class Pnboia(Oceanobs):
         return stations
 
     def _prepare_stations(self, stations: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the stations metadata
+        """Prepare the stations metadata
 
         Parameters
         ----------
@@ -78,13 +87,8 @@ class Pnboia(Oceanobs):
         gdf_stations = self._convert_to_gdf(df_stations)
         return gdf_stations
 
-
-    def get_data(self,
-                 station,
-                 start_date=None,
-                 end_date=None,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, start_date=None, end_date=None, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
@@ -121,11 +125,9 @@ class Pnboia(Oceanobs):
             for column in data.columns:
                 try:
                     data[column] = pd.to_numeric(data[column])
-                except:
+                except Exception:
                     pass
-            data["date_time"] = pd.to_datetime(
-                data["date_time"], format="%Y-%m-%dT%H:%M:%S"
-            )
+            data["date_time"] = pd.to_datetime(data["date_time"], format="%Y-%m-%dT%H:%M:%S")
             data.sort_values("date_time", inplace=True)
             data = self._rename_columns(data)
             data = data.copy()
@@ -149,7 +151,7 @@ class Pnboia(Oceanobs):
         return data, None
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -166,15 +168,12 @@ class Pnboia(Oceanobs):
         if "gust" in data.columns:
             data.gust = data.gust * 1.94384
 
-        data = data.replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
         data = data.dropna(subset=["date_time"])
         return data
 
-
     def _rename_columns(self, data: pd.DataFrame) -> pd.DataFrame:
-        """ Rename columns
+        """Rename columns
 
         Parameters
         ----------

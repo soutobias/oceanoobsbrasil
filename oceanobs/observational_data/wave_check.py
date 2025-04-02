@@ -1,17 +1,32 @@
 """WaveCheck data module"""
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import datetime
-from functools import partial
-from datetime import datetime
-from itertools import chain
+
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    as_completed,
+)
+from datetime import (
+    datetime,
+)
+from functools import (
+    partial,
+)
+from itertools import (
+    chain,
+)
 
 import numpy as np
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
-from tqdm import tqdm
+from bs4 import (
+    BeautifulSoup,
+)
+from tqdm import (
+    tqdm,
+)
 
-from oceanobs.oceanobs import Oceanobs
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class WaveCheck(Oceanobs):
@@ -23,14 +38,18 @@ class WaveCheck(Oceanobs):
     ----------
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
+    base_url : str, optional
+        Base URL for the data, by default None
     """
+
     def __init__(
         self,
         n_workers: int = 1,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__(n_workers=n_workers)
-        self.base_url = "https://www.waves.com.br/"
+        self.base_url = "https://www.waves.com.br/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Wave Check
@@ -45,17 +64,13 @@ class WaveCheck(Oceanobs):
         menu = soup.find("ul", {"id": "menu-td-demo-header-menu-1"})
         menus = menu.find_all("a")
         hrefs = []
-        errors = []
         for item in menus:
             href = item.attrs["href"]
             if "condicao" in href:
                 hrefs.append({"name": item.text, "href": href})
         stations = []
         with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
-            futures = [
-                executor.submit(partial(self.get_station, href=href))
-                for href in hrefs
-            ]
+            futures = [executor.submit(partial(self.get_station, href=href)) for href in hrefs]
             for future in tqdm(as_completed(futures), desc="Get Stations", total=len(futures)):
                 station = future.result()
                 if len(station) > 0:
@@ -94,15 +109,13 @@ class WaveCheck(Oceanobs):
                     "identifier": data_link,
                     "latitude": float(latitude),
                     "longitude": float(longitude),
-                    "name": name
+                    "name": name,
                 }
                 stations_local.append(station)
         return stations_local
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> pd.DataFrame:
-        """ Get data from a station
+    def get_data(self, station, add_columns: list = None) -> pd.DataFrame:
+        """Get data from a station
 
         Parameters
         ----------
@@ -119,8 +132,8 @@ class WaveCheck(Oceanobs):
         url = f"{self.base_url}surf/ondas/picos/{station['identifier']}"
         try:
             response = requests.get(str(url))
-        except:
-            error = f"Error getting data from {station['name']}"
+        except Exception as e:
+            error = f"Error getting data from {station['name']}: {str(e)}"
             return None, error
         soup = BeautifulSoup(response.text, "html.parser")
         has_data = soup.find("div", {"class": "pico_header_pico"})
@@ -130,12 +143,10 @@ class WaveCheck(Oceanobs):
             try:
                 [k1, _] = swvht_part.split("m")
                 swvht = float(k1)
-            except:
+            except Exception:
                 swvht = 0
 
-            wvdir_part = soup.find("td", {"id": "forecast_wave_direction"}).get_text(
-                strip=True
-            )
+            wvdir_part = soup.find("td", {"id": "forecast_wave_direction"}).get_text(strip=True)
             wvdir = str(wvdir_part).lower()
             wvdir = self._convert_wvdir(wvdir)
             date_time = datetime.now()
@@ -154,7 +165,6 @@ class WaveCheck(Oceanobs):
             error = f"No data for {station['name']}"
             return None, error
 
-
     def _convert_wvdir(self, wvdir: str) -> float:
         """Convert the wave direction to degrees
 
@@ -170,21 +180,42 @@ class WaveCheck(Oceanobs):
         """
         direction_map = {
             "norte": 0,
-            "norte-nordeste": 22, "norte nordeste": 22,
+            "norte-nordeste": 22,
+            "norte nordeste": 22,
             "nordeste": 45,
-            "nordeste-leste": 67, "nordeste leste": 67, "leste nordeste": 67, "leste-nordeste": 67,
+            "nordeste-leste": 67,
+            "nordeste leste": 67,
+            "leste nordeste": 67,
+            "leste-nordeste": 67,
             "leste": 90,
-            "sudeste-leste": 112, "sudeste leste": 112, "leste sudeste": 112,
+            "sudeste-leste": 112,
+            "sudeste leste": 112,
+            "leste sudeste": 112,
             "sudeste": 135,
-            "sul-sudeste": 157, "sul sudeste": 157, "sudeste sul": 157, "sudeste-sul": 157,
+            "sul-sudeste": 157,
+            "sul sudeste": 157,
+            "sudeste sul": 157,
+            "sudeste-sul": 157,
             "sul": 180,
-            "sul-sudoeste": 202, "sul sudoeste": 202, "sudoeste-sul": 202, "sudoeste sul": 202,
+            "sul-sudoeste": 202,
+            "sul sudoeste": 202,
+            "sudoeste-sul": 202,
+            "sudoeste sul": 202,
             "sudoeste": 225,
-            "sudoeste-oeste": 247, "sudoeste oeste": 247, "oeste-sudoeste": 247, "oeste sudoeste": 247,
+            "sudoeste-oeste": 247,
+            "sudoeste oeste": 247,
+            "oeste-sudoeste": 247,
+            "oeste sudoeste": 247,
             "oeste": 270,
-            "noroeste-oeste": 292, "noroeste oeste": 292, "oeste-noroeste": 292, "oeste noroeste": 292,
+            "noroeste-oeste": 292,
+            "noroeste oeste": 292,
+            "oeste-noroeste": 292,
+            "oeste noroeste": 292,
             "noroeste": 315,
-            "noroeste-norte": 337, "noroeste norte": 337, "norte-noroeste": 337, "norte noroeste": 337,
+            "noroeste-norte": 337,
+            "noroeste norte": 337,
+            "norte-noroeste": 337,
+            "norte noroeste": 337,
             "não informado": np.nan,
         }
 

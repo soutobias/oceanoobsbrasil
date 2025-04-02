@@ -1,24 +1,40 @@
 """Weather Warning CHM module."""
-import datetime
+
 import re
-from datetime import datetime, timezone
+from datetime import (
+    datetime,
+    timezone,
+)
 
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup
+from bs4 import (
+    BeautifulSoup,
+)
 
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
 
 
 class WeatherWarningCHM(Oceanobs):
-    """WeatherWarningCHM class"""
+    """WeatherWarningCHM class
+
+    This class is used to get weather warnings from CHM website.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
+
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = "https://www.marinha.mil.br/chm/dados-do-smm-avisos-de-mau-tempo/avisos-de-mau-tempo"
+        self.base_url = "https://www.marinha.mil.br/chm/dados-do-smm-avisos-de-mau-tempo/avisos-de-mau-tempo" if not base_url else base_url
         self.regions = [
             "ALFA",
             "BRAVO",
@@ -60,8 +76,12 @@ class WeatherWarningCHM(Oceanobs):
                             break
             temp_areas_idx.append(len(p_tags_in_warning))
             areas_idx = list(zip(temp_areas_idx, temp_areas_idx[1:]))
-        except:
-            self.logger.error("Error parsing the weather warnings from %s", self.base_url)
+        except Exception as e:
+            self.logger.error(
+                "Error parsing the weather warnings from %s: %s",
+                self.base_url,
+                str(e),
+            )
             return
 
         try:
@@ -73,35 +93,34 @@ class WeatherWarningCHM(Oceanobs):
                         param = {}
                         hour = (datetime.now(timezone.utc).hour // 6) * 6
                         date_time = datetime.now(timezone.utc).replace(hour=hour)
-                        param["date_time"] = date_time.strftime(format=f"%Y-%m-%d %H:01:00")
+                        param["date_time"] = date_time.strftime(format="%Y-%m-%d %H:01:00")
                         param["region"] = region
                         param["warning_number"] = p_tag_text.text.strip()
-                        param["warning_number"] = re.findall(
-                            "[0-9]+/[0-9]+", param["warning_number"]
-                        )[0]
+                        param["warning_number"] = re.findall("[0-9]+/[0-9]+", param["warning_number"])[0]
                         try:
                             try:
                                 param = self._get_params_from_section(p_tags_in_warning, p_tag_idx, param)
-                            except:
+                            except Exception:
                                 p_tag_idx += 1
                                 param = self._get_params_from_section(p_tags_in_warning, p_tag_idx, param)
                             if param:
                                 param = self._calculate_start_end_date(param)
                                 params.append(param)
-                        except:
+                        except Exception:
                             continue
-        except:
-            self.logger.error("Error getting the weather warnings from %s", self.base_url)
+        except Exception as e:
+            self.logger.error(
+                "Error getting the weather warnings from %s: %s",
+                self.base_url,
+                str(e),
+            )
             return
 
         data = pd.DataFrame(params)
 
         return data
 
-    def _get_params_from_section(self,
-                                 p_tags_in_warning: list,
-                                 p_tag_idx: int,
-                                 param: dict) -> dict:
+    def _get_params_from_section(self, p_tags_in_warning: list, p_tag_idx: int, param: dict) -> dict:
         """Get the parameters from the section
 
         Parameters
@@ -122,21 +141,12 @@ class WeatherWarningCHM(Oceanobs):
         p_tag_for_region = p_tag_for_region.replace("\t", "").split("\n")
         for text in p_tag_for_region:
             if "AVISO DE" in text:
-                param["warning_type"] = (
-                   text.replace("AVISO DE", "").strip()
-                )
+                param["warning_type"] = text.replace("AVISO DE", "").strip()
             if "EMITIDO ÀS" in text:
-                param["start_date"] = (
-                    text.replace("EMITIDO ÀS", "").strip()
-                )
+                param["start_date"] = text.replace("EMITIDO ÀS", "").strip()
                 continue
             if "VÁLIDO ATÉ" in text:
-                param["end_date"] = (
-                    text
-                    .replace("VÁLIDO ATÉ", "")
-                    .replace(".", "")
-                    .strip()
-                )
+                param["end_date"] = text.replace("VÁLIDO ATÉ", "").replace(".", "").strip()
                 continue
             if text.strip():
                 param["description"] = text.strip()

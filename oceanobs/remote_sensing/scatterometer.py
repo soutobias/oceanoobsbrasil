@@ -1,22 +1,22 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import os
 import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import xarray as xr
 from dotenv import load_dotenv
-from harmony import BBox, Client, Collection, Environment, LinkType, Request
+from harmony import BBox, Client, Collection, Request
 
 from oceanobs.oceanobs import Oceanobs
-from oceanobs.oceanobs_handler.db_handler import DbHandler
 
 load_dotenv()
 
+
 class Scatterometer(Oceanobs):
-    """ Scatterometer data collection class
+    """Scatterometer data collection class
 
 
     Parameters
@@ -29,18 +29,22 @@ class Scatterometer(Oceanobs):
     n_workers : int, optional
         Number of workers for the thread pool executor, by default 1
     """
-    def __init__(self,
-                 collections=["C2075141559-POCLOUD"],
-                 start_date: str = None,
-                 end_date: str = None,
-                 lat_lon_limits: dict = None,
-                 n_workers: int = 1,
-                 **kwargs):
 
-        super().__init__(start_date=start_date,
-                         end_date=end_date,
-                         lat_lon_limits=lat_lon_limits,
-                         n_workers=n_workers)
+    def __init__(
+        self,
+        collections=["C2075141559-POCLOUD"],
+        start_date: str = None,
+        end_date: str = None,
+        lat_lon_limits: dict = None,
+        n_workers: int = 1,
+        **kwargs,
+    ):
+        super().__init__(
+            start_date=start_date,
+            end_date=end_date,
+            lat_lon_limits=lat_lon_limits,
+            n_workers=n_workers,
+        )
         self.start_date = self._validate_date(start_date, is_start_date=True)
         self.end_date = self._validate_date(end_date, is_start_date=False)
         self.collections = collections
@@ -57,12 +61,28 @@ class Scatterometer(Oceanobs):
         pd.DataFrame
             DataFrame with the data
         """
-        wind_flag, wind_dir, wind_speed, wind_time, wind_lat, wind_lon = [], [], [], [], [], []
+        wind_flag, wind_dir, wind_speed, wind_time, wind_lat, wind_lon = (
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+        )
         for collection in self.collections:
             nc_files = self.download(collection)
             with ThreadPoolExecutor(max_workers=self.n_workers) as executor:
                 futures = [
-                    executor.submit(self.get_data, file=file, wind_flag=wind_flag, wind_dir=wind_dir, wind_speed=wind_speed, wind_time=wind_time, wind_lat=wind_lat, wind_lon=wind_lon)
+                    executor.submit(
+                        self.get_data,
+                        file=file,
+                        wind_flag=wind_flag,
+                        wind_dir=wind_dir,
+                        wind_speed=wind_speed,
+                        wind_time=wind_time,
+                        wind_lat=wind_lat,
+                        wind_lon=wind_lon,
+                    )
                     for file in nc_files
                 ]
                 for future in tqdm(as_completed(futures), desc="Downloading data", total=len(futures)):
@@ -75,14 +95,16 @@ class Scatterometer(Oceanobs):
         win_flag = np.concatenate(wind_flag)
 
         # Create final DataFrame
-        data = pd.DataFrame({
-            "date_time": date_time,
-            "latitude": lat,
-            "longitude": lon,
-            "wdir": wdir,
-            "wspd": wspd,
-            "flag": win_flag,
-        })
+        data = pd.DataFrame(
+            {
+                "date_time": date_time,
+                "latitude": lat,
+                "longitude": lon,
+                "wdir": wdir,
+                "wspd": wspd,
+                "flag": win_flag,
+            }
+        )
         data = data.loc[data["date_time"].notna()]
         data = data.loc[data["latitude"].notna()]
         data = data.loc[data["longitude"].notna()]
@@ -96,8 +118,16 @@ class Scatterometer(Oceanobs):
         data["station_type"] = "Scatterometer"
         return data
 
-
-    def get_data(self, file: str, wind_flag: list, wind_dir: list, wind_speed: list, wind_time: list, wind_lat: list, wind_lon: list):
+    def get_data(
+        self,
+        file: str,
+        wind_flag: list,
+        wind_dir: list,
+        wind_speed: list,
+        wind_time: list,
+        wind_lat: list,
+        wind_lon: list,
+    ):
         """Get the data from the Scatterometer
 
         Parameters
@@ -152,7 +182,12 @@ class Scatterometer(Oceanobs):
         request = Request(
             collection=collection_id,
             temporal={"start": self.start_date, "stop": self.end_date},
-            spatial=BBox(self.lat_lon_limits["min_lon"], self.lat_lon_limits["min_lat"], self.lat_lon_limits["max_lon"], self.lat_lon_limits["max_lat"]),
+            spatial=BBox(
+                self.lat_lon_limits["min_lon"],
+                self.lat_lon_limits["min_lat"],
+                self.lat_lon_limits["max_lon"],
+                self.lat_lon_limits["max_lat"],
+            ),
         )
         if request.is_valid():
             job_id = harmony_client.submit(request)
@@ -160,8 +195,6 @@ class Scatterometer(Oceanobs):
             harmony_client.result_json(job_id, show_progress=True)
             self.logger.info(f"Job ID: {job_id} completed")
         temp_dir = tempfile.mkdtemp()
-        futures = harmony_client.download_all(
-            job_id, directory=temp_dir, overwrite=True
-        )
+        futures = harmony_client.download_all(job_id, directory=temp_dir, overwrite=True)
         nc_files = [f.result() for f in futures]
         return nc_files

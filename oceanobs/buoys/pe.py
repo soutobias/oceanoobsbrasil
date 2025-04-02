@@ -1,31 +1,60 @@
-""" Class to get data from Pernambuco buoys """
+"""Class to get data from Pernambuco buoys"""
+
 import json
 import os
 import re
 import time
-from datetime import datetime
+from datetime import (
+    datetime,
+)
 
 import numpy as np
 import pandas as pd
-from bs4 import BeautifulSoup
-from dotenv import load_dotenv
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
+from bs4 import (
+    BeautifulSoup,
+)
+from dotenv import (
+    load_dotenv,
+)
+from selenium.webdriver.common.by import (
+    By,
+)
+from selenium.webdriver.support import (
+    expected_conditions as ec,
+)
+from selenium.webdriver.support.ui import (
+    WebDriverWait,
+)
 
-from oceanobs.oceanobs import Oceanobs
-from oceanobs.utils import quit_driver, uv2intdir
+from oceanobs.oceanobs import (
+    Oceanobs,
+)
+from oceanobs.utils.utils import (
+    quit_driver,
+    uv2intdir,
+)
+
 load_dotenv()
 
+
 class PEBuoy(Oceanobs):
-    """Get data from Pernambuco buoys"""
+    """Get data from Pernambuco buoys
+
+    This class is used to get data from Pernambuco buoys.
+
+    Parameters
+    ----------
+    base_url : str, optional
+        Base URL for the data, by default None
+    """
 
     def __init__(
         self,
+        base_url: str = None,
         **kwargs,
     ):
         super().__init__()
-        self.base_url = os.getenv("PE_URL")
+        self.base_url = "http://www.sismowater.com.br/sismo/suape/HC_hmsuwave/" if not base_url else base_url
 
     def get_stations(self) -> pd.DataFrame:
         """Get stations from Pernambuco buoys
@@ -47,15 +76,15 @@ class PEBuoy(Oceanobs):
         stations = self._convert_to_gdf(stations)
         return stations
 
-    def get_data(self,
-                 station,
-                 add_columns: list = None) -> tuple:
-        """ Get data from a station
+    def get_data(self, station, add_columns: list = None) -> tuple:
+        """Get data from a station
 
         Parameters
         ----------
         station : dict
             The station information
+        add_columns : list, optional
+            Additional columns to add to the data, by default None
 
         Returns
         -------
@@ -75,7 +104,7 @@ class PEBuoy(Oceanobs):
         wait.until(ec.visibility_of_element_located((By.XPATH, "//div[@id='Box01_1631']")))
 
         def get_element_text(element_id: str, data_type=float):
-            """ Helper function to extract text from an element and convert it to the specified data type. """
+            """Helper function to extract text from an element and convert it to the specified data type."""
             try:
                 element_text = driver.find_element("id", element_id).text
                 return data_type(element_text)
@@ -90,8 +119,7 @@ class PEBuoy(Oceanobs):
         swellhm0 = get_element_text("Box07_1624")
 
         try:
-            date_time = driver.find_element(By.XPATH,
-                                             "//*[contains(text(), 'Latest data')]")
+            date_time = driver.find_element(By.XPATH, "//*[contains(text(), 'Latest data')]")
             date_time = date_time.text
             date_time = datetime.strptime(date_time[13:], "%Y-%m-%d %H:%M")
         except Exception as e:
@@ -111,16 +139,34 @@ class PEBuoy(Oceanobs):
 
             wspd = round(float(soup.find(attrs={"id": "Box01_689"}).text), 2)
             gust = round(float(soup.find(attrs={"id": "Box01_690"}).text), 2)
-        except Exception as e:
+        except Exception:
             wdir, wspd, gust = None, None, None
 
-        values = np.array([
-            date_time, mwd, hm0, seapeakdir, seahm0,
-            swellpeakdir, swellhm0, wspd, gust, wdir
-        ])
+        values = np.array(
+            [
+                date_time,
+                mwd,
+                hm0,
+                seapeakdir,
+                seahm0,
+                swellpeakdir,
+                swellhm0,
+                wspd,
+                gust,
+                wdir,
+            ]
+        )
         columns = [
-            "date_time", "wvdir", "swvht", "wvdir_sea", "swvht_sea",
-            "wvdir_swell", "swvht_swell", "wspd", "gust", "wdir"
+            "date_time",
+            "wvdir",
+            "swvht",
+            "wvdir_sea",
+            "swvht_sea",
+            "wvdir_swell",
+            "swvht_swell",
+            "wspd",
+            "gust",
+            "wdir",
         ]
         data = pd.DataFrame(values).T
         data.columns = columns
@@ -135,7 +181,7 @@ class PEBuoy(Oceanobs):
         return data, None
 
     def _prepare_data(self, data: pd.DataFrame, columns: list) -> pd.DataFrame:
-        """ Prepare the data
+        """Prepare the data
 
         Parameters
         ----------
@@ -148,9 +194,7 @@ class PEBuoy(Oceanobs):
             The prepared data
         """
         data = data.infer_objects(copy=False)
-        data = data.replace(
-            to_replace=["None", None, "NULL", " ", ""], value=np.nan
-        )
+        data = data.replace(to_replace=["None", None, "NULL", " ", ""], value=np.nan)
         for column in columns:
             if column != "date_time":
                 if isinstance(data[column], (pd.Series, list, tuple, np.ndarray)):
